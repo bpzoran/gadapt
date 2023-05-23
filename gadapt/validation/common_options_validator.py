@@ -1,4 +1,3 @@
-from typing import List
 from validation.base_options_validator import BaseOptionsValidator
 import ga_model.definitions
 import ga_model.definitions
