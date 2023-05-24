@@ -5,10 +5,10 @@
 To install [GAdapt] use pip, with the following command:
 pip install gadapt
 
-#Source Code
+# Source Code
 The source code is stored on GitHub, on the following address: https://github.com/bpzoran/gadapt
 
-#Usage example
+# Usage example
 The following example optimizes variable values for a complex trigonometric function.
 ```python
 from gadapt.ga import GA
@@ -20,6 +20,7 @@ def trig_func(args):
 
 #Instantiation of genetic algorithm for desired function
 ga = GA(cost_function=trig_func)
+
 #Adding variables (minimal value, maximal value and step)
 ga.add(1.0, 4.0, 0.01)
 ga.add(37.0, 40.0, 0.01)
