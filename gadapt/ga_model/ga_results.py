@@ -1,4 +1,3 @@
-from typing import List
 import gadapt.string_operation.ga_strings as ga_strings
 
 class GAResults:
