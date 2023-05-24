@@ -5,13 +5,11 @@ from gadapt.crossover.base_crossover import BaseCrossover
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.gene import Gene
-from gadapt.ga_model.genetic_variable import GeneticVariable
 from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
 from gadapt.immigration.population_immigration.base_population_immigrator import BasePopulationImmigrator
 from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
 from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
 from gadapt.mutation.population_mutation.composed_population_mutator import ComposedPopulationMutator
-from sklearn.preprocessing import MinMaxScaler
 from gadapt.variable_update.base_variable_updater import BaseVariableUpdater
 import gadapt.string_operation.ga_strings as ga_strings
 from datetime import datetime
@@ -31,7 +29,6 @@ class Population:
                  variable_updater: BaseVariableUpdater):
         if options.population_size < 4:
             raise Exception("Population size 4 must be higher than 3")        
-        self.scaler = MinMaxScaler(feature_range=(1, 2))
         self.options = options
         self.chromosome_mutator = chromosome_mutator
         self.population_mutator = population_mutator
