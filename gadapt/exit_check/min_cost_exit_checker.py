@@ -1,4 +1,4 @@
-from exit_check.base_exit_checker import BaseExitChecker
+from gadapt.exit_check.base_exit_checker import BaseExitChecker
 
 class MinCostExitChecker(BaseExitChecker):
     def is_exit(self, population):

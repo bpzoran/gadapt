@@ -3,7 +3,7 @@ from functools import reduce
 import math
 import random
 from typing import List
-import ga_model.definitions
+import gadapt.ga_model.definitions as definitions
 def get_rand_bool():
     rand_int = random.getrandbits(1)
     return bool(rand_int)

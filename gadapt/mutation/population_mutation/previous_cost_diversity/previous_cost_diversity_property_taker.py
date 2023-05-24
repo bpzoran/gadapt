@@ -1,7 +1,7 @@
-import ga_model.definitions
+import gadapt.ga_model.definitions as definitions
 class BasePreviousCostDiversityPropertyTaker:
     def take_property(self, mutator):
-        raise Exception(ga_model.definitions.NOT_IMPLEMENTED)
+        raise Exception(definitions.NOT_IMPLEMENTED)
     
 class MinPreviousCostCostDiversityPropertyTaker:
     def take_property(self, mutator):

@@ -1,9 +1,9 @@
-from factory.ga_factory import GAFactory
-from ga_logging.logging_settings import init_logging
-from ga_model.ga_options import GAOptions
-from ga_model.ga_results import GAResults
-from ga_model.population import Population
-import ga_model.message_levels
+from gadapt.factory.ga_factory import GAFactory
+from gadapt.ga_logging.logging_settings import init_logging
+from gadapt.ga_model.ga_options import GAOptions
+from gadapt.ga_model.ga_results import GAResults
+from gadapt.ga_model.population import Population
+import gadapt.ga_model.message_levels as message_levels
 
 class GAExecutor:
     def __init__(self, ga_options: GAOptions, factory: GAFactory) -> None:
@@ -17,7 +17,7 @@ class GAExecutor:
         try: 
             init_logging(self.ga_options.logging)                           
         except Exception as ex:
-            results.messages.append((ga_model.message_levels.WARNING, "Logging failed. Error message: {exc}".format(exc=str(ex))))
+            results.messages.append((message_levels.WARNING, "Logging failed. Error message: {exc}".format(exc=str(ex))))
             self.ga_options.logging = False
         validator = self.factory.get_options_validator()
         validator.validate()
@@ -54,7 +54,7 @@ class GAExecutor:
             population.mutate()
             population.find_costs()            
         if population.timeout_expired:
-            results.messages.append((ga_model.message_levels.WARNING, "Timeout expired!"))
+            results.messages.append((message_levels.WARNING, "Timeout expired!"))
         best_individual = population.best_individual
         results.min_cost = population.min_cost
         results.number_of_iterations = population.population_generation
@@ -62,6 +62,6 @@ class GAExecutor:
             results.result_values[g.genetic_variable.variable_id] = g.variable_value
         #except Exception as ex:
         #    results.success = False
-        #    results.messages.append((ga_model.message_levels.ERROR, str(ex)))
+        #    results.messages.append((message_levels.ERROR, str(ex)))
         return results
     

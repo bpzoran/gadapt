@@ -1,10 +1,10 @@
-from ga_model.chromosome import Chromosome
-from ga_model.gene import Gene
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.gene import Gene
 from typing import List
 import random
-from mutation.chromosome_mutation.random_chromosome_mutator import RandomChromosomeMutator
-from sampling.base_sampling import BaseSampling
-import utils.ga_utils
+from gadapt.mutation.chromosome_mutation.random_chromosome_mutator import RandomChromosomeMutator
+from gadapt.sampling.base_sampling import BaseSampling
+import gadapt.utils.ga_utils as ga_utils
 
 class CrossDiversityChromosomeMutator(RandomChromosomeMutator):
                     
@@ -37,7 +37,7 @@ class CrossDiversityChromosomeMutator(RandomChromosomeMutator):
         return g.variable_value + number_of_steps * g.genetic_variable.step
     
     def make_random_value_below_or_above(self, g: Gene):
-        if (utils.ga_utils.get_rand_bool()):
+        if (ga_utils.get_rand_bool()):
             return self.make_random_value_above(g)
         return self.make_random_value_below(g)
     
@@ -53,7 +53,7 @@ class CrossDiversityChromosomeMutator(RandomChromosomeMutator):
         prob = g.genetic_variable.relative_standard_deviation
         if prob > 1.0:
             prob = 1.0
-        should_mutate_random = utils.ga_utils.get_rand_bool_with_probability(prob)
+        should_mutate_random = ga_utils.get_rand_bool_with_probability(prob)
         if should_mutate_random:
             return self.set_random_value
         else:

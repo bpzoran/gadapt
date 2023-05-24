@@ -1,8 +1,8 @@
-import ga_model.definitions
+import gadapt.ga_model.definitions as definitions
 class RankingModel:
     def __init__(self):
         self._rank = -1
-        self._cummulative_probability = ga_model.definitions.FLOAT_NAN
+        self._cummulative_probability = definitions.FLOAT_NAN
     
     @property
     def rank(self):
@@ -26,4 +26,4 @@ class RankingModel:
 
     def reset_for_sampling(self):
         self._rank = -1
-        self._cummulative_probability = ga_model.definitions.FLOAT_NAN
+        self._cummulative_probability = definitions.FLOAT_NAN

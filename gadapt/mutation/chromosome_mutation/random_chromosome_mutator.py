@@ -1,9 +1,9 @@
-from ga_model.chromosome import Chromosome
-from ga_model.gene import Gene
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.gene import Gene
 from typing import List
 import random
 
-from mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
+from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
 
 class RandomChromosomeMutator(BaseChromosomeMutator):
     def mutate_chromosome(self, c: Chromosome, number_of_mutation_genes: int):

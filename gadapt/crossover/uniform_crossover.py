@@ -1,9 +1,9 @@
-from ga_model.chromosome import Chromosome
-from crossover.base_crossover import BaseCrossover
-from ga_model.gene import Gene
-from immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
-from mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
-from gene_combination.base_gene_combination import BaseGeneCombination
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.crossover.base_crossover import BaseCrossover
+from gadapt.ga_model.gene import Gene
+from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
+from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
+from gadapt.gene_combination.base_gene_combination import BaseGeneCombination
 
 class UniformCrossover(BaseCrossover):
     

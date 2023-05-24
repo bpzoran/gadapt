@@ -1,10 +1,10 @@
-from ga_model.chromosome import Chromosome
-from ga_model.gene import Gene
-from immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
-from mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
-from gene_combination.base_gene_combination import BaseGeneCombination
-import utils.ga_utils
-import ga_model.definitions
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.gene import Gene
+from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
+from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
+from gadapt.gene_combination.base_gene_combination import BaseGeneCombination
+import gadapt.utils.ga_utils as ga_utils
+import gadapt.ga_model.definitions as definitions
 
 class BaseCrossover:
     
@@ -70,7 +70,7 @@ class BaseCrossover:
             var1, var2 = self.combine(mother_gene, father_gene)
             offspring1.add_gene(self.genetic_variable_father, var1)
             offspring2.add_gene(self.genetic_variable_father, var2)
-        parrents_diversity = round(utils.ga_utils.average(genetic_diversity), 2)
+        parrents_diversity = round(ga_utils.average(genetic_diversity), 2)
         offspring1.parents_diversity = parrents_diversity
         offspring2.parents_diversity = parrents_diversity
         offspring1.mutation_on_both_sides = self.mutation_on_both_sides
@@ -86,10 +86,10 @@ class BaseCrossover:
         pass
 
     def get_mother_father_genes(self, mother: Chromosome, father: Chromosome):
-        raise Exception(ga_model.definitions.NOT_IMPLEMENTED)
+        raise Exception(definitions.NOT_IMPLEMENTED)
 
     def combine(self, mother_gene: Gene, father_gene: Gene):
-        raise Exception(ga_model.definitions.NOT_IMPLEMENTED)
+        raise Exception(definitions.NOT_IMPLEMENTED)
     
     def increase_generation(self, offspring1: Chromosome, offspring2: Chromosome, mother: Chromosome, father: Chromosome):
         current_generation = mother.chromosome_generation

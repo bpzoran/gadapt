@@ -1,9 +1,9 @@
 from ast import List
 import random
-from ga_model.chromosome import Chromosome
-from ga_model.ga_options import GAOptions
-from mutation.population_mutation.base_population_mutator import BasePopulationMutator
-from sampling.base_sampling import BaseSampling
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.ga_options import GAOptions
+from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
+from gadapt.sampling.base_sampling import BaseSampling
 
 class ParentsDiversityPopulationMutator(BasePopulationMutator):
         

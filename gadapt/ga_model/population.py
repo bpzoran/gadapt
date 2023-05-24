@@ -1,22 +1,21 @@
-from selectors import BaseSelector
 from typing import List, Tuple
-from exit_check.base_exit_checker import BaseExitChecker
-from cost_finding.base_cost_finder import BaseCostFinder
-from crossover.base_crossover import BaseCrossover
-from ga_model.chromosome import Chromosome
-from ga_model.ga_options import GAOptions
-from ga_model.gene import Gene
-from ga_model.genetic_variable import GeneticVariable
-from immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
-from immigration.population_immigration.base_population_immigrator import BasePopulationImmigrator
-from mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
-from mutation.population_mutation.base_population_mutator import BasePopulationMutator
-from mutation.population_mutation.composed_population_mutator import ComposedPopulationMutator
+from gadapt.exit_check.base_exit_checker import BaseExitChecker
+from gadapt.cost_finding.base_cost_finder import BaseCostFinder
+from gadapt.crossover.base_crossover import BaseCrossover
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.ga_options import GAOptions
+from gadapt.ga_model.gene import Gene
+from gadapt.ga_model.genetic_variable import GeneticVariable
+from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
+from gadapt.immigration.population_immigration.base_population_immigrator import BasePopulationImmigrator
+from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
+from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
+from gadapt.mutation.population_mutation.composed_population_mutator import ComposedPopulationMutator
 from sklearn.preprocessing import MinMaxScaler
-from variable_update.base_variable_updater import BaseVariableUpdater
-import string_operation.ga_strings
+from gadapt.variable_update.base_variable_updater import BaseVariableUpdater
+import gadapt.string_operation.ga_strings as ga_strings
 from datetime import datetime
-import ga_model.definitions
+import gadapt.ga_model.definitions as definitions
 
 class Population:
 
@@ -27,7 +26,7 @@ class Population:
                  cost_finder: BaseCostFinder,
                  population_immigrator: BasePopulationImmigrator,
                  chromosome_immigrator: BaseChromosomeImmigrator,
-                 selector: BaseSelector,
+                 selector,
                  crossover: BaseCrossover,
                  variable_updater: BaseVariableUpdater):
         if options.population_size < 4:
@@ -75,10 +74,10 @@ class Population:
             self.add_new_chromosome()
 
     def to_string(self):
-        return string_operation.ga_strings.population_to_string(self)
+        return ga_strings.population_to_string(self)
 
     def set_init_values(self):
-        float_init_value = ga_model.definitions.FLOAT_NAN
+        float_init_value = definitions.FLOAT_NAN
         self.avg_cost = float_init_value
         self.previous_avg_cost = float_init_value
         self.min_cost = float_init_value
@@ -179,11 +178,11 @@ class Population:
         self._cost_finder = value
 
     @property
-    def selector(self) -> BaseSelector:
+    def selector(self):
         return self._selector
 
     @selector.setter
-    def selector(self, value: BaseSelector):
+    def selector(self, value):
         self._selector = value
 
     @property

@@ -1,6 +1,6 @@
 from typing import List
-from ga_model.chromosome import Chromosome
-from immigration.population_immigration.base_population_immigrator import BasePopulationImmigrator
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.immigration.population_immigration.base_population_immigrator import BasePopulationImmigrator
 
 class CommonPopulationImmigrator(BasePopulationImmigrator):
 

@@ -1,4 +1,4 @@
-from exit_check.base_exit_checker import BaseExitChecker
+from gadapt.exit_check.base_exit_checker import BaseExitChecker
 
 class RequestedCostExitChecker(BaseExitChecker):
     def __init__(self, requested_cost: float) -> None:

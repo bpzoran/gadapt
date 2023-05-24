@@ -1,18 +1,18 @@
 from ast import List
 import math
-from ga_model.chromosome import Chromosome
-from ga_model.ga_options import GAOptions
-from mutation.population_mutation.base_population_mutator import BasePopulationMutator
-import utils.ga_utils
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.ga_options import GAOptions
+from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
+import gadapt.utils.ga_utils as ga_utils
 import statistics as stat
-import ga_model.definitions
+import gadapt.ga_model.definitions as definitions
 
 class CostDiversityPopulationMutator(BasePopulationMutator):
         
     def __init__(self, options: GAOptions, population_mutator_for_execution: BasePopulationMutator) -> None:
         super().__init__(options)
         self.population_mutator_for_execution = population_mutator_for_execution
-        self.first_cost = ga_model.definitions.FLOAT_NAN
+        self.first_cost = definitions.FLOAT_NAN
         
     @property
     def first_cost(self) -> float:
@@ -42,7 +42,7 @@ class CostDiversityPopulationMutator(BasePopulationMutator):
                 #current_costs.append(c.cost_value)  
                 current_costs.append(c.cost_value - current_min_value.cost_value) 
             stddev = stat.stdev(current_costs)
-            avg = abs(utils.ga_utils.average(current_costs))
+            avg = abs(ga_utils.average(current_costs))
             if avg == 0:
                 rel_stddev = 0
             else:

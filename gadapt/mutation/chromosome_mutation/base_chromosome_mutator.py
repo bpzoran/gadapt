@@ -1,5 +1,5 @@
 from typing import List
-import ga_model.definitions
+import gadapt.ga_model.definitions as definitions
 class BaseChromosomeMutator:    
     
     def mutate(self, c, number_of_mutation_genes: int):
@@ -8,7 +8,7 @@ class BaseChromosomeMutator:
         self.chromosome_mutated(c)
     
     def mutate_chromosome(self, c, number_of_mutation_genes: int):
-        raise Exception(ga_model.definitions.NOT_IMPLEMENTED)
+        raise Exception(definitions.NOT_IMPLEMENTED)
     
     def gene_mutated(self, g, c):
         c.mutated_variables_id_list.append(g.genetic_variable.variable_id)        

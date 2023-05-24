@@ -1,6 +1,6 @@
 import sys
 from typing import List
-from ga_model.genetic_variable import GeneticVariable
+from gadapt.ga_model.genetic_variable import GeneticVariable
 class GAOptions():
    
     def __init__(self, ga) -> None:

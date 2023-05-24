@@ -1,18 +1,18 @@
 from typing import List
-from ga_model.gene import Gene
-from ga_model.genetic_variable import GeneticVariable
-from ga_model.ranking_model import RankingModel
-from immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
-from mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
-import string_operation.ga_strings
-import ga_model.definitions
+from gadapt.ga_model.gene import Gene
+from gadapt.ga_model.genetic_variable import GeneticVariable
+from gadapt.ga_model.ranking_model import RankingModel
+from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
+from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
+import gadapt.ga_model.definitions as definitions
+import gadapt.string_operation.ga_strings as ga_strings
 class Chromosome (RankingModel):
     
     def __init__(self, mutator: BaseChromosomeMutator, immigrator: BaseChromosomeImmigrator, population_generation: int):
         super().__init__()
         self._mutator = mutator
         self._immigrator = immigrator
-        self.cost_value = ga_model.definitions.FLOAT_NAN
+        self.cost_value = definitions.FLOAT_NAN
         self._is_immigrant = False
         self.population_generation = population_generation
         self._chromosome_id = None
@@ -50,7 +50,7 @@ class Chromosome (RankingModel):
         self.genes.clear()
 
     def to_string(self):
-        return string_operation.ga_strings.chromosome_to_string(self)
+        return ga_strings.chromosome_to_string(self)
 
     def set_chromosome_string(self, value: str):
         if value is None:
@@ -133,7 +133,7 @@ class Chromosome (RankingModel):
     def father_id(self, value: int):
         self._father_id = value
 
-    def add_gene(self, gen_var: GeneticVariable, gen_var_value: float = ga_model.definitions.FLOAT_NAN):
+    def add_gene(self, gen_var: GeneticVariable, gen_var_value: float = definitions.FLOAT_NAN):
         g = Gene(gen_var, gen_var_value)
         self.append(g)
 

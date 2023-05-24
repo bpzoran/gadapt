@@ -1,10 +1,10 @@
 import random
-import ga_model.definitions
+import gadapt.ga_model.definitions as definitions
 class GeneticVariable:
 
     def __init__(self, id: int) -> None:
         self.variable_id = id
-        self._standard_deviation = ga_model.definitions.FLOAT_NAN
+        self._standard_deviation = definitions.FLOAT_NAN
     
     def __eq__(self, other):
         if not isinstance(other, GeneticVariable):

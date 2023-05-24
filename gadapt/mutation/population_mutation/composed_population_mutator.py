@@ -1,7 +1,7 @@
 from ast import List
 import random
-from ga_model.ga_options import GAOptions
-from mutation.population_mutation.base_population_mutator import BasePopulationMutator
+from gadapt.ga_model.ga_options import GAOptions
+from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
 
 class ComposedPopulationMutator(BasePopulationMutator):
         

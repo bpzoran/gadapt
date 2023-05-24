@@ -1,6 +1,6 @@
 import statistics as stat
-from ga_model.genetic_variable import GeneticVariable
-import utils.ga_utils
+from gadapt.ga_model.genetic_variable import GeneticVariable
+import gadapt.utils.ga_utils as ga_utils
 
 class CommonVariableUpdater:
     def update_variables(self, population):
@@ -41,6 +41,6 @@ class CommonVariableUpdater:
                 continue
             scaled_values = scale_values(key, values_per_variables[key])
             stddev = stat.stdev(scaled_values)
-            avg_val = utils.ga_utils.average(scaled_values)
+            avg_val = ga_utils.average(scaled_values)
             rel_st_dev = stddev / avg_val
             key.relative_standard_deviation = rel_st_dev

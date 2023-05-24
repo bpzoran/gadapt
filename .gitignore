@@ -158,3 +158,4 @@ cython_debug/
 
 # VSCode
 .vscode
+/test_functions.py

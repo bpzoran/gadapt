@@ -1,6 +1,6 @@
-from validation.base_options_validator import BaseOptionsValidator
-import ga_model.definitions
-import ga_model.definitions
+from gadapt.validation.base_options_validator import BaseOptionsValidator
+import gadapt.ga_model.definitions as definitions
+import gadapt.ga_model.definitions as definitions
 class CommonOptionsValidator(BaseOptionsValidator):
 
     def __init__(self, options) -> None:
@@ -134,8 +134,8 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif not isinstance(self.options.chromosome_mutation, str):
             self.add_message("Chromosome Mutation must be type str!")
             rslt &= False  
-        elif  self.options.chromosome_mutation not in ga_model.definitions.CHROMOSOME_MUTATOR_STRINGS:
-            self.add_message("Invalid value of Chromosome Mutation: {0}. Allowed values: {1}".format(self.options.chromosome_mutation, self.get_allowed_values(ga_model.definitions.CHROMOSOME_MUTATOR_STRINGS)))
+        elif  self.options.chromosome_mutation not in definitions.CHROMOSOME_MUTATOR_STRINGS:
+            self.add_message("Invalid value of Chromosome Mutation: {0}. Allowed values: {1}".format(self.options.chromosome_mutation, self.get_allowed_values(definitions.CHROMOSOME_MUTATOR_STRINGS)))
             rslt &= False   
         if self.options.exit_check is None:
             self.add_message("Exit Check must not be None!")
@@ -143,10 +143,10 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif not isinstance(self.options.exit_check, str):
             self.add_message("Exit Check must be type str!")
             rslt &= False
-        elif self.options.exit_check not in ga_model.definitions.EXIT_CRITERIA_STRINGS:
-            self.add_message("Invalid value of Exit Check: {0}. Allowed values: {1}".format(self.options.exit_check, self.get_allowed_values(ga_model.definitions.EXIT_CRITERIA_STRINGS)))
+        elif self.options.exit_check not in definitions.EXIT_CRITERIA_STRINGS:
+            self.add_message("Invalid value of Exit Check: {0}. Allowed values: {1}".format(self.options.exit_check, self.get_allowed_values(definitions.EXIT_CRITERIA_STRINGS)))
             rslt &= False
-        if self.options.chromosome_mutation == ga_model.definitions.CROSS_DIVERSITY:
+        if self.options.chromosome_mutation == definitions.CROSS_DIVERSITY:
             if self.options.cross_diversity_mutation_gene_selection is None:
                 self.add_message("Cross Diversity Mutation Gene Selection must not be None!")
                 rslt &= False
@@ -167,7 +167,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif not isinstance(self.options.must_mutate_for_same_parents, bool):
             self.add_message("Must Mutate For Same Parents must be type bool!")
             rslt &= False 
-        if self.options.population_mutation == ga_model.definitions.COST_DIVERSITY or ga_model.definitions.PARENTS_DIVERSITY in self.options.population_mutation:
+        if self.options.population_mutation == definitions.COST_DIVERSITY or definitions.PARENTS_DIVERSITY in self.options.population_mutation:
             if self.options.parent_diversity_mutation_chromosome_selection is None:
                 self.add_message("Parent Diversity Mutation Chromosome Selection must not be None!")
                 rslt &= False
@@ -182,14 +182,14 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif not isinstance(self.options.population_mutation, str):
             self.add_message("Population Mutation must be type str!")
             rslt &= False
-        elif ga_model.definitions.PARAM_SEPARATOR in self.options.population_mutation:
-            mutator_strings = [ms.strip() for ms in self.options.population_mutation.split(ga_model.definitions.PARAM_SEPARATOR)]
+        elif definitions.PARAM_SEPARATOR in self.options.population_mutation:
+            mutator_strings = [ms.strip() for ms in self.options.population_mutation.split(definitions.PARAM_SEPARATOR)]
             for mutator_string in mutator_strings:
-                if mutator_string not in ga_model.definitions.POPULATION_MUTATOR_STRINGS:
-                    self.add_message("Invalid value of Population Mutation: {0}. Allowed values: {1}".format(mutator_string, self.get_allowed_values(ga_model.definitions.POPULATION_MUTATOR_STRINGS)))
+                if mutator_string not in definitions.POPULATION_MUTATOR_STRINGS:
+                    self.add_message("Invalid value of Population Mutation: {0}. Allowed values: {1}".format(mutator_string, self.get_allowed_values(definitions.POPULATION_MUTATOR_STRINGS)))
                     rslt &= False
-        elif self.options.population_mutation not in ga_model.definitions.POPULATION_MUTATOR_STRINGS:
-            self.add_message("Invalid value of Population Mutation: {0}. Allowed values: {1}".format(self.options.population_mutation, self.get_allowed_values(ga_model.definitions.POPULATION_MUTATOR_STRINGS)))
+        elif self.options.population_mutation not in definitions.POPULATION_MUTATOR_STRINGS:
+            self.add_message("Invalid value of Population Mutation: {0}. Allowed values: {1}".format(self.options.population_mutation, self.get_allowed_values(definitions.POPULATION_MUTATOR_STRINGS)))
             rslt &= False
         if self.options.parent_selection is None:
             self.add_message("Parent Selection must not be None!")
@@ -217,11 +217,11 @@ class CommonOptionsValidator(BaseOptionsValidator):
         return rslt
     
     def validate_selection(self, selection_string, selection_type, comparing_number, group_size_error_message) -> bool:
-        selection_strings = selection_string.split(ga_model.definitions.PARAM_SEPARATOR)
-        if len(selection_strings) > 2 or (len(selection_strings) > 1 and selection_strings[0] != ga_model.definitions.TOURNAMENT):
+        selection_strings = selection_string.split(definitions.PARAM_SEPARATOR)
+        if len(selection_strings) > 2 or (len(selection_strings) > 1 and selection_strings[0] != definitions.TOURNAMENT):
             self.add_message("Invalid {0} value: {1}".format(selection_type, selection_string))
             return False
-        if selection_strings[0] == ga_model.definitions.TOURNAMENT and len(selection_strings) > 1:
+        if selection_strings[0] == definitions.TOURNAMENT and len(selection_strings) > 1:
             group_size= selection_strings[1]
             n_group_size = -1
             try:
@@ -238,8 +238,8 @@ class CommonOptionsValidator(BaseOptionsValidator):
             elif int(n_group_size) > comparing_number:
                 self.add_message(group_size_error_message)
                 return False
-        if not selection_strings[0] in ga_model.definitions.SELECTION_STRINGS:
-            self.add_message("Invalid {0} value: {1}. Allowed values: {2}".format(selection_type, selection_string, self.get_allowed_values(ga_model.definitions.SELECTION_STRINGS)))
+        if not selection_strings[0] in definitions.SELECTION_STRINGS:
+            self.add_message("Invalid {0} value: {1}. Allowed values: {2}".format(selection_type, selection_string, self.get_allowed_values(definitions.SELECTION_STRINGS)))
             return False
         return True
     

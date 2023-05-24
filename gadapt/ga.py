@@ -1,28 +1,28 @@
 import sys
-from execution.ga_executor import GAExecutor
-from factory.ga_factory import GAFactory
-from ga_model.genetic_variable import GeneticVariable
-from ga_model.ga_options import GAOptions
-from ga_model.ga_results import GAResults
-from ga_model.population import Population
-import utils.ga_utils
-import ga_model.definitions
+from gadapt.execution.ga_executor import GAExecutor
+from gadapt.factory.ga_factory import GAFactory
+from gadapt.ga_model.genetic_variable import GeneticVariable
+from gadapt.ga_model.ga_options import GAOptions
+from gadapt.ga_model.ga_results import GAResults
+from gadapt.ga_model.population import Population
+import gadapt.utils.ga_utils as ga_utils
+import gadapt.ga_model.definitions as definitions
 
 class GA:
     def __init__(self,
                  cost_function = None,
                  population_size = 64, 
-                 exit_check = ga_model.definitions.AVG_COST,
+                 exit_check = definitions.AVG_COST,
                  requested_cost = sys.float_info.max,
                  max_attempt_no = 10,
-                 parent_selection = ga_model.definitions.ROULETTE_WHEEL,
-                 population_mutation = ga_model.definitions.COST_DIVERSITY, 
+                 parent_selection = definitions.ROULETTE_WHEEL,
+                 population_mutation = definitions.COST_DIVERSITY, 
                  number_of_mutation_chromosomes = 1,    
-                 parent_diversity_mutation_chromosome_selection = ga_model.definitions.ROULETTE_WHEEL, 
+                 parent_diversity_mutation_chromosome_selection = definitions.ROULETTE_WHEEL, 
                  must_mutate_for_same_parents = True,
-                 chromosome_mutation = ga_model.definitions.CROSS_DIVERSITY,                                        
+                 chromosome_mutation = definitions.CROSS_DIVERSITY,                                        
                  number_of_mutation_genes = 1,                     
-                 cross_diversity_mutation_gene_selection = ga_model.definitions.ROULETTE_WHEEL,
+                 cross_diversity_mutation_gene_selection = definitions.ROULETTE_WHEEL,
                  immigration_number = 0,                                                                                   
                  logging = False,                                                              
                  timeout = 120
@@ -57,7 +57,7 @@ class GA:
     
     @population_size.setter
     def population_size(self, value: int):
-        self._population_size = utils.ga_utils.try_get_int(value)
+        self._population_size = ga_utils.try_get_int(value)
 
     def add(self, min_value: float, max_value:float, step: float=0.01):    
         if (not isinstance(min_value, float) and not isinstance(min_value, int)) or (not isinstance(max_value, float) and not isinstance(max_value, int)):
@@ -83,7 +83,7 @@ class GA:
     
     @number_of_mutation_genes.setter
     def number_of_mutation_genes(self, value: int):
-        self._number_of_mutation_genes = utils.ga_utils.try_get_int(value)
+        self._number_of_mutation_genes = ga_utils.try_get_int(value)
 
     @property
     def number_of_mutation_chromosomes(self) -> int:
@@ -92,7 +92,7 @@ class GA:
     @number_of_mutation_chromosomes.setter
     def number_of_mutation_chromosomes(self, value: int):
         first_time = self._number_of_mutation_chromosomes == -1
-        self._number_of_mutation_chromosomes = utils.ga_utils.try_get_int(value)
+        self._number_of_mutation_chromosomes = ga_utils.try_get_int(value)
         if not first_time:
             self._number_of_mutation_chromosomes_changed = True
 
@@ -102,7 +102,7 @@ class GA:
     
     @immigration_number.setter
     def immigration_number(self, value: int):
-        self._immigration_number = utils.ga_utils.try_get_int(value)
+        self._immigration_number = ga_utils.try_get_int(value)
     
     @property
     def population_mutation(self) -> str:
@@ -110,7 +110,7 @@ class GA:
 
     @population_mutation.setter
     def population_mutation(self, value: str):
-        self._population_mutation = utils.ga_utils.prepare_string(value)
+        self._population_mutation = ga_utils.prepare_string(value)
 
     @property
     def parent_diversity_mutation_chromosome_selection(self) -> str:
@@ -118,7 +118,7 @@ class GA:
 
     @parent_diversity_mutation_chromosome_selection.setter
     def parent_diversity_mutation_chromosome_selection(self, value: str):
-        self._parent_diversity_mutation_chromosome_selection = utils.ga_utils.prepare_string(value)
+        self._parent_diversity_mutation_chromosome_selection = ga_utils.prepare_string(value)
 
     @property
     def chromosome_mutation(self) -> str:
@@ -126,7 +126,7 @@ class GA:
 
     @chromosome_mutation.setter
     def chromosome_mutation(self, value: str):
-        self._chromosome_mutation = utils.ga_utils.prepare_string(value)
+        self._chromosome_mutation = ga_utils.prepare_string(value)
 
     @property
     def cross_diversity_mutation_gene_selection(self) -> str:
@@ -134,7 +134,7 @@ class GA:
 
     @cross_diversity_mutation_gene_selection.setter
     def cross_diversity_mutation_gene_selection(self, value: str):
-        self._cross_diversity_mutation_gene_selection = utils.ga_utils.prepare_string(value)
+        self._cross_diversity_mutation_gene_selection = ga_utils.prepare_string(value)
 
     @property
     def max_attempt_no(self) -> int:
@@ -142,7 +142,7 @@ class GA:
 
     @max_attempt_no.setter
     def max_attempt_no(self, value: int):
-        self._max_attempt_no = utils.ga_utils.try_get_int(value)
+        self._max_attempt_no = ga_utils.try_get_int(value)
 
     @property
     def exit_check(self) -> str:
@@ -150,7 +150,7 @@ class GA:
 
     @exit_check.setter
     def exit_check(self, value: str):
-        self._exit_check = utils.ga_utils.prepare_string(value)
+        self._exit_check = ga_utils.prepare_string(value)
 
     @property
     def parent_selection(self) -> str:
@@ -158,7 +158,7 @@ class GA:
 
     @parent_selection.setter
     def parent_selection(self, value: str):
-        self._parent_selection = utils.ga_utils.prepare_string(value)
+        self._parent_selection = ga_utils.prepare_string(value)
 
     @property
     def requested_cost(self) -> float:
@@ -166,7 +166,7 @@ class GA:
 
     @requested_cost.setter
     def requested_cost(self, value: float):
-        self._requested_cost = utils.ga_utils.try_get_float(value)
+        self._requested_cost = ga_utils.try_get_float(value)
 
     @property
     def logging(self) -> bool:
@@ -174,7 +174,7 @@ class GA:
     
     @logging.setter
     def logging(self, value: bool):
-        self._logging = utils.ga_utils.try_get_bool(value)
+        self._logging = ga_utils.try_get_bool(value)
 
     @property
     def must_mutate_for_same_parents(self) -> bool:
@@ -182,7 +182,7 @@ class GA:
     
     @must_mutate_for_same_parents.setter
     def must_mutate_for_same_parents(self, value: bool):
-        self._must_mutate_for_same_parents = utils.ga_utils.try_get_bool(value)
+        self._must_mutate_for_same_parents = ga_utils.try_get_bool(value)
     
     @property
     def timeout(self) -> int:
@@ -190,5 +190,5 @@ class GA:
     
     @timeout.setter
     def timeout(self, value: int):
-        self._timeout = utils.ga_utils.try_get_int(value)
+        self._timeout = ga_utils.try_get_int(value)
     

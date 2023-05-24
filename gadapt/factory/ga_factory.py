@@ -1,39 +1,39 @@
-from exit_check.avg_cost_exit_checker import AvgCostExitChecker
-from exit_check.base_exit_checker import BaseExitChecker
-from exit_check.min_cost_exit_checker import MinCostExitChecker
-from exit_check.requested_cost_exit_checker import RequestedCostExitChecker
-from cost_finding.base_cost_finder import BaseCostFinder
-from cost_finding.common_cost_finder import CommonCostFinder
-from crossover.base_crossover import BaseCrossover
-from crossover.uniform_crossover import UniformCrossover
-from ga_model.ga_options import GAOptions
-from immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
-from immigration.chromosome_immigration.random_chromosome_immigrator import RandomChromosomeImmigrator
-from immigration.population_immigration.base_population_immigrator import BasePopulationImmigrator
-from immigration.population_immigration.common_population_immigrator import CommonPopulationImmigrator
-from mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
-from mutation.chromosome_mutation.cross_diversity_chromosome_mutator import CrossDiversityChromosomeMutator
-from mutation.chromosome_mutation.random_chromosome_mutator import RandomChromosomeMutator
-from mutation.population_mutation.base_population_mutator import BasePopulationMutator
-from mutation.population_mutation.composed_population_mutator import ComposedPopulationMutator
-from mutation.population_mutation.cost_diversity.cost_diversity_population_mutator import CostDiversityPopulationMutator
-from mutation.population_mutation.parents_diversity_population_mutator import ParentsDiversityPopulationMutator
-from mutation.population_mutation.previous_cost_diversity.previous_cost_diversity_population_mutator import PreviousCostDiversityPopulationMutator
-from mutation.population_mutation.previous_cost_diversity.previous_cost_diversity_property_taker import AvgPreviousCostCostDiversityPropertyTaker, BasePreviousCostDiversityPropertyTaker, MinPreviousCostCostDiversityPropertyTaker
-from mutation.population_mutation.random_population_mutator import RandomPopulationMutator
-from parent_selection.base_parent_selector import BaseParentSelector
-from parent_selection.sampling_parent_selector import SamplingParentSelector
-from sampling.base_sampling import BaseSampling
-from sampling.from_top_to_bottom_sampling import FromTopToBottomSampling
-from sampling.random_sampling import RandomSampling
-from sampling.roulette_wheel_sampling import RouletteWheelSampling
-from sampling.tournament_sampling import TournamentSampling
-from validation.base_options_validator import BaseOptionsValidator
-from validation.common_options_validator import CommonOptionsValidator
-from gene_combination.base_gene_combination import BaseGeneCombination
-from gene_combination.blending_gene_combination import BlendingGeneCombination
-from variable_update.common_variable_updater import CommonVariableUpdater
-import ga_model.definitions
+from gadapt.exit_check.avg_cost_exit_checker import AvgCostExitChecker
+from gadapt.exit_check.base_exit_checker import BaseExitChecker
+from gadapt.exit_check.min_cost_exit_checker import MinCostExitChecker
+from gadapt.exit_check.requested_cost_exit_checker import RequestedCostExitChecker
+from gadapt.cost_finding.base_cost_finder import BaseCostFinder
+from gadapt.cost_finding.common_cost_finder import CommonCostFinder
+from gadapt.crossover.base_crossover import BaseCrossover
+from gadapt.crossover.uniform_crossover import UniformCrossover
+from gadapt.ga_model.ga_options import GAOptions
+from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
+from gadapt.immigration.chromosome_immigration.random_chromosome_immigrator import RandomChromosomeImmigrator
+from gadapt.immigration.population_immigration.base_population_immigrator import BasePopulationImmigrator
+from gadapt.immigration.population_immigration.common_population_immigrator import CommonPopulationImmigrator
+from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
+from gadapt.mutation.chromosome_mutation.cross_diversity_chromosome_mutator import CrossDiversityChromosomeMutator
+from gadapt.mutation.chromosome_mutation.random_chromosome_mutator import RandomChromosomeMutator
+from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
+from gadapt.mutation.population_mutation.composed_population_mutator import ComposedPopulationMutator
+from gadapt.mutation.population_mutation.cost_diversity.cost_diversity_population_mutator import CostDiversityPopulationMutator
+from gadapt.mutation.population_mutation.parents_diversity_population_mutator import ParentsDiversityPopulationMutator
+from gadapt.mutation.population_mutation.previous_cost_diversity.previous_cost_diversity_population_mutator import PreviousCostDiversityPopulationMutator
+from gadapt.mutation.population_mutation.previous_cost_diversity.previous_cost_diversity_property_taker import AvgPreviousCostCostDiversityPropertyTaker, BasePreviousCostDiversityPropertyTaker, MinPreviousCostCostDiversityPropertyTaker
+from gadapt.mutation.population_mutation.random_population_mutator import RandomPopulationMutator
+from gadapt.parent_selection.base_parent_selector import BaseParentSelector
+from gadapt.parent_selection.sampling_parent_selector import SamplingParentSelector
+from gadapt.sampling.base_sampling import BaseSampling
+from gadapt.sampling.from_top_to_bottom_sampling import FromTopToBottomSampling
+from gadapt.sampling.random_sampling import RandomSampling
+from gadapt.sampling.roulette_wheel_sampling import RouletteWheelSampling
+from gadapt.sampling.tournament_sampling import TournamentSampling
+from gadapt.validation.base_options_validator import BaseOptionsValidator
+from gadapt.validation.common_options_validator import CommonOptionsValidator
+from gadapt.gene_combination.base_gene_combination import BaseGeneCombination
+from gadapt.gene_combination.blending_gene_combination import BlendingGeneCombination
+from gadapt.variable_update.common_variable_updater import CommonVariableUpdater
+import gadapt.ga_model.definitions as definitions
 
 
 class GAFactory:
@@ -58,30 +58,30 @@ class GAFactory:
         return RandomChromosomeImmigrator()
 
     def get_chromosome_mutator(self) -> BaseChromosomeMutator:
-        if self.ga_options.chromosome_mutation.strip() == ga_model.definitions.CROSS_DIVERSITY:
+        if self.ga_options.chromosome_mutation.strip() == definitions.CROSS_DIVERSITY:
             return CrossDiversityChromosomeMutator(self.get_sampling_method(self.ga_options.cross_diversity_mutation_gene_selection))
-        elif self.ga_options.chromosome_mutation.strip() == ga_model.definitions.RANDOM:
+        elif self.ga_options.chromosome_mutation.strip() == definitions.RANDOM:
             return RandomChromosomeMutator()
         else:
             raise Exception("unknown chromosome mutation")
 
     def population_mutator_options_validation(self):
-        mutator_strings = self.ga_options.population_mutation.split(ga_model.definitions.PARAM_SEPARATOR)
+        mutator_strings = self.ga_options.population_mutation.split(definitions.PARAM_SEPARATOR)
         for s in mutator_strings:
-            if not s.strip() in ga_model.definitions.POPULATION_MUTATOR_STRINGS:
+            if not s.strip() in definitions.POPULATION_MUTATOR_STRINGS:
                 raise Exception(s + " is not defined as option for population mutation")
 
     def get_population_mutator(self, population_mutator_string=None) -> BasePopulationMutator:
         self.population_mutator_options_validation()
         if population_mutator_string is None:
             population_mutator_string = self.ga_options.population_mutation.strip()
-        if population_mutator_string.find(ga_model.definitions.PARAM_SEPARATOR) > -1:
+        if population_mutator_string.find(definitions.PARAM_SEPARATOR) > -1:
             return self.get_population_mutator_combined()
-        elif population_mutator_string == ga_model.definitions.COST_DIVERSITY:
+        elif population_mutator_string == definitions.COST_DIVERSITY:
             return CostDiversityPopulationMutator(self.ga_options, ParentsDiversityPopulationMutator(self.get_sampling_method(self.ga_options.parent_diversity_mutation_chromosome_selection), self.ga_options))
-        elif population_mutator_string == ga_model.definitions.PARENTS_DIVERSITY:
+        elif population_mutator_string == definitions.PARENTS_DIVERSITY:
             return ParentsDiversityPopulationMutator(self.get_sampling_method(self.ga_options.parent_diversity_mutation_chromosome_selection), self.ga_options)
-        elif population_mutator_string == ga_model.definitions.RANDOM:
+        elif population_mutator_string == definitions.RANDOM:
             return RandomPopulationMutator(self.ga_options)
         else:
             raise Exception("unknown population mutation")
@@ -90,7 +90,7 @@ class GAFactory:
         return AvgPreviousCostCostDiversityPropertyTaker()
 
     def get_population_mutator_combined(self) -> ComposedPopulationMutator:
-        mutator_strings = [ms.strip() for ms in self.ga_options.population_mutation.split(ga_model.definitions.PARAM_SEPARATOR)]
+        mutator_strings = [ms.strip() for ms in self.ga_options.population_mutation.split(definitions.PARAM_SEPARATOR)]
         if (self.is_cost_diversity_random(mutator_strings)):
             return CostDiversityPopulationMutator(self.ga_options, RandomPopulationMutator(self.ga_options))
         if (self.is_cost_diversity_parents_diversity(mutator_strings)):
@@ -108,17 +108,17 @@ class GAFactory:
         return composedPopulationMutator
 
     def is_cost_diversity_random(self, mutator_strings: list):
-        if len(mutator_strings) == 2 and ga_model.definitions.COST_DIVERSITY in mutator_strings and ga_model.definitions.RANDOM in mutator_strings:
+        if len(mutator_strings) == 2 and definitions.COST_DIVERSITY in mutator_strings and definitions.RANDOM in mutator_strings:
             return True
         return False
 
     def is_cost_diversity_parents_diversity(self, mutator_strings: list):
-        if len(mutator_strings) == 2 and ga_model.definitions.COST_DIVERSITY in mutator_strings and ga_model.definitions.PARENTS_DIVERSITY in mutator_strings:
+        if len(mutator_strings) == 2 and definitions.COST_DIVERSITY in mutator_strings and definitions.PARENTS_DIVERSITY in mutator_strings:
             return True
         return False
 
     def is_cost_diversity_parents_diversity_random(self, mutator_strings: list):
-        if len(mutator_strings) == 3 and ga_model.definitions.COST_DIVERSITY in mutator_strings and ga_model.definitions.PARENTS_DIVERSITY in mutator_strings and ga_model.definitions.RANDOM in mutator_strings:
+        if len(mutator_strings) == 3 and definitions.COST_DIVERSITY in mutator_strings and definitions.PARENTS_DIVERSITY in mutator_strings and definitions.RANDOM in mutator_strings:
             return True
         return False
 
@@ -127,7 +127,7 @@ class GAFactory:
 
     def get_sampling_method(self, str) -> BaseSampling:
         str_value = str
-        sampling_method_strings = str.split(ga_model.definitions.PARAM_SEPARATOR)
+        sampling_method_strings = str.split(definitions.PARAM_SEPARATOR)
         other_value = None
         if len(sampling_method_strings) > 1:
             str_value = sampling_method_strings[0]
@@ -135,11 +135,11 @@ class GAFactory:
                 other_value = int(sampling_method_strings[1])
             except:
                 pass
-        if str_value == ga_model.definitions.TOURNAMENT:
+        if str_value == definitions.TOURNAMENT:
             return TournamentSampling(other_value)
-        elif str_value == ga_model.definitions.FROM_TOP_TO_BOTTOM:
+        elif str_value == definitions.FROM_TOP_TO_BOTTOM:
             return FromTopToBottomSampling()
-        elif str_value == ga_model.definitions.RANDOM:
+        elif str_value == definitions.RANDOM:
             return RandomSampling()
         return RouletteWheelSampling()
 
@@ -147,9 +147,9 @@ class GAFactory:
         return BlendingGeneCombination()
 
     def get_exit_checker(self) -> BaseExitChecker:
-        if self.ga_options.exit_check == ga_model.definitions.AVG_COST:
+        if self.ga_options.exit_check == definitions.AVG_COST:
             return AvgCostExitChecker(self.ga_options.max_attempt_no)
-        if self.ga_options.exit_check == ga_model.definitions.MIN_COST:
+        if self.ga_options.exit_check == definitions.MIN_COST:
             return MinCostExitChecker(self.ga_options.max_attempt_no)
         return RequestedCostExitChecker(self.ga_options.requested_cost)
 

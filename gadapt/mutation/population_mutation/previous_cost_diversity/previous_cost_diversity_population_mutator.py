@@ -1,11 +1,11 @@
 from ast import List
-from ga_model.chromosome import Chromosome
-from ga_model.ga_options import GAOptions
-from mutation.population_mutation.base_population_mutator import BasePopulationMutator
-from mutation.population_mutation.previous_cost_diversity.previous_cost_diversity_property_taker import BasePreviousCostDiversityPropertyTaker
-import utils.ga_utils
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.ga_options import GAOptions
+from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
+from gadapt.mutation.population_mutation.previous_cost_diversity.previous_cost_diversity_property_taker import BasePreviousCostDiversityPropertyTaker
+import gadapt.utils.ga_utils as ga_utils
 import statistics as stat
-import ga_model.definitions
+import gadapt.ga_model.definitions as definitions
 
 class PreviousCostDiversityPopulationMutator(BasePopulationMutator):
         
@@ -13,7 +13,7 @@ class PreviousCostDiversityPopulationMutator(BasePopulationMutator):
         super().__init__(options)
         self.population_mutator_for_execution = population_mutator_for_execution
         self.property_taker = property_taker
-        self.first_cost = ga_model.definitions.FLOAT_NAN
+        self.first_cost = definitions.FLOAT_NAN
         self.previous_avg_costs: List[float] = []
         self.previous_min_costs: List[float] = []
         self.mutation_rate_sample_number = 10
@@ -47,7 +47,7 @@ class PreviousCostDiversityPopulationMutator(BasePopulationMutator):
             if prev_avg_costs_len < 2:
                 return 0    
             stddev = stat.stdev(previous_costs)
-            rel_stddev = stddev / abs(utils.ga_utils.average(previous_costs))
+            rel_stddev = stddev / abs(ga_utils.average(previous_costs))
             if (rel_stddev > 1):
                 return 0
             return 1 - rel_stddev

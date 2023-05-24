@@ -1,7 +1,7 @@
 import random
 from typing import List
-from ga_model.ranking_model import RankingModel
-from sampling.base_sampling import BaseSampling
+from gadapt.ga_model.ranking_model import RankingModel
+from gadapt.sampling.base_sampling import BaseSampling
 
 class RandomSampling(BaseSampling):
     def prepare_sample(self, lst: List[RankingModel]) -> List[RankingModel]:

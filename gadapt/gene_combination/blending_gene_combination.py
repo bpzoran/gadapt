@@ -1,6 +1,6 @@
 import random
-from ga_model.gene import Gene
-from gene_combination.base_gene_combination import BaseGeneCombination
+from gadapt.ga_model.gene import Gene
+from gadapt.gene_combination.base_gene_combination import BaseGeneCombination
 
 class BlendingGeneCombination(BaseGeneCombination):
     def combine(self, mother_gene: Gene, father_gene: Gene):

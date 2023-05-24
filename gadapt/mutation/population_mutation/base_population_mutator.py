@@ -1,9 +1,9 @@
 import math
 import random
 from typing import List
-from ga_model.chromosome import Chromosome
-from ga_model.ga_options import GAOptions
-import ga_model.definitions
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.ga_options import GAOptions
+import gadapt.ga_model.definitions as definitions
 class BasePopulationMutator:
     
     def __init__(self, options: GAOptions) -> None:
@@ -20,7 +20,7 @@ class BasePopulationMutator:
         self.mutate_population(population, number_of_mutated_chromosomes)
 
     def mutate_population(self, population, number_of_mutated_chromosomes):
-        raise Exception(ga_model.definitions.NOT_IMPLEMENTED)
+        raise Exception(definitions.NOT_IMPLEMENTED)
     
     def get_unallocated_chromosomes(self, population, sort_key_function = None) -> List[Chromosome]:
         def unallocated_chromosomes_condition(c: Chromosome) -> bool:

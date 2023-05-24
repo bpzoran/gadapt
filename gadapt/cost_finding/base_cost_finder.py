@@ -1,8 +1,8 @@
 import sys
 import traceback
 from typing import List
-from ga_model.chromosome import Chromosome
-import ga_model.definitions
+from gadapt.ga_model.chromosome import Chromosome
+import gadapt.ga_model.definitions as definitions
 
 class BaseCostFinder:
     def execute_function(self, cost_function, c: Chromosome):
@@ -19,4 +19,4 @@ class BaseCostFinder:
             c.cost_value = sys.float_info.max
 
     def find_costs_for_chromosome(self, population):
-        raise Exception(ga_model.definitions.NOT_IMPLEMENTED)
+        raise Exception(definitions.NOT_IMPLEMENTED)

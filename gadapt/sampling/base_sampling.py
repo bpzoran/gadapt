@@ -1,6 +1,6 @@
 from typing import List
-from ga_model.ranking_model import RankingModel
-import ga_model.definitions
+from gadapt.ga_model.ranking_model import RankingModel
+import gadapt.ga_model.definitions as definitions
 class BaseSampling:
     def get_sample(self, lst: List[RankingModel], max_num, sort_key=None) -> List[RankingModel]:
         if len(lst) == 0:
@@ -15,4 +15,4 @@ class BaseSampling:
         return self.prepare_sample(lst)
     
     def prepare_sample(self, lst: List[RankingModel]) -> List[RankingModel]:
-        raise Exception(ga_model.definitions.NOT_IMPLEMENTED)
+        raise Exception(definitions.NOT_IMPLEMENTED)

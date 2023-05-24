@@ -1,7 +1,7 @@
 from typing import List, Tuple
-from ga_model.chromosome import Chromosome
-from parent_selection.base_parent_selector import BaseParentSelector
-from sampling.base_sampling import BaseSampling
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.parent_selection.base_parent_selector import BaseParentSelector
+from gadapt.sampling.base_sampling import BaseSampling
 
 
 class SamplingParentSelector(BaseParentSelector):

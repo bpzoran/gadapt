@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-import ga_model.definitions
+import gadapt.ga_model.definitions as definitions
 
 class BaseExitChecker:
     def __init__(self, max_attempt_no: int) -> None:
@@ -30,4 +30,4 @@ class BaseExitChecker:
         return False
     
     def is_exit(self, population) -> bool:
-        raise Exception(ga_model.definitions.NOT_IMPLEMENTED)
+        raise Exception(definitions.NOT_IMPLEMENTED)

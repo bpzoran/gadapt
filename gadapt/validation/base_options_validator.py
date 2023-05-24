@@ -1,6 +1,6 @@
 from typing import List, Tuple
-import ga_model.message_levels
-import ga_model.definitions
+import gadapt.ga_model.message_levels as message_levels
+import gadapt.ga_model.definitions as definitions
 
 class BaseOptionsValidator:
     
@@ -10,7 +10,7 @@ class BaseOptionsValidator:
         self.success = True
     
     def validate(self) -> bool:
-        raise Exception(ga_model.definitions.NOT_IMPLEMENTED)
+        raise Exception(definitions.NOT_IMPLEMENTED)
     
     @property
     def validation_messages(self):
@@ -20,6 +20,6 @@ class BaseOptionsValidator:
     def validation_messages(self, value):
         self._validation_messages = value
 
-    def add_message(self, message, message_level = ga_model.message_levels.ERROR):
+    def add_message(self, message, message_level = message_levels.ERROR):
         self.validation_messages.append((message_level, message))
     

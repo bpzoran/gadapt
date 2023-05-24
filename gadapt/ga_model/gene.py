@@ -1,8 +1,8 @@
 import math
-from ga_model.genetic_variable import GeneticVariable
-from ga_model.ranking_model import RankingModel
-import string_operation.ga_strings
-import ga_model.definitions
+from gadapt.ga_model.genetic_variable import GeneticVariable
+from gadapt.ga_model.ranking_model import RankingModel
+import gadapt.string_operation.ga_strings as ga_strings
+import gadapt.ga_model.definitions as definitions
 class Gene(RankingModel):
 
     def __init__(self, gen_variable, var_value = None):
@@ -10,7 +10,7 @@ class Gene(RankingModel):
         self.genetic_variable = gen_variable        
         self.variable_value = var_value
         self._rank = -1
-        self._cummulative_probability = ga_model.definitions.FLOAT_NAN
+        self._cummulative_probability = definitions.FLOAT_NAN
         if (self.variable_value == None or math.isnan(self.variable_value)):
             self.set_random_value()
 
@@ -18,7 +18,7 @@ class Gene(RankingModel):
         return self.to_string()
     
     def to_string(self):
-        return string_operation.ga_strings.gene_to_string(self)
+        return ga_strings.gene_to_string(self)
 
     @property
     def genetic_variable(self) -> GeneticVariable:

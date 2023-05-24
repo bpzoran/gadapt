@@ -1,10 +1,10 @@
 import logging
 import math
 from typing import List
-from cost_finding.base_cost_finder import BaseCostFinder
-from ga_model.chromosome import Chromosome
-from ga_model.population import Population
-import utils.ga_utils
+from gadapt.cost_finding.base_cost_finder import BaseCostFinder
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.population import Population
+import gadapt.utils.ga_utils as ga_utils
 
 class CommonCostFinder(BaseCostFinder):
     def find_costs_for_chromosome(self, population: Population):
@@ -29,7 +29,7 @@ class CommonCostFinder(BaseCostFinder):
         
     def cost_found_first_time(self, population: Population, better_chromosomes: List[Chromosome] ):
         if math.isnan(population.first_cost):
-            population.first_cost = utils.ga_utils.average([c.cost_value for c in better_chromosomes])
+            population.first_cost = ga_utils.average([c.cost_value for c in better_chromosomes])
             population.population_mutator.after_first_execution(population)
 
     def log_population(self, population: Population):

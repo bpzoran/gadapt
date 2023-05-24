@@ -1,11 +1,11 @@
-import ga_model.definitions
+import gadapt.ga_model.definitions as definitions
 class BaseChromosomeImmigrator:
     def immigrate(self, c):
         self.immigrate_chromosome(c)
         self.chromosome_immigrated(c)
 
     def immigrate_chromosome(self, c):
-        raise Exception(ga_model.definitions.NOT_IMPLEMENTED)
+        raise Exception(definitions.NOT_IMPLEMENTED)
 
     def chromosome_immigrated(self, c):
         c.is_immigrant = True

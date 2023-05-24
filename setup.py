@@ -1,19 +1,15 @@
-from setuptools import setup, find_packages
+import setuptools
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setup(
+setuptools.setup(
     name='gadapt',
-    version='0.1',
-    license='MIT',
+    version='0.2.12',
     author="Zoran Jankovic",
     author_email='bpzoran@yahoo.com',
-    packages=find_packages(),
     url='https://github.com/bpzoran/gadapt',
-    keywords='example project',
-    description="GAdapt: A Python Library for Self-Adaptive Genetic Algorithm.",
+    packages=setuptools.find_packages(),
     long_description=long_description,
-    long_description_content_type="text/markdown",
-
+    description="GAdapt: A Python Library for Self-Adaptive Genetic Algorithm."
 )

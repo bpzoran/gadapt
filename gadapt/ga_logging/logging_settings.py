@@ -3,7 +3,7 @@ import logging
 import os
 from os.path import isfile, join
 import traceback
-from utils.TimeStampFormatter import TimestampFormatter
+from gadapt.utils.TimeStampFormatter import TimestampFormatter
 
 def init_logging(is_logging: bool):
     def get_last_num(s: str) -> int:

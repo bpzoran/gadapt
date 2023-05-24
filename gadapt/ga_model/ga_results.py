@@ -1,5 +1,5 @@
 from typing import List
-import string_operation.ga_strings as ga_strings
+import gadapt.string_operation.ga_strings as ga_strings
 
 class GAResults:
     def __init__(self) -> None:
