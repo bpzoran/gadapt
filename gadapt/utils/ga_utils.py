@@ -31,7 +31,7 @@ def try_get_int(s):
 def try_get_float(s):
     if isinstance(s, float):
         return s
-    if isinstance(s, str):
+    if isinstance(s, str) or isinstance(s, int):
         try:
             n = float(s)
             return n
@@ -42,7 +42,7 @@ def try_get_float(s):
 def try_get_bool(s):
     if isinstance(s, bool):
         return s
-    if isinstance(s, str):
+    if isinstance(s, str) or isinstance(s, int):
         try:
             n = bool(s)
             return n

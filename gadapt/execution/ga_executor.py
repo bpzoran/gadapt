@@ -18,13 +18,7 @@ class GAExecutor:
             init_logging(self.ga_options.logging)                           
         except Exception as ex:
             results.messages.append((message_levels.WARNING, "Logging failed. Error message: {exc}".format(exc=str(ex))))
-            self.ga_options.logging = False
-        validator = self.factory.get_options_validator()
-        validator.validate()
-        if not validator.success:
-            results.success = False
-            results.messages = validator.validation_messages
-            return results
+            self.ga_options.logging = False        
         #try:
         chromosome_mutator = self.factory.get_chromosome_mutator()
         population_mutator = self.factory.get_population_mutator()

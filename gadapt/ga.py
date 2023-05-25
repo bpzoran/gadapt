@@ -7,6 +7,7 @@ from gadapt.ga_model.ga_results import GAResults
 from gadapt.ga_model.population import Population
 import gadapt.utils.ga_utils as ga_utils
 import gadapt.ga_model.definitions as definitions
+from gadapt.validation.common_options_validator import CommonOptionsValidator
 
 class GA:
     def __init__(self,
@@ -17,11 +18,13 @@ class GA:
                  max_attempt_no = 10,
                  parent_selection = definitions.ROULETTE_WHEEL,
                  population_mutation = definitions.COST_DIVERSITY, 
-                 number_of_mutation_chromosomes = 1,    
+                 number_of_mutation_chromosomes = -1,    
+                 percentage_of_mutation_chromosomes = 10.0,
                  parent_diversity_mutation_chromosome_selection = definitions.ROULETTE_WHEEL, 
                  must_mutate_for_same_parents = True,
                  chromosome_mutation = definitions.CROSS_DIVERSITY,                                        
-                 number_of_mutation_genes = 1,                     
+                 number_of_mutation_genes = -1,   
+                 percentage_of_mutations_genes = 10.0,           
                  cross_diversity_mutation_gene_selection = definitions.ROULETTE_WHEEL,
                  immigration_number = 0,                                                                                   
                  logging = False,                                                              
@@ -35,10 +38,10 @@ class GA:
         self.parent_selection = parent_selection
         self.population_mutation = population_mutation
         self.must_mutate_for_same_parents = must_mutate_for_same_parents
-        self._number_of_mutation_chromosomes = -1
         self.number_of_mutation_chromosomes = number_of_mutation_chromosomes
-        self._number_of_mutation_chromosomes_changed = False
+        self.percentage_of_mutation_chromosomes = percentage_of_mutation_chromosomes
         self.number_of_mutation_genes = number_of_mutation_genes
+        self.percentage_of_mutation_genes = percentage_of_mutations_genes
         self.chromosome_mutation = chromosome_mutation        
         self.immigration_number = immigration_number                                              
         self.logging = logging
@@ -48,8 +51,16 @@ class GA:
         self.timeout = timeout 
         self._current_gv_id = 0               
 
-    def execute(self) -> GAResults:        
-        return GAExecutor(GAOptions(self) , GAFactory(self)).execute()
+    def execute(self) -> GAResults:  
+        validator = CommonOptionsValidator(self)
+        validator.validate()
+        if not validator.success:
+            results = GAResults()
+            results.success = False
+            results.messages = validator.validation_messages
+            return results
+        ga_options = GAOptions(self)  
+        return GAExecutor(ga_options, GAFactory(self, ga_options)).execute()
         
     @property
     def population_size(self) -> int:
@@ -86,15 +97,28 @@ class GA:
         self._number_of_mutation_genes = ga_utils.try_get_int(value)
 
     @property
+    def percentage_of_mutation_genes(self) -> float:
+        return self._percentage_of_mutation_genes
+
+    @percentage_of_mutation_genes.setter
+    def percentage_of_mutation_genes(self, value: float):
+        self._percentage_of_mutation_genes = ga_utils.try_get_float(value)
+
+    @property
     def number_of_mutation_chromosomes(self) -> int:
         return self._number_of_mutation_chromosomes
     
     @number_of_mutation_chromosomes.setter
     def number_of_mutation_chromosomes(self, value: int):
-        first_time = self._number_of_mutation_chromosomes == -1
         self._number_of_mutation_chromosomes = ga_utils.try_get_int(value)
-        if not first_time:
-            self._number_of_mutation_chromosomes_changed = True
+
+    @property
+    def percentage_of_mutation_chromosomes(self) -> float:
+        return self._percentage_of_mutation_chromosomes
+
+    @percentage_of_mutation_chromosomes.setter
+    def percentage_of_mutation_chromosomes(self, value: float):
+        self._percentage_of_mutation_chromosomes = ga_utils.try_get_float(value)
 
     @property
     def immigration_number(self) -> int:
