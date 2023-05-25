@@ -7,7 +7,8 @@
 
 # Installation
 To install [GAdapt] use pip, with the following command:
-pip install gadapt
+
+**pip install gadapt**
 
 # Source Code
 The source code is stored on GitHub, on the following address: https://github.com/bpzoran/gadapt
@@ -163,6 +164,6 @@ Supported values:
 		""from_top_to_bottom"" - From Top To Bottom selection algorithm start at the top of the list and selects genes for mutation.	
 		"random" - Random selection algorithm uses a uniform random number generator to select genes for mutation. In this case, selection for mutation will not depend on gene cross-diversity.
 	
-**immigration_number**=0 - Refers to the "Random Immigrants" concepts. It is a strategy that introduces new **immigration_number** number of individuals into the population during the evolution process. These new individuals are generated randomly and injected into the population.
+**immigration_number**=0 - Refers to the "Random Immigrants" concepts. It is a strategy that introduces a certain number of individuals into the population during the evolution process. These new individuals are generated randomly and injected into the population.
 
 **logging** = False - if this parameter has True value, log file is going to be created in the current working directory. The log file contains the flow of genetic algorithm execution, along with values of chromosomes, genes and cost fuctions in each generation
