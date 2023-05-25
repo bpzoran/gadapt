@@ -35,4 +35,18 @@ results = ga.execute()
 
 #Printing results
 print(results)
+
+"""
+Possible output:
+Min cost: -3.370583074871819
+Number of iterations: 286
+Parameter values:
+0: 1.57
+1: 39.27
+2: 86.4
+3: 0.0
+4: 1.0
+5: 3.14
+"""
+
 ```
