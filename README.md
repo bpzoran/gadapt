@@ -1,17 +1,17 @@
 # GAdapt: Self-Adaptive Genetic Algorithm
-**GAdapt** (https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for adaptive mutation of genes and chromosomes.
+**GAdapt** (https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for the adaptive mutation of genes and chromosomes.
 
 # What innovations does GAdapt bring?
-**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on diversity of parents, diversity of cost and cross-diversity of genetic variables in the population. Less diversity increases the possibility of the mutation. Consequently, it increases the accuracy and the performance of the optimization. Default settings provide self-adaptive determination of mutation chromosomes and genes.
+**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost and cross-diversity of genetic variables in the population. Less diversity increases the possibility of mutation. Consequently, it increases the accuracy and the performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
 
 
 # Installation
-To install [GAdapt] use pip, with the following command:
+To install [GAdapt], use pip with the following command:
 
 **pip install gadapt**
 
 # Source Code
-The source code is stored on GitHub, on the following address: https://github.com/bpzoran/gadapt
+The source code is stored on GitHub at the following address: https://github.com/bpzoran/gadapt
 
 # Getting started
 The following example optimizes variable values for a complex trigonometric function.
@@ -54,7 +54,7 @@ Parameter values:
 5: 3.14
 """
 ```
-In this example, genetic algorithm searches for the combination of six parameters which bring the lowest value for the passed function. The only mandatory attribute to the genetic algorithm is cost_function, and other attributes in this example took default values. Parameters to be optimized are added by the "add" method. There are seven parameters to be optimized in this example.
+In this example, the genetic algorithm searches for the combination of six parameters, bringing the lowest value for the passed function. The only mandatory attribute to the genetic algorithm is cost_function, and other attributes in this example took default values. Parameters to be optimized are added by the "add" method. There are seven parameters to be optimized in this example.
 # Parameter Settings
 GAdapt genetic algorithm can receive parameters using constructor, properties, or combined.
 Passing parameters through the class constructor:
