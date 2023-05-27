@@ -148,7 +148,8 @@ Supported values:
 **chromosome_mutation**=*"cross_diversity"* - the type of mutation of genes in chromosomes.  
 Supported values:  
 - *"cross_diversity"* - considers the diversity of genes of the same type in the population. Lower diversity can mean that this genetic variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_selection* parameter.  
-- *"random"* - genes are randomly selected for the mutation  
+- *"random"* - genes are randomly selected for the mutation
+
 **cross_diversity_mutation_gene_selection**=*"roulette_wheel"* - the selection algorithm for mutating chromosomes when *chromosome_mutation* has value *"cross_diversity"*. It only applies when *chromosome_mutation* has value *"cross_diversity"* . It determines the way how genes are to be selected based on the cross-diversity.  
 Supported values:  
 - *"roulette_wheel"* - Roulette Wheel selection algorithm (also known as "Weighted random pairing"). The probabilities assigned to the genes to be mutated are inversely proportional to their cross-diversity. A gene with the lowest cross-diversity has the greatest probability of mutation, while the gene with the highest cross-diversity has the lowest probability of mutation.  
