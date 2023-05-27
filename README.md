@@ -55,6 +55,7 @@ Parameter values:
 3: 0.0
 4: 1.0
 5: 3.14
+6: -1.0
 ```
 
 In this example, the genetic algorithm searches for the combination of six parameters, bringing the lowest value for the passed function. The only mandatory attribute to the genetic algorithm is cost_function, and other attributes in this example took default values. Parameters to be optimized are added by the "add" method. There are seven parameters to be optimized in this example.
