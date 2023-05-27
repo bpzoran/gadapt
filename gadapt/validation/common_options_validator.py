@@ -45,14 +45,14 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif not callable(self.options.cost_function):
             self.add_message("Cost Function must be callable!")
             return False
-        kwargsmin = {}
-        kwargsmax = {}
+        argsmin = {}
+        argsmax = {}
         for v in self.options._genetic_variables:
-            kwargsmin[v.variable_id] = v.min_value
-            kwargsmax[v.variable_id] = v.max_value
+            argsmin[v.variable_id] = v.min_value
+            argsmax[v.variable_id] = v.max_value
         try:
-            func_result_min = self.options.cost_function(kwargsmin)
-            func_result_max = self.options.cost_function(kwargsmin)
+            func_result_min = self.options.cost_function(argsmin)
+            func_result_max = self.options.cost_function(argsmax)
             if not isinstance(func_result_min, float) or not isinstance(func_result_max, float):
                 self.add_message("The function must return float value!")
                 return False
