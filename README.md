@@ -106,9 +106,7 @@ ga.timeout=3600
 Supported values:
 
 *"avg_cost"* - the optimisation exit is triggered when the average cost of the upper half of the population is not improved in the specified number of generations
-
 *"min_cost"* - the optimisation exit is triggered when the minimal cost in the population is not improved in the specified number of generations
-
 *"requested"* - the optimisation exit is triggered when the requested value reached
     
 **timeout** = 120 - a number of seconds after which the genetic algorithm optimisation will exit, regardless of whether *exit_check* criteria is reached.
