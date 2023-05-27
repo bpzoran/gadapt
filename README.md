@@ -102,7 +102,7 @@ ga.timeout=3600
 **population_size**=*64* - Number of chromosomes in the population.
 
 **exit_check**=*"avg_cost"* - A criteria for the exit for the genetic algorithm.  
-Supported values:  
+Supported values:
 - *"avg_cost"* - the optimisation exit is triggered when the average cost of the upper half of the population is not improved in the specified number of generations  
 - *"min_cost"* - the optimisation exit is triggered when the minimal cost in the population is not improved in the specified number of generations  
 - *"requested"* - the optimisation exit is triggered when the requested value reached
@@ -114,7 +114,7 @@ Supported values:
 **requested_cost**=*sys.float_info.max* - this parameter only takes place when *exit_check* has value *"requested"*. It determines the requested value which causes the exit from the genetic algorithm
 
 **parent_selection**=*"roulette_wheel"* - the algorithm for parent selection.  
-Supported values:  
+Supported values:
 - *"roulette_wheel"* - Roulette Wheel selection algorithm (also known as "Weighted random pairing"). The probabilities assigned to the chromosomes in the mating pool are inversely proportional to their cost. A chromosome with the lowest cost has the greatest probability of mating, while the chromosome with the highest cost has the lowest probability of mating.  
 - *"tournament"* - Tournament selection algorithm. It randomly picks small subsets (groups) of chromosomes from the mating pool, and chromosomes with the lowest cost in subsets become a parent. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,8"* means that the tournament parent selection algorithm is chosen, and each group contains up to 8 members. The default group size is 4.  
 - *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and pairs the chromosomes two at a time until the top kept chromosomes are selected for mating. Thus, the algorithm pairs odd rows with even rows.  
@@ -129,14 +129,14 @@ Supported values:
 **number_of_mutation_genes**=*-1* - number of mutated genes in each chromosome. It overrides *percentage_of_mutations_genes*. This value is an upper bound - the number of mutated genes can vary from 1 to *number_of_mutation_genes*.
 
 **population_mutation**=*"cost_diversity"* - a type of mutation for the entire population. Based on the value of this parameter, the number of mutation chromosomes can be determined, along with how chromosomes for the mutation will be selected.  
-Supported values:  
+Supported values:
 - *"cost_diversity"* - the number of mutated chromosomes is determined adaptively by the diversity of costs in the population. Lower cost diversity means a higher number of mutated chromosomes. The minimal value of mutated chromosomes is 0, and the maximal value is determined by the value of *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes* parameters. If *population_mutation* has a value other than *"cost_diversity"*, the number of mutation chromosomes is a random value from 1 to *number_of_mutation_chromosomes* value (or to value determined by *percentage_of_mutation_chromosomes* value). *"cost_diversity"* means that the *"parents_diversity"* method is selected to select chromosomes to be mutated. This method only determines the number of mutated chromosomes, but not how chromosomes are selected for the mutation.  
 - *"parents_diversity"* - chromosomes to be mutated are selected by the diversity of their parents. The more similar parents (lower parents diversity) mean a higher probability of mutation for the child. Based on the calculated parent diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *parent_diversity_mutation_chromosome_selection* parameter.  
 - *random* - chromosomes to be mutated are selected randomly.  
 Population_mutation may have more values, separated by a comma. It means that more than one method can be chosen for the mutation of chromosomes in the population. For example, *"cost_diversity,parents_diversity"* means that number of mutation chromosomes will be determined by the cost diversity and the selection of chromosomes to be mutated will be defined by parent diversity. *"cost_diversity,parents_diversity"* and *"cost_diversity"* return the same logic for the determination of mutation number and the way how chromosomes are to be selected. *"cost_diversity,random"* means that the cost diversity will determine the number of mutation chromosomes, and the selection of chromosomes to be mutated will be chosen randomly.
     
 **parent_diversity_mutation_chromosome_selection**=*"roulette_wheel"* - the selection algorithm for mutating chromosomes when *population_mutation* contains value *"parents_diversity"*. It only applies when *population_mutation* has value *"cost_diversity"*. It determines the way how chromosomes are to be selected based on the diversity of their parents.  
-Supported values:  
+Supported values:
 - *"roulette_wheel"* - Roulette Wheel selection algorithm (also known as "Weighted random pairing"). The probabilities assigned to the chromosomes to be mutated are proportional to their similarity (inversely proportional to their diversity). A chromosome with the lowest parent diversity has the greatest probability of mutation, while the chromosome with the highest parent diversity has the lowest probability of mutation.  
 - *"tournament"* - Tournament selection algorithm. It randomly picks small subsets (groups) of chromosomes, and chromosomes with the lowest parent diversity (highest parent similarity) in subsets are chosen to be mutated. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,8"* means that the tournament mutation selection algorithm is chosen, and each group contains up to 8 members. The default group size is 4.  
 - *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and selects chromosomes for mutation.  
@@ -145,12 +145,12 @@ Supported values:
 **must_mutate_for_same_parents**=*True* - indicates if completely the same parents must influence mutation for their children. In other words, each child will be mutated if it has parents with a diversity value of 0. If *must_mutate_for_same_parents* has the value True, the number of mutated chromosomes can outreach value determined by *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes*
 
 **chromosome_mutation**=*"cross_diversity"* - the type of mutation of genes in chromosomes.  
-Supported values:  
+Supported values:
 - *"cross_diversity"* - considers the diversity of genes of the same type in the population. Lower diversity can mean that this genetic variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_selection* parameter.  
 - *"random"* - genes are randomly selected for the mutation
 
 **cross_diversity_mutation_gene_selection**=*"roulette_wheel"* - the selection algorithm for mutating chromosomes when *chromosome_mutation* has value *"cross_diversity"*. It only applies when *chromosome_mutation* has value *"cross_diversity"* . It determines the way how genes are to be selected based on the cross-diversity.  
-Supported values:  
+Supported values:
 - *"roulette_wheel"* - Roulette Wheel selection algorithm (also known as "Weighted random pairing"). The probabilities assigned to the genes to be mutated are inversely proportional to their cross-diversity. A gene with the lowest cross-diversity has the greatest probability of mutation, while the gene with the highest cross-diversity has the lowest probability of mutation.  
 - *"tournament"* - Tournament selection algorithm. It randomly picks small subsets (groups) of genes, and genes with the lowest cross-diversity in subsets are chosen to be mutated. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,3"* means that the tournament mutation selection algorithm is chosen, and each group contains up to 3 members. The default group size is 4.  
 - *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and selects genes for mutation.  
