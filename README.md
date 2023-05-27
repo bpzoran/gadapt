@@ -6,7 +6,7 @@
 
 
 # Installation
-To install [GAdapt], use pip with the following command:
+To install [GAdapt], use **pip** with the following command:
 
 ```
 pip install gadapt
@@ -133,7 +133,6 @@ Supported values:
 - *"cost_diversity"* - the number of mutated chromosomes is determined adaptively by the diversity of costs in the population. Lower cost diversity means a higher number of mutated chromosomes. The minimal value of mutated chromosomes is 0, and the maximal value is determined by the value of *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes* parameters. If *population_mutation* has a value other than *"cost_diversity"*, the number of mutation chromosomes is a random value from 1 to *number_of_mutation_chromosomes* value (or to value determined by *percentage_of_mutation_chromosomes* value). *"cost_diversity"* means that the *"parents_diversity"* method is selected to select chromosomes to be mutated. This method only determines the number of mutated chromosomes, but not how chromosomes are selected for the mutation.  
 - *"parents_diversity"* - chromosomes to be mutated are selected by the diversity of their parents. The more similar parents (lower parents diversity) mean a higher probability of mutation for the child. Based on the calculated parent diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *parent_diversity_mutation_chromosome_selection* parameter.  
 - *random* - chromosomes to be mutated are selected randomly.  
-
 Population_mutation may have more values, separated by a comma. It means that more than one method can be chosen for the mutation of chromosomes in the population. For example, *"cost_diversity,parents_diversity"* means that number of mutation chromosomes will be determined by the cost diversity and the selection of chromosomes to be mutated will be defined by parent diversity. *"cost_diversity,parents_diversity"* and *"cost_diversity"* return the same logic for the determination of mutation number and the way how chromosomes are to be selected. *"cost_diversity,random"* means that the cost diversity will determine the number of mutation chromosomes, and the selection of chromosomes to be mutated will be chosen randomly.
     
 **parent_diversity_mutation_chromosome_selection**=*"roulette_wheel"* - the selection algorithm for mutating chromosomes when *population_mutation* contains value *"parents_diversity"*. It only applies when *population_mutation* has value *"cost_diversity"*. It determines the way how chromosomes are to be selected based on the diversity of their parents.  
