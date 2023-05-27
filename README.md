@@ -8,7 +8,9 @@
 # Installation
 To install [GAdapt], use pip with the following command:
 
-**pip install gadapt**
+```
+pip install gadapt
+```
 
 # Source Code
 The source code is stored on GitHub at the following address: https://github.com/bpzoran/gadapt
@@ -40,9 +42,10 @@ results = ga.execute()
 
 #Printing results
 print(results)
+```
 
-"""
-Possible output:
+The possible output:
+```
 Min cost: -3.370583074871819
 Number of iterations: 286
 Parameter values:
@@ -52,8 +55,8 @@ Parameter values:
 3: 0.0
 4: 1.0
 5: 3.14
-"""
 ```
+
 In this example, the genetic algorithm searches for the combination of six parameters, bringing the lowest value for the passed function. The only mandatory attribute to the genetic algorithm is cost_function, and other attributes in this example took default values. Parameters to be optimized are added by the "add" method. There are seven parameters to be optimized in this example.
 # Parameter Settings
 GAdapt genetic algorithm can receive parameters using constructor, properties, or combined.
@@ -102,9 +105,11 @@ ga.timeout=3600
 
 Supported values:
 
-        "avg_cost" - the optimisation exit is triggered when the average cost of the upper half of the population is not improved in the specified number of generations
-        "min_cost" - the optimisation exit is triggered when the minimal cost in the population is not improved in the specified number of generations
-        "requested" - the optimisation exit is triggered when the requested value reached
+*"avg_cost"* - the optimisation exit is triggered when the average cost of the upper half of the population is not improved in the specified number of generations
+
+*"min_cost"* - the optimisation exit is triggered when the minimal cost in the population is not improved in the specified number of generations
+
+*"requested"* - the optimisation exit is triggered when the requested value reached
     
 **timeout** = 120 - a number of seconds after which the genetic algorithm optimisation will exit, regardless of whether *exit_check* criteria is reached.
 
