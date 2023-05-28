@@ -182,7 +182,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif not isinstance(self.options.must_mutate_for_same_parents, bool):
             self.add_message("Must Mutate For Same Parents must be type bool!")
             rslt &= False 
-        if self.options.population_mutation == definitions.COST_DIVERSITY or definitions.PARENTS_DIVERSITY in self.options.population_mutation:
+        if self.options.population_mutation == definitions.COST_DIVERSITY or definitions.PARENT_DIVERSITY in self.options.population_mutation:
             if self.options.parent_diversity_mutation_chromosome_selection is None:
                 self.add_message("Parent Diversity Mutation Chromosome Selection must not be None!")
                 rslt &= False

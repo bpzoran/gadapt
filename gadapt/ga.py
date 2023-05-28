@@ -17,7 +17,7 @@ class GA:
                  requested_cost = sys.float_info.max,
                  max_attempt_no = 10,
                  parent_selection = definitions.ROULETTE_WHEEL,
-                 population_mutation = definitions.COST_DIVERSITY, 
+                 population_mutation = "{0}{1}{2}".format(definitions.COST_DIVERSITY, definitions.PARAM_SEPARATOR, definitions.PARENT_DIVERSITY),
                  number_of_mutation_chromosomes = -1,    
                  percentage_of_mutation_chromosomes = 10.0,
                  parent_diversity_mutation_chromosome_selection = definitions.ROULETTE_WHEEL, 

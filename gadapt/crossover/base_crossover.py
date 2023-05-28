@@ -71,8 +71,8 @@ class BaseCrossover:
             offspring1.add_gene(self.genetic_variable_father, var1)
             offspring2.add_gene(self.genetic_variable_father, var2)
         parrents_diversity = round(ga_utils.average(genetic_diversity), 2)
-        offspring1.parents_diversity = parrents_diversity
-        offspring2.parents_diversity = parrents_diversity
+        offspring1.parent_diversity = parrents_diversity
+        offspring2.parent_diversity = parrents_diversity
         offspring1.mutation_on_both_sides = self.mutation_on_both_sides
         offspring2.mutation_on_both_sides = self.mutation_on_both_sides
         offspring1.mother_id = mother.chromosome_id

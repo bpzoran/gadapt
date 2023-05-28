@@ -17,7 +17,7 @@ from gadapt.mutation.chromosome_mutation.random_chromosome_mutator import Random
 from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
 from gadapt.mutation.population_mutation.composed_population_mutator import ComposedPopulationMutator
 from gadapt.mutation.population_mutation.cost_diversity.cost_diversity_population_mutator import CostDiversityPopulationMutator
-from gadapt.mutation.population_mutation.parents_diversity_population_mutator import ParentsDiversityPopulationMutator
+from gadapt.mutation.population_mutation.parent_diversity_population_mutator import ParentsDiversityPopulationMutator
 from gadapt.mutation.population_mutation.previous_cost_diversity.previous_cost_diversity_population_mutator import PreviousCostDiversityPopulationMutator
 from gadapt.mutation.population_mutation.previous_cost_diversity.previous_cost_diversity_property_taker import AvgPreviousCostCostDiversityPropertyTaker, BasePreviousCostDiversityPropertyTaker, MinPreviousCostCostDiversityPropertyTaker
 from gadapt.mutation.population_mutation.random_population_mutator import RandomPopulationMutator
@@ -88,7 +88,7 @@ class GAFactory:
             return self.get_population_mutator_combined()
         elif population_mutator_string == definitions.COST_DIVERSITY:
             return CostDiversityPopulationMutator(self.options, ParentsDiversityPopulationMutator(self.get_sampling_method(self.ga.parent_diversity_mutation_chromosome_selection), self.options))
-        elif population_mutator_string == definitions.PARENTS_DIVERSITY:
+        elif population_mutator_string == definitions.PARENT_DIVERSITY:
             return ParentsDiversityPopulationMutator(self.get_sampling_method(self.ga.parent_diversity_mutation_chromosome_selection), self.options)
         elif population_mutator_string == definitions.RANDOM:
             return RandomPopulationMutator(self.options)
@@ -102,9 +102,9 @@ class GAFactory:
         mutator_strings = [ms.strip() for ms in self.ga.population_mutation.split(definitions.PARAM_SEPARATOR)]
         if (self.is_cost_diversity_random(mutator_strings)):
             return CostDiversityPopulationMutator(self.options, RandomPopulationMutator(self.options))
-        if (self.is_cost_diversity_parents_diversity(mutator_strings)):
+        if (self.is_cost_diversity_parent_diversity(mutator_strings)):
             return CostDiversityPopulationMutator(self.options, ParentsDiversityPopulationMutator(self.get_sampling_method(self.ga.parent_diversity_mutation_chromosome_selection), self.options))
-        if self.is_cost_diversity_parents_diversity_random(mutator_strings):
+        if self.is_cost_diversity_parent_diversity_random(mutator_strings):
             composedPopulationMutator = ComposedPopulationMutator(self.options)
             composedPopulationMutator.append(ParentsDiversityPopulationMutator(self.get_sampling_method(
                 self.ga.parent_diversity_mutation_chromosome_selection), self.options))
@@ -121,13 +121,13 @@ class GAFactory:
             return True
         return False
 
-    def is_cost_diversity_parents_diversity(self, mutator_strings: list):
-        if len(mutator_strings) == 2 and definitions.COST_DIVERSITY in mutator_strings and definitions.PARENTS_DIVERSITY in mutator_strings:
+    def is_cost_diversity_parent_diversity(self, mutator_strings: list):
+        if len(mutator_strings) == 2 and definitions.COST_DIVERSITY in mutator_strings and definitions.PARENT_DIVERSITY in mutator_strings:
             return True
         return False
 
-    def is_cost_diversity_parents_diversity_random(self, mutator_strings: list):
-        if len(mutator_strings) == 3 and definitions.COST_DIVERSITY in mutator_strings and definitions.PARENTS_DIVERSITY in mutator_strings and definitions.RANDOM in mutator_strings:
+    def is_cost_diversity_parent_diversity_random(self, mutator_strings: list):
+        if len(mutator_strings) == 3 and definitions.COST_DIVERSITY in mutator_strings and definitions.PARENT_DIVERSITY in mutator_strings and definitions.RANDOM in mutator_strings:
             return True
         return False
 

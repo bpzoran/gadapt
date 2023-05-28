@@ -138,12 +138,12 @@ class Chromosome (RankingModel):
         self.append(g)
 
     @property
-    def parents_diversity(self) -> float:
-        return self._parents_diversity
+    def parent_diversity(self) -> float:
+        return self._parent_diversity
     
-    @parents_diversity.setter
-    def parents_diversity(self, value: float):
-        self._parents_diversity = value
+    @parent_diversity.setter
+    def parent_diversity(self, value: float):
+        self._parent_diversity = value
 
     @property
     def population_generation(self) -> int:
