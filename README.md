@@ -163,7 +163,7 @@ Supported values:
 **logging**=*False* - If this parameter has a True value, the log file will be created in the current working directory. The log file contains the flow of genetic algorithm execution, along with values of chromosomes, genes and cost functions in each generation
 
 # Adding Variables
-Variables to be optimized can be added by callning the *Add* method of the *GA* object. Parameters of this method are the minimum value, the maximum value, and the step. The minimum and maximum value determine a range of possible variable values. The *step* parameter specifies the step that will be used in changing the variables values during the optimization.
+Variables to be optimized can be added by callning the *add* method of the *GA* object. Parameters of this method are the minimum value, the maximum value, and the step. The minimum and maximum value determine a range of possible variable values. The *step* parameter specifies the step that will be used in changing the variables values during the optimization.
 
 For example:
 ```python
@@ -189,12 +189,12 @@ ga.add(-5, 5, 0.1) # Refers to args[1]
 # GA Execution and Optimisation Results
 Genetic algorithm optimization executes by calling *execute* method, without parameters. This method returns the object of type *GAResults*, which contain following properties:
 - **success**  - Indicates if genetic algorithm optimisation executed successfuly.
-- **min_cost** - Тхе мinimal cost for optimized variables
-- **number_of_iterations** - The number of iterations in which the optimization reached the minimum cost
+- **min_cost** - The minimal cost for optimized variables
+- **number_of_iterations** - The number of iterations in which the optimization reached the minimal cost
 - **result_values** - The dictionary that contains variables' optimized values. The key of this dictionary is the sequence number of variable adding, and also the argument index in the cost function. The value of this dictionary is the optimized value for the variable.
 - **messages** - Additional messages of the optimizations. This is a tuple structure where first value is a message level ("INFO", "WARNING" or "ERROR"), and the second value is the message text.
 
-For example, for the give function:
+For example, for the given function:
 ```python
 def some_func(args):
       return math.sqrt(abs(args[0])) + math.pow(args[1], 2)
@@ -224,7 +224,7 @@ else:
 for m in results.messages:
     print(m[0] + ": " + m[1])
 ```
-, the output may look like it follows:
+The output may look like it follows:
 ```
 Minimal cost: 0.0
 Number of iterations: 19
@@ -232,18 +232,15 @@ Parameter values:
 0: 0.0
 1: 0.0
 ```
-In the case of some inadequate setting, for example adding not enough parameters, the output might look like it follows:
+In the case of some inadequate setting, e.g. adding not enough parameters, the output might look like it follows:
 ```
 Calculation not succesful.
 ERROR: Inadequate number of parameters for the passed function!
 ```
 Casting results to string returns a readable strings containing all relevant data. For example:
 ```python
-Min cost: 0.0
-Number of iterations: 21
-Parameter values:
-0: 0.0
-1: 0.0
+s = str(results)
+print(s)
 ```
 might return the following output:
 ```
