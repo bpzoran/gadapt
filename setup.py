@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='gadapt',
-    version='0.2.16',
+    version='0.2.17',
     author="Zoran Jankovic",
     author_email='bpzoran@yahoo.com',
     url='https://github.com/bpzoran/gadapt',
