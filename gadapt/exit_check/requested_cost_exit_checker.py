@@ -1,6 +1,11 @@
 from gadapt.exit_check.base_exit_checker import BaseExitChecker
 
 class RequestedCostExitChecker(BaseExitChecker):
+
+    """
+    Exit check based on requested cost
+    """
+
     def __init__(self, requested_cost: float) -> None:
         super().__init__(1)
         self.requested_cost = requested_cost

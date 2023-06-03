@@ -178,3 +178,6 @@ cython_debug/
 # VSCode
 .vscode
 /test_functions.py
+create_documentation.bat
+
+test*.py

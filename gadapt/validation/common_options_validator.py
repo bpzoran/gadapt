@@ -3,6 +3,10 @@ import gadapt.ga_model.definitions as definitions
 import gadapt.ga_model.definitions as definitions
 class CommonOptionsValidator(BaseOptionsValidator):
 
+    """
+    Common class for options validation
+    """
+
     def __init__(self, options) -> None:
         super().__init__(options)
         self._validation_messages = []        

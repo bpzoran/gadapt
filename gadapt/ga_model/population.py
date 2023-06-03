@@ -10,12 +10,17 @@ from gadapt.immigration.population_immigration.base_population_immigrator import
 from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
 from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
 from gadapt.mutation.population_mutation.composed_population_mutator import ComposedPopulationMutator
+from gadapt.parent_selection.base_parent_selector import BaseParentSelector
 from gadapt.variable_update.base_variable_updater import BaseVariableUpdater
 import gadapt.string_operation.ga_strings as ga_strings
 from datetime import datetime
 import gadapt.ga_model.definitions as definitions
 
 class Population:
+
+    """
+    Population for the genetic algorithm. It contains a collection of chromosomes, as well as additional parameters
+    """
 
     def __init__(self, options: GAOptions,
                  chromosome_mutator: BaseChromosomeMutator,
@@ -24,9 +29,32 @@ class Population:
                  cost_finder: BaseCostFinder,
                  population_immigrator: BasePopulationImmigrator,
                  chromosome_immigrator: BaseChromosomeImmigrator,
-                 selector,
+                 parent_selector: BaseParentSelector,
                  crossover: BaseCrossover,
                  variable_updater: BaseVariableUpdater):
+        """
+        Initializator for the Population class.
+
+        options: Genetic Algorithm Options
+
+        chromosome_mutator: Chromosome Mutator Instance
+
+        population_mutator: Population Mutator Instance
+
+        exit_checker: Exit Checker Instance
+
+        cost_finder: Cost Finder Instance
+
+        population_immigrator: Population Immigrator Instance
+
+        chromosome_immigrator: Chromosome Immigrator Instance
+
+        parent_selector: Parent Selector Instance
+
+        crossover: Crossover Instance
+
+        variable_updater: Variable Updater Instance
+        """
         if options.population_size < 4:
             raise Exception("Population size 4 must be higher than 3")        
         self.options = options
@@ -36,7 +64,7 @@ class Population:
         self.cost_finder = cost_finder
         self.population_immigrator = population_immigrator
         self.chromosome_immigrator = chromosome_immigrator
-        self.selector = selector
+        self.parent_selector = parent_selector
         self.crossover = crossover
         self.variable_updater = variable_updater
         self.set_init_values()
@@ -83,6 +111,9 @@ class Population:
 
     @property
     def options(self) -> GAOptions:
+        """
+        Genetic algorithm options
+        """
         return self._options
 
     @options.setter
@@ -91,6 +122,9 @@ class Population:
 
     @property
     def avg_cost(self) -> float:
+        """
+        Average cost of the population
+        """
         return self._avg_cost
 
     @avg_cost.setter
@@ -99,6 +133,9 @@ class Population:
 
     @property
     def previous_avg_cost(self) -> float:
+        """
+        Previous average cost
+        """
         return self._previous_avg_cost
 
     @previous_avg_cost.setter
@@ -107,6 +144,9 @@ class Population:
 
     @property
     def min_cost(self):
+        """
+        Minimum cost
+        """
         return self._min_cost
 
     @min_cost.setter
@@ -115,6 +155,9 @@ class Population:
 
     @property
     def previous_min_cost(self):
+        """
+        Previous minimum cost
+        """
         return self._previous_min_cost
 
     @previous_min_cost.setter
@@ -123,6 +166,9 @@ class Population:
 
     @property
     def first_cost(self) -> float:
+        """
+        First cost found
+        """
         return self._first_cost
 
     @first_cost.setter
@@ -131,6 +177,9 @@ class Population:
 
     @property
     def best_individual(self) -> Chromosome:
+        """
+        Best individual chromosome
+        """
         return self._best_individual
 
     @best_individual.setter
@@ -139,6 +188,9 @@ class Population:
 
     @property
     def population_generation(self):
+        """
+        Current generation of the population
+        """
         return self._population_generation
 
     @population_generation.setter
@@ -147,6 +199,9 @@ class Population:
 
     @property
     def chromosome_mutator(self) -> BaseChromosomeMutator:
+        """
+        Chromosome mutator algorithm
+        """
         return self._chromosome_mutator
 
     @chromosome_mutator.setter
@@ -155,6 +210,9 @@ class Population:
 
     @property
     def population_mutator(self) -> BasePopulationMutator:
+        """
+        Population mutator algorithm
+        """
         return self._population_mutator
 
     @population_mutator.setter
@@ -162,12 +220,18 @@ class Population:
         self._population_mutator = value
 
     def append_population_mutator(self, value: BasePopulationMutator):
+        """
+        Appends population mutator algorithm
+        """
         if self._population_mutator is None or not isinstance(self._population_mutator, ComposedPopulationMutator):
             self.population_mutator = ComposedPopulationMutator(self.options)
         self.population_mutator.append(value)
 
     @property
     def cost_finder(self) -> BaseCostFinder:
+        """
+        Cost finding algorithm
+        """
         return self._cost_finder
 
     @cost_finder.setter
@@ -175,15 +239,21 @@ class Population:
         self._cost_finder = value
 
     @property
-    def selector(self):
-        return self._selector
+    def parent_selector(self):
+        """
+        Parent selection algorithm
+        """
+        return self._parent_selector
 
-    @selector.setter
-    def selector(self, value):
-        self._selector = value
+    @parent_selector.setter
+    def parent_selector(self, value):
+        self._parent_selector = value
 
     @property
     def population_immigrator(self) -> BasePopulationImmigrator:
+        """
+        Population immigration algorithm
+        """
         return self._population_immigrator
 
     @population_immigrator.setter
@@ -192,6 +262,9 @@ class Population:
 
     @property
     def chromosome_immigrator(self) -> BasePopulationImmigrator:
+        """
+        Chromosome immigration algorithm
+        """
         return self._chromosome_immigrator
 
     @chromosome_immigrator.setter
@@ -200,6 +273,9 @@ class Population:
 
     @property
     def crossover(self) -> BaseCrossover:
+        """
+        Crossover algorithm
+        """
         return self._crossover
 
     @crossover.setter
@@ -208,6 +284,9 @@ class Population:
 
     @property
     def variable_updater(self) -> BaseVariableUpdater:
+        """
+        Variable update algorithm
+        """
         return self._variable_updater
 
     @variable_updater.setter
@@ -215,15 +294,10 @@ class Population:
         self._variable_updater = value
 
     @property
-    def population_immigrator(self) -> BasePopulationImmigrator:
-        return self._population_immigrator
-
-    @population_immigrator.setter
-    def population_immigrator(self, value: BasePopulationImmigrator):
-        self._population_immigrator = value
-
-    @property
     def cost_finder(self) -> BaseCostFinder:
+        """
+        Cost finding algorithm
+        """
         return self._cost_finder
 
     @cost_finder.setter
@@ -232,6 +306,9 @@ class Population:
 
     @property
     def exit_checker(self) -> BaseExitChecker:
+        """
+        Exit checking algorithm
+        """
         return self._exit_checker
 
     @exit_checker.setter
@@ -239,47 +316,80 @@ class Population:
         self._exit_checker = value
 
     def exit(self) -> bool:
+        """
+        Check exit from the GA
+        """
         self.population_generation += 1
         self.population_mutator.before_exit_check(self)
         return self.exit_checker.check(self)
 
     def immigrate(self):
+        """
+        Immigrates new chromosomes
+        """
         self.population_immigrator.immigrate(self)
 
     def select_mates(self) -> List[Tuple[Chromosome, Chromosome]]:
-        return self.selector.select_mates(self)
+        """
+        Selects mates for pairing
+        """
+        return self.parent_selector.select_mates(self)
 
     def mate(self):
+        """
+        Mates chromosomes
+        """
         chromosome_pairs = self.select_mates()
         for chromosome1, chromosome2 in chromosome_pairs:
             offspring1, offspring2 = self.crossover.mate(chromosome1, chromosome2, self.population_generation)
             self.add_chromosomes((offspring1, offspring2))
 
     def mutate(self):
+        """
+        Mutates chromosomes in the population
+        """
         self.population_mutator.mutate(self)
 
     def find_costs(self):
+        """
+        Finds costs for chromosomes
+        """
         self.previous_avg_cost = self.avg_cost
         self.previous_min_cost = self.min_cost
         self.cost_finder.find_costs_for_chromosome(self)
 
     def clear(self):
+        """
+        Clears all chromosomes
+        """
         self.chromosomes.clear()
 
     def clear_and_add_chromosomes(self, chromosomes: List[Chromosome]):
+        """
+        Clears chromosomes and adds new ones
+        """
         self.chromosomes.clear()
         self.add_chromosomes(chromosomes)
 
     def add_chromosomes(self, chromosomes):
+        """
+        Adds chromosomes to population
+        """
         for c in chromosomes:
             self.add_chromosome(c)
 
     def add_new_chromosome(self):
+        """
+        Adds new chromosomes to the population
+        """
         chromosome = Chromosome(self.chromosome_mutator, self.chromosome_immigrator, self.population_generation)
         chromosome.chromosome_generation = 1
         self.add_chromosome(chromosome)
 
     def add_chromosome(self, chromosome):
+        """
+        Adds chromosome to the population
+        """
         if len(self) >= self.options.population_size:
             return
         if chromosome.chromosome_id is None or chromosome.chromosome_id == -1:
@@ -292,5 +402,8 @@ class Population:
         self.append(chromosome)
 
     def update_variables(self):
+        """
+        Updates genetic variables
+        """
         self.variable_updater.update_variables(self)
     

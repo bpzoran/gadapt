@@ -5,6 +5,10 @@ from gadapt.sampling.base_sampling import BaseSampling
 
 class RouletteWheelSampling(BaseSampling):
     
+    """
+    "RouletteWheel" (also known as "Weighted Random Pairing") algorithm for extracting a sample from the population.
+    """
+    
     def prepare_sample(self, lst: List[RankingModel]) -> List[RankingModel]:
         rank_sum = sum(range(1, len(lst) + 1))
         cummultative_probability_list: List[float] = []

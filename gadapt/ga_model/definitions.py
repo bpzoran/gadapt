@@ -1,3 +1,7 @@
+"""
+Genetic algorithm definitions
+"""
+
 RANDOM = "random"
 COST_DIVERSITY = "cost_diversity"
 PARENT_DIVERSITY = "parent_diversity"

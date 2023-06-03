@@ -7,6 +7,10 @@ import gadapt.utils.ga_utils as ga_utils
 import gadapt.ga_model.definitions as definitions
 
 class BaseCrossover:
+
+    """
+    Base Crossover Class
+    """
     
     def __init__(self, gene_combination: BaseGeneCombination, mutator: BaseChromosomeMutator, immigrator: BaseChromosomeImmigrator):
         self._mutation_on_both_sides = True

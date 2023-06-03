@@ -5,7 +5,11 @@ from gadapt.ga_model.ga_options import GAOptions
 from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
 from gadapt.sampling.base_sampling import BaseSampling
 
-class ParentsDiversityPopulationMutator(BasePopulationMutator):
+class ParentDiversityPopulationMutator(BasePopulationMutator):
+
+    """
+    Population mutator based on parent diversity
+    """
         
     def __init__(self, sampling: BaseSampling, options: GAOptions) -> None:
         super().__init__(options)

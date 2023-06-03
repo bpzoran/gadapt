@@ -1,5 +1,9 @@
 import math
 
+"""
+Genetic algorithm string operations
+"""
+
 def gene_to_string(g):
     return str(g.genetic_variable.variable_id) + ": " + str(round(g.variable_value, 2))
 

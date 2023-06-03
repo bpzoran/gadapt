@@ -8,6 +8,11 @@ import gadapt.ga_model.definitions as definitions
 import gadapt.string_operation.ga_strings as ga_strings
 class Chromosome (RankingModel):
     
+    """
+    Chromosome class.
+    Chromosome is a part of the Population. Chromosome consists of Genes
+    """
+    
     def __init__(self, mutator: BaseChromosomeMutator, immigrator: BaseChromosomeImmigrator, population_generation: int):
         super().__init__()
         self._mutator = mutator
@@ -44,9 +49,15 @@ class Chromosome (RankingModel):
         return sorted(self.genes, key=key, reverse=reverse)
 
     def append(self, g: Gene):
+        """
+        Appends a new gene into the chromosom
+        """
         self.genes.append(g)
 
     def clear(self):
+        """
+        Clears all genes from the chromosome
+        """
         self.genes.clear()
 
     def to_string(self):
@@ -63,6 +74,9 @@ class Chromosome (RankingModel):
 
     @property
     def mutator(self) -> BaseChromosomeMutator:
+        """
+        Mutation algorithm
+        """
         return self._mutator
     
     @mutator.setter
@@ -71,6 +85,9 @@ class Chromosome (RankingModel):
 
     @property
     def immigrator(self) -> BaseChromosomeImmigrator:
+        """
+        Immigration algorithm
+        """
         return self._immigrator
     
     @immigrator.setter
@@ -79,6 +96,9 @@ class Chromosome (RankingModel):
 
     @property
     def number_of_mutation_genes(self):
+        """
+        The number of mutated genes in the chromosome.
+        """
         return self._number_of_mutation_genes
     
     @number_of_mutation_genes.setter
@@ -87,6 +107,9 @@ class Chromosome (RankingModel):
 
     @property
     def chromosome_id(self):
+        """
+        Id of the chromosme
+        """
         return self._chromosome_id
     
     @chromosome_id.setter
@@ -95,6 +118,9 @@ class Chromosome (RankingModel):
 
     @property
     def cost_value(self):
+        """
+        Calculated cost value  of the chromosome
+        """
         return self._cost_value
     
     @cost_value.setter
@@ -103,6 +129,9 @@ class Chromosome (RankingModel):
 
     @property
     def is_mutated(self) -> bool:
+        """
+        Indicates if the chromosome is mutated
+        """
         return self._is_mutated
     
     @is_mutated.setter
@@ -111,6 +140,9 @@ class Chromosome (RankingModel):
 
     @property
     def is_immigrant(self) -> bool:
+        """
+        Indicates if the chromosome is immigrant
+        """
         return self._is_immigrant
     
     @is_immigrant.setter
@@ -119,6 +151,9 @@ class Chromosome (RankingModel):
 
     @property
     def mother_id(self) -> int:
+        """
+        ID of mother chromosome
+        """
         return self._mother_id
     
     @mother_id.setter
@@ -127,6 +162,9 @@ class Chromosome (RankingModel):
 
     @property
     def father_id(self) -> int:
+        """
+        ID of father chromosome
+        """
         return self._father_id
     
     @father_id.setter
@@ -139,6 +177,9 @@ class Chromosome (RankingModel):
 
     @property
     def parent_diversity(self) -> float:
+        """
+        Diversity of parents
+        """
         return self._parent_diversity
     
     @parent_diversity.setter
@@ -147,6 +188,9 @@ class Chromosome (RankingModel):
 
     @property
     def population_generation(self) -> int:
+        """
+        Population generation in which the chromosome appeared
+        """
         return self._population_generation
     
     @population_generation.setter
@@ -155,6 +199,10 @@ class Chromosome (RankingModel):
 
     @property
     def chromosome_generation(self) -> int:
+        """
+        Generation of chromosome. It differs from the Population generation.
+        It determines how many generations were needed for this chromosome to arise.
+        """
         return self._chromosome_generation
     
     @chromosome_generation.setter
@@ -163,6 +211,9 @@ class Chromosome (RankingModel):
 
     @property
     def first_mutant_generation(self) -> int:
+        """
+        Indicates how many generations passed after a first mutation
+        """
         return self._first_mutant_generation
     
     @first_mutant_generation.setter
@@ -171,10 +222,20 @@ class Chromosome (RankingModel):
 
     @property
     def last_mutant_generation(self) -> int:
+        """
+        Indicates how many generations passed after a last mutation
+        """
         return self._last_mutant_generation
+    
+    @last_mutant_generation.setter
+    def last_mutant_generation(self, value: int):
+        self._last_mutant_generation = value
     
     @property
     def first_immigrant_generation(self) -> int:
+        """
+        Indicates how many generations passed after a first immigration
+        """
         return self._first_immigrant_generation
     
     @first_immigrant_generation.setter
@@ -183,18 +244,20 @@ class Chromosome (RankingModel):
 
     @property
     def last_immigrant_generation(self) -> int:
+        """
+        Indicates how many generations passed after a last immigration
+        """
         return self._last_immigrant_generation
     
     @last_immigrant_generation.setter
     def last_immigrant_generation(self, value: int):
-        self._last_immigrant_generation = value
-    
-    @last_mutant_generation.setter
-    def last_mutant_generation(self, value: int):
-        self._last_mutant_generation = value
+        self._last_immigrant_generation = value        
 
     @property
     def mutation_on_both_sides(self) -> bool:
+        """
+        Indicates if mutation should be applied on both sides
+        """
         return self._mutation_on_both_sides
     
     @mutation_on_both_sides.setter
@@ -202,7 +265,10 @@ class Chromosome (RankingModel):
         self._mutation_on_both_sides = value
 
     @property
-    def succ(self) -> bool:
+    def succ(self) -> bool:   
+        """
+        Indicates if cost function execution succeded
+        """     
         return self._succ
     
     @succ.setter
@@ -210,11 +276,20 @@ class Chromosome (RankingModel):
         self._succ = value
 
     def mutate(self, number_of_mutation_genes: int):
+        """
+        Mutates chromosome
+        """
         self.mutator.mutate(self, number_of_mutation_genes)
 
     def immigrate(self):
+        """
+        Immigrates chromosome
+        """
         self.immigrator.immigrate(self)
 
     @property
     def mutated_variables_id_list(self) -> List[int]:
+        """
+        List of mutated variables
+        """
         return self._mutated_variables_id_list

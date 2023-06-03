@@ -6,6 +6,11 @@ from gadapt.ga_model.population import Population
 import gadapt.ga_model.message_levels as message_levels
 
 class GAExecutor:
+
+    """
+    Executor for the genetic algorithm
+    """
+
     def __init__(self, ga_options: GAOptions, factory: GAFactory) -> None:
         if (not ga_options is None):
             self.ga_options = ga_options    
@@ -38,7 +43,7 @@ class GAExecutor:
                                     cost_finder=cost_finder,
                                     population_immigrator=population_immigrator,
                                     chromosome_immigrator=chromosome_immigrator,
-                                    selector=selector,
+                                    parent_selector=selector,
                                     crossover=crossover,
                                     variable_updater=variable_updater)
             population.find_costs()

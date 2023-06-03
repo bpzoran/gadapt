@@ -6,6 +6,10 @@ from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChro
 from gadapt.gene_combination.base_gene_combination import BaseGeneCombination
 
 class UniformCrossover(BaseCrossover):
+
+    """
+    Uniform Crossover
+    """
     
     def __init__(self, var_combination: BaseGeneCombination, mutator: BaseChromosomeMutator, immigrator: BaseChromosomeImmigrator):
         super(UniformCrossover, self).__init__(var_combination, mutator, immigrator)

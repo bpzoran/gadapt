@@ -4,6 +4,10 @@ from gadapt.ga_model.ga_options import GAOptions
 from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
 
 class ComposedPopulationMutator(BasePopulationMutator):
+
+    """
+    Population mutator that consists of more different population mutators
+    """
         
     def __init__(self, options: GAOptions) -> None:
         super().__init__(options)

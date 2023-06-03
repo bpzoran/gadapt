@@ -1,5 +1,10 @@
 import gadapt.ga_model.definitions as definitions
 class BaseChromosomeImmigrator:
+
+    """
+    Base class for chromosome immigration
+    """
+
     def immigrate(self, c):
         self.immigrate_chromosome(c)
         self.chromosome_immigrated(c)

@@ -6,6 +6,9 @@ import traceback
 from gadapt.utils.TimeStampFormatter import TimestampFormatter
 
 def init_logging(is_logging: bool):
+    """
+    Initializes logging for genetic algorithm
+    """
     def get_last_num(s: str) -> int:
         try:
             if not s.startswith("log.log"):

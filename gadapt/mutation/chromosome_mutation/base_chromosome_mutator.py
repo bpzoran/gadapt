@@ -1,6 +1,11 @@
 from typing import List
 import gadapt.ga_model.definitions as definitions
-class BaseChromosomeMutator:    
+class BaseChromosomeMutator:   
+
+    """
+    Base class for the mutation of chromosome.
+    Mutates specific genes in the chromosome.
+    """ 
     
     def mutate(self, c, number_of_mutation_genes: int):
         self.before_mutated(c)

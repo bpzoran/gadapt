@@ -7,6 +7,11 @@ from gadapt.ga_model.population import Population
 import gadapt.utils.ga_utils as ga_utils
 
 class CommonCostFinder(BaseCostFinder):
+
+    """
+    Common class for cost finding
+    """
+
     def find_costs_for_chromosome(self, population: Population):
         if (population is None):
             raise Exception("population must not be null!")

@@ -3,6 +3,11 @@ from gadapt.ga_model.genetic_variable import GeneticVariable
 import gadapt.utils.ga_utils as ga_utils
 
 class CommonVariableUpdater:
+
+    """
+    Common variable updater
+    """
+
     def update_variables(self, population):
         def scale_values(gv: GeneticVariable, values):
             rslt = []

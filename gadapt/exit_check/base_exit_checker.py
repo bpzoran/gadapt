@@ -3,6 +3,11 @@ from datetime import datetime
 import gadapt.ga_model.definitions as definitions
 
 class BaseExitChecker:
+
+    """
+    Base class for exit check
+    """
+
     def __init__(self, max_attempt_no: int) -> None:
         self.max_attempt_no = max_attempt_no
         self.attempt_no = 0              

@@ -4,6 +4,11 @@ from gadapt.ga_model.ranking_model import RankingModel
 from gadapt.sampling.base_sampling import BaseSampling
 
 class TournamentSampling(BaseSampling):
+
+    """
+    "Tournament" algorithm for extracting a sample from the population.
+    """
+
     def __init__(self, group_size = None) -> None:
         super().__init__()
         self.group_size = group_size

@@ -4,6 +4,11 @@ import math
 import random
 from typing import List
 import gadapt.ga_model.definitions as definitions
+
+"""
+Genetic algorithm utility
+"""
+
 def get_rand_bool():
     rand_int = random.getrandbits(1)
     return bool(rand_int)

@@ -6,6 +6,15 @@ from gadapt.sampling.base_sampling import BaseSampling
 
 class SamplingParentSelector(BaseParentSelector):
 
+    """
+    Parent Selector based on sampling.
+    Sampling is the algorithm for extracting a sample from the population,
+    based on specific value of the chromosme.
+    In this case sampling depends on cost value.
+
+    Selects mates for mating from the population
+    """
+    
     def __init__(self, sampling: BaseSampling) -> None:
         super().__init__()
         self.sampling = sampling

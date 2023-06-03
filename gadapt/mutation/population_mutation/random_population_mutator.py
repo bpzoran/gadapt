@@ -4,6 +4,11 @@ from gadapt.ga_model.ga_options import GAOptions
 from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
 
 class RandomPopulationMutator(BasePopulationMutator):
+    
+    """
+    Random population mutator
+    """
+    
     def __init__(self, options: GAOptions) -> None:
         super().__init__(options)
 

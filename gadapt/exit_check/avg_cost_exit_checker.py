@@ -1,6 +1,11 @@
 from gadapt.exit_check.base_exit_checker import BaseExitChecker
 
 class AvgCostExitChecker(BaseExitChecker):
+
+    """
+    Exit check based on average cost
+    """
+    
     def is_exit(self, population):
         if population is None:
             raise Exception("population must not be null")

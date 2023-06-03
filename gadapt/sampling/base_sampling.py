@@ -2,6 +2,11 @@ from typing import List
 from gadapt.ga_model.ranking_model import RankingModel
 import gadapt.ga_model.definitions as definitions
 class BaseSampling:
+
+    """
+    The algorithm for extracting a sample from the population.
+    """
+
     def get_sample(self, lst: List[RankingModel], max_num, sort_key=None) -> List[RankingModel]:
         if len(lst) == 0:
             return lst

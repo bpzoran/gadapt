@@ -5,6 +5,11 @@ from gadapt.ga_model.chromosome import Chromosome
 import gadapt.ga_model.definitions as definitions
 
 class BaseCostFinder:
+
+    """
+    Base class for cost finding
+    """
+
     def execute_function(self, cost_function, c: Chromosome):
         dict = {}
         for g in c:

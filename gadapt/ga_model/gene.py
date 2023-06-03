@@ -5,6 +5,12 @@ import gadapt.string_operation.ga_strings as ga_strings
 import gadapt.ga_model.definitions as definitions
 class Gene(RankingModel):
 
+    """
+    Gene class. Gene is a part of chromosome.
+    It contains concrete values for genetic variables.
+    
+    """
+    
     def __init__(self, gen_variable, var_value = None):
         super().__init__()
         self.genetic_variable = gen_variable        

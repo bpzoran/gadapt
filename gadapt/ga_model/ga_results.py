@@ -1,6 +1,11 @@
 import gadapt.string_operation.ga_strings as ga_strings
 
 class GAResults:
+
+    """
+    Results for the genetic algorithm execution
+    """
+
     def __init__(self) -> None:
         self._success = True
         self.result_values = {}
@@ -8,10 +13,14 @@ class GAResults:
 
     def __str__(self) -> str:
        return ga_strings.results_to_string(self)
-
-    
+      
     @property
     def result_values(self):
+        """
+        The dictionary that contains variables' optimized values.
+        The key of this dictionary is the sequence number of variable adding, and also the argument index in the cost function.
+        The value of this dictionary is the optimized value for the variable.
+        """
         return self._result_values
 
     @result_values.setter
@@ -20,6 +29,9 @@ class GAResults:
 
     @property
     def min_cost(self) -> float:
+        """
+        Minimum cost found
+        """
         return self._min_cost
 
     @min_cost.setter
@@ -28,6 +40,9 @@ class GAResults:
 
     @property
     def number_of_iterations(self) -> float:
+        """
+        Number of iterations (generations)
+        """
         return self._number_of_iterations
 
     @number_of_iterations.setter
@@ -37,6 +52,9 @@ class GAResults:
 
     @property
     def success(self) -> bool:
+        """
+        Indicates if genetic algorithm optimization succeded
+        """
         return self._success
 
     @success.setter
@@ -45,6 +63,9 @@ class GAResults:
 
     @property
     def messages(self):
+        """
+        Messages from the optimization
+        """
         return self._messages
 
     @messages.setter
@@ -53,6 +74,9 @@ class GAResults:
 
     @property
     def message(self) -> str:
+        """
+        Messages from the optimization sublimed to one string
+        """
         return self._get_message()
 
     def _get_message(self):

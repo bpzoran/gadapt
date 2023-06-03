@@ -5,7 +5,12 @@ import random
 
 from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
 
+
 class RandomChromosomeMutator(BaseChromosomeMutator):
+
+    """
+    Class for the random mutation of chromosome.
+    """ 
     def mutate_chromosome(self, c: Chromosome, number_of_mutation_genes: int):
         if number_of_mutation_genes == 0:
             return

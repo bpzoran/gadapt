@@ -164,7 +164,7 @@ Supported values:
 **logging**=*False* - If this parameter has a True value, the log file will be created in the current working directory. The log file contains the flow of genetic algorithm execution, along with values of chromosomes, genes and cost functions in each generation
 
 # Adding Variables
-Variables to be optimized can be added by callning the *add* method of the *GA* object. Parameters of this method are the minimum value, the maximum value, and the step. The minimum and maximum value determine a range of possible variable values. The *step* parameter specifies the step that will be used in changing the variables values during the optimization.
+Variables to be optimized can be added by calling the *add* method of the *GA* object. Parameters of this method are the minimum value, the maximum value, and the step. The minimum and maximum value determine a range of possible variable values. The *step* parameter specifies the step that will be used in changing the variables values during the optimization.
 
 For example:
 ```python

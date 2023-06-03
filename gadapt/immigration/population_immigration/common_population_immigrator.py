@@ -4,6 +4,11 @@ from gadapt.immigration.population_immigration.base_population_immigrator import
 
 class CommonPopulationImmigrator(BasePopulationImmigrator):
 
+    """
+    Common class for the population immigration.
+    In kept part of the population lower ranked chromosomes are replaced with new ones
+    """
+    
     def immigrate(self, population):
         if population.options.immigration_number < 1:
             return

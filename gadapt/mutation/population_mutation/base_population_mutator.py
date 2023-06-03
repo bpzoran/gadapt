@@ -5,6 +5,10 @@ from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.ga_options import GAOptions
 import gadapt.ga_model.definitions as definitions
 class BasePopulationMutator:
+
+    """
+    Base class for mutating chromosomes in population
+    """
     
     def __init__(self, options: GAOptions) -> None:
         self.options = options

@@ -9,6 +9,10 @@ import gadapt.ga_model.definitions as definitions
 
 class CostDiversityPopulationMutator(BasePopulationMutator):
         
+    """
+    Population mutator based on cost diversity
+    """
+    
     def __init__(self, options: GAOptions, population_mutator_for_execution: BasePopulationMutator) -> None:
         super().__init__(options)
         self.population_mutator_for_execution = population_mutator_for_execution

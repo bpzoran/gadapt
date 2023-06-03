@@ -2,6 +2,11 @@ import random
 import gadapt.ga_model.definitions as definitions
 class GeneticVariable:
 
+    """
+    Genetic variable class defines genes.
+    It contains common values for genes: variable id, maximal value, minimal value, step.
+    """
+    
     def __init__(self, id: int) -> None:
         self.variable_id = id
         self._standard_deviation = definitions.FLOAT_NAN

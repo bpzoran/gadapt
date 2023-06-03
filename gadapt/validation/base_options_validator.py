@@ -3,6 +3,10 @@ import gadapt.ga_model.message_levels as message_levels
 import gadapt.ga_model.definitions as definitions
 
 class BaseOptionsValidator:
+
+    """
+    Base class for options validation
+    """
     
     def __init__(self, options) -> None:
         self._validation_messages = []

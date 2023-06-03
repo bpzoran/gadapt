@@ -1,5 +1,10 @@
 import gadapt.ga_model.definitions as definitions
 class RankingModel:
+
+    """
+    Base class for the object that can be ranked (chromosomes and genes)
+    """
+
     def __init__(self):
         self._rank = -1
         self._cummulative_probability = definitions.FLOAT_NAN

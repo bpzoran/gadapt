@@ -3,6 +3,14 @@ from gadapt.ga_model.gene import Gene
 from gadapt.gene_combination.base_gene_combination import BaseGeneCombination
 
 class BlendingGeneCombination(BaseGeneCombination):
+
+    """
+    Blending gene combination combines
+    gene values from the two parents into new variable values in the offspring.
+    A single offspring variable value, pnew, comes from a combination of the two
+    corresponding offspring gene values
+    """
+
     def combine(self, mother_gene: Gene, father_gene: Gene):
         genetic_variable = father_gene.genetic_variable
         val_father = father_gene.variable_value
