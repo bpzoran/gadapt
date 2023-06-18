@@ -18,8 +18,6 @@ from gadapt.mutation.population_mutation.base_population_mutator import BasePopu
 from gadapt.mutation.population_mutation.composed_population_mutator import ComposedPopulationMutator
 from gadapt.mutation.population_mutation.cost_diversity.cost_diversity_population_mutator import CostDiversityPopulationMutator
 from gadapt.mutation.population_mutation.parent_diversity_population_mutator import ParentDiversityPopulationMutator
-from gadapt.mutation.population_mutation.previous_cost_diversity.previous_cost_diversity_population_mutator import PreviousCostDiversityPopulationMutator
-from gadapt.mutation.population_mutation.previous_cost_diversity.previous_cost_diversity_property_taker import AvgPreviousCostCostDiversityPropertyTaker, BasePreviousCostDiversityPropertyTaker, MinPreviousCostCostDiversityPropertyTaker
 from gadapt.mutation.population_mutation.random_population_mutator import RandomPopulationMutator
 from gadapt.parent_selection.base_parent_selector import BaseParentSelector
 from gadapt.parent_selection.sampling_parent_selector import SamplingParentSelector
@@ -114,9 +112,6 @@ class GAFactory:
         else:
             raise Exception("unknown population mutation")
 
-    def get_previous_cost_diversity_property_taker(self) -> BasePreviousCostDiversityPropertyTaker:
-        return AvgPreviousCostCostDiversityPropertyTaker()
-
     def get_population_mutator_combined(self) -> ComposedPopulationMutator:
         """
         Population Mutator Instance - combined
@@ -132,7 +127,7 @@ class GAFactory:
                 self.ga.parent_diversity_mutation_chromosome_selection), self.options))
             composedPopulationMutator.append(
                 RandomPopulationMutator(self.options))
-            return PreviousCostDiversityPopulationMutator(self.options, composedPopulationMutator)
+            return CostDiversityPopulationMutator(self.options, composedPopulationMutator)
         composedPopulationMutator = ComposedPopulationMutator(self.options)
         for ms in mutator_strings:
             composedPopulationMutator.append(self.get_population_mutator(ms))

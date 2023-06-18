@@ -6,9 +6,9 @@ class BlendingGeneCombination(BaseGeneCombination):
 
     """
     Blending gene combination combines
-    gene values from the two parents into new variable values in the offspring.
-    A single offspring variable value, pnew, comes from a combination of the two
-    corresponding offspring gene values
+    gene values from the two parents into new variable values in offsprings.
+    One value of the offspring variable comes from a combination of the two
+    corresponding values of the parental genes
     """
 
     def combine(self, mother_gene: Gene, father_gene: Gene):

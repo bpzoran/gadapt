@@ -181,3 +181,5 @@ cython_debug/
 create_documentation.bat
 
 test*.py
+
+documentation/
