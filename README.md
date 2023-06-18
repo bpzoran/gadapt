@@ -13,10 +13,10 @@ pip install gadapt
 ```
 
 # Source Code
-The source code is stored on GitHub at the following link: [GAdapt]https://github.com/bpzoran/gadapt
+The source code is stored on GitHub at the following link: [GAdapt](https://github.com/bpzoran/gadapt)
 
 # API Documentation
-The API documentation can be found on the following link: [GAdapt]https://www.gadapt.com/api
+The API documentation can be found on the following link: [GAdapt](https://www.gadapt.com/api)
 
 # Getting started
 The following example optimizes variable values for a complex trigonometric function.
