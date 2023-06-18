@@ -13,13 +13,13 @@ pip install gadapt
 ```
 
 # Releases
-Latest releases of GAdapt can be found at the PyPI repository: [GAdapt on PyPI](https://pypi.org/project/gadapt/){:target="_blank"}
+Latest releases of GAdapt can be found at the PyPI repository: [GAdapt on PyPI](https://pypi.org/project/gadapt/){target="_blank"}
 
 # Source Code
-The source code is stored at the GitHub repository: [GAdapt on GitHub](https://github.com/bpzoran/gadapt/){:target="_blank"}
+The source code is stored at the GitHub repository: [GAdapt on GitHub](https://github.com/bpzoran/gadapt/){target="_blank"}
 
 # API Documentation
-The API documentation can be found at the following link: [GAdapt API Documentation](https://www.gadapt.com/api/){:target="_blank"}
+The API documentation can be found at the following link: [GAdapt API Documentation](https://www.gadapt.com/api/){target="_blank"}
 
 # Getting started
 The following example optimizes variable values for a complex trigonometric function.
