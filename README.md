@@ -1,5 +1,5 @@
 # GAdapt: Self-Adaptive Genetic Algorithm
-[GAdapt](https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for the adaptive mutation of genes and chromosomes.
+**GAdapt** is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for the adaptive mutation of genes and chromosomes.
 
 # What innovations does GAdapt bring?
 **GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost and cross-diversity of genetic variables in the population. Less diversity increases the probability of mutation. Consequently, it increases the accuracy and the performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
@@ -12,11 +12,14 @@ To install **GAdapt**, use **pip** with the following command:
 pip install gadapt
 ```
 
+# Releases
+Latest releases of GAdapt can be found at the PyPI repository: [GAdapt on PyPI {_ext}](https://pypi.org/project/gadapt/) 
+
 # Source Code
-The source code is stored on GitHub at the following link: [GAdapt](https://github.com/bpzoran/gadapt)
+The source code is stored at the GitHub repository: [GAdapt on GitHub {_ext}](https://github.com/bpzoran/gadapt/)
 
 # API Documentation
-The API documentation can be found on the following link: [GAdapt](https://www.gadapt.com/api)
+The API documentation can be found at the following link: [GAdapt API Documentation {_ext}](https://www.gadapt.com/api/)
 
 # Getting started
 The following example optimizes variable values for a complex trigonometric function.
