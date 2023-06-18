@@ -1,3 +1,6 @@
+"""
+Population
+"""
 from typing import List, Tuple
 from gadapt.exit_check.base_exit_checker import BaseExitChecker
 from gadapt.cost_finding.base_cost_finder import BaseCostFinder
@@ -356,7 +359,7 @@ class Population:
         """
         self.previous_avg_cost = self.avg_cost
         self.previous_min_cost = self.min_cost
-        self.cost_finder.find_costs_for_chromosome(self)
+        self.cost_finder.find_costs_for_population(self)
 
     def clear(self):
         """

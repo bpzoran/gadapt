@@ -1,3 +1,6 @@
+"""
+Ranking model
+"""
 import gadapt.ga_model.definitions as definitions
 class RankingModel:
 

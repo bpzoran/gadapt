@@ -9,6 +9,13 @@ class GAExecutor:
 
     """
     Executor for the genetic algorithm
+    
+    Parameters
+    ------------
+        ga_options: GAOptions
+            Options for GA execution
+        factory: GAFactory
+            Factory for objects creation
     """
 
     def __init__(self, ga_options: GAOptions, factory: GAFactory) -> None:
@@ -18,6 +25,9 @@ class GAExecutor:
 
 
     def execute(self) -> GAResults:
+        """
+        Executes the genetic algorithm
+        """
         results = GAResults()
         try: 
             init_logging(self.ga_options.logging)                           

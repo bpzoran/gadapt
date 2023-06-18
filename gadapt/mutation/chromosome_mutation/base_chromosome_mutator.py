@@ -8,6 +8,10 @@ class BaseChromosomeMutator:
     """ 
     
     def mutate(self, c, number_of_mutation_genes: int):
+        """
+        Mutates genes in the chromosome.
+        Number of mutated genes is determined by the parameter "number_of_mutation_genes"
+        """
         self.before_mutated(c)
         self.mutate_chromosome(c, number_of_mutation_genes)
         self.chromosome_mutated(c)

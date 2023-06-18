@@ -19,4 +19,4 @@ class BaseChromosomeImmigrator:
         c.last_immigrant_generation = 1
         c.first_mutant_generation = 0
         c.last_mutant_generation = 0
-        c.set_chromosome_string(None)
+        c.set_chromosome_string_none()

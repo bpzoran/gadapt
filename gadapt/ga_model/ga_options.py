@@ -1,9 +1,12 @@
+"""
+Genetic algorithm options
+"""
 from typing import List
 from gadapt.ga_model.genetic_variable import GeneticVariable
 class GAOptions():
    
     """
-    Genetic algorithm options
+    Genetic algorithm options class
     """
     
     def __init__(self, ga) -> None:

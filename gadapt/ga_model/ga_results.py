@@ -1,9 +1,12 @@
+"""
+Results for the genetic algorithm execution
+"""
 import gadapt.string_operation.ga_strings as ga_strings
 
 class GAResults:
 
     """
-    Results for the genetic algorithm execution
+    Results class for the genetic algorithm execution
     """
 
     def __init__(self) -> None:

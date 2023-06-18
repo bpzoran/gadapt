@@ -1,3 +1,6 @@
+"""
+The main genetic algorithm module
+"""
 import sys
 from gadapt.execution.ga_executor import GAExecutor
 from gadapt.factory.ga_factory import GAFactory
@@ -10,7 +13,9 @@ import gadapt.ga_model.definitions as definitions
 from gadapt.validation.common_options_validator import CommonOptionsValidator
 
 class GA:
-    """The main genetic algorithm class"""
+    """
+    The main genetic algorithm class
+    """
 
 
     def __init__(self,
@@ -35,62 +40,82 @@ class GA:
                  ) -> None:                     
         """
         The constructor of the GA class accepts all parameters required to create an instance of the GA class. It validates such parameters.
-
-        cost_function: Custom function for the cost calculation (fitness). The optimisation goal is minimising the output of the cost function. 
-        cost_function must be the function with one argument - a dictionary of values, where the key is an index (the ordinal of adding parameters) and the key is the parameter's value to be optimised.
-        When adding parameters, there should be as many parameters as the function uses. The cost_function is the only mandatory parameter.
         
-        population_size: Number of chromosomes in the population.
-        
-        exit_check:  A criteria for the exit for the genetic algorithm
-        
-        requested_cost: This parameter only takes place when exit_check has value “requested”. It determines the requested value which causes the exit from the genetic algorithm
-        
-        max_attempt_no: This parameter only takes place when exit_check has value “avg_cost” or “min_cost”. It determines the number of generations in which there is no improvement in the average/minimal cost.
-        
-        parent_selection: The algorithm for parent selection.
-        
-        population_mutation: A type of mutation for the entire population.
-        Based on the value of this parameter, the number of mutation chromosomes can be determined, along with how chromosomes for the mutation will be selected.
-        
-        number_of_mutation_chromosomes: The number of mutation chromosomes in the population. 
-        In case it's value is equal to or higher than 0, it overrides percentage_of_mutation_chromosomes.
-        This value is the upper bound - the actual number of mutated chromosomes can vary from 1 to number_of_mutation_chromosomes.
-        
-        percentage_of_mutation_chromosomes:  The percentage of mutated chromosomes in the population.
-        This value is applied to the population_size value and rounded to an integer value, giving the number of mutation chromosomes.
-        For example, if population_size has a value of 32, and percentage_of_mutation_chromosomes has a value of 10, the number of mutation chromosomes will be 3.
-        The calculated value is an upper bound - the actual number of mutated chromosomes can vary from 1 to the calculated value.
-        percentage_of_mutation_chromosomes only applies if number_of_mutation_chromosomes does not have a valid integer value equal to or higher than 0.
-        
-        parent_diversity_mutation_chromosome_selection: The selection algorithm for mutating chromosomes when population_mutation contains value “parent_diversity”.
-        It only applies when population_mutation has value “parent_diversity”. It determines the way how chromosomes are to be selected based on the diversity of their parents.
-        
-        must_mutate_for_same_parents:  Indicates if completely the same parents must influence mutation for their children.
-        In other words, each child will be mutated if it has parents with a diversity value of 0.
-        If must_mutate_for_same_parents has the value True, the number of mutated chromosomes can outreach value determined by number_of_mutation_chromosomes or percentage_of_mutation_chromosomes
-        
-        chromosome_mutation: The type of mutation of genes in chromosomes.
-        
-        number_of_mutation_genes: The number of mutated genes in each chromosome.
-        In case it's value is equal to or higher than 0, it overrides percentage_of_mutation_genes.
-        This value is the upper bound - the number of mutated genes can vary from 1 to number_of_mutation_genes.
-        
-        percentage_of_mutation_genes: The percentage of mutated genes in each chromosome.
-        It applies to the chromosome size (number of genes in each chromosome), and the calculated value rounds to an integer value.
-        The calculated value is the upper bound - the actual number of mutated genes can vary from 1 to the calculated value.
-        percentage_of_mutation_genes only applies if number_of_mutations_genes does not have a valid integer value equal to or higher than 0.
-        
-        cross_diversity_mutation_gene_selection: The selection algorithm for mutating chromosomes when chromosome_mutation has value “cross_diversity”.
-        It only applies when chromosome_mutation has value “cross_diversity” . It determines the way how genes are to be selected based on the cross-diversity.
-        
-        immigration_number: Refers to the “Random Immigrants” concepts. This strategy introduces a certain number of individuals into the population during the evolution process.
-        These new individuals are generated randomly and injected into the population.
-        
-        logging:  If this parameter has a True value, the log file will be created in the current working directory.
-        The log file contains the flow of genetic algorithm execution, along with values of chromosomes, genes and cost functions in each generation
-        
-        timeout: A number of seconds after which the genetic algorithm optimisation will exit, regardless of whether exit_check criteria is reached.
+        Parameters
+        ------------
+            cost_function
+                Custom function for the cost calculation (fitness). The optimisation goal is minimising the output of the cost function. 
+                cost_function must be the function with one argument - a dictionary of values, where the key is an index (the ordinal of adding parameters) and the key is the parameter's value to be optimised.
+                When adding parameters, there should be as many parameters as the function uses. The cost_function is the only mandatory parameter.
+            
+            population_size
+                Number of chromosomes in the population.
+            
+            exit_check
+                A criteria for the exit for the genetic algorithm
+            
+            requested_cost
+                This parameter only takes place when exit_check has value “requested”. It determines the requested value which causes the exit from the genetic algorithm
+            
+            max_attempt_no
+                This parameter only takes place when exit_check has value “avg_cost” or “min_cost”. It determines the number of generations in which there is no improvement in the average/minimal cost.
+            
+            parent_selection
+                The algorithm for parent selection.
+            
+            population_mutation
+                A type of mutation for the entire population.
+                Based on the value of this parameter, the number of mutation chromosomes can be determined, along with how chromosomes for the mutation will be selected.
+            
+            number_of_mutation_chromosomes
+                The number of mutation chromosomes in the population. 
+                In case it's value is equal to or higher than 0, it overrides percentage_of_mutation_chromosomes.
+                This value is the upper bound - the actual number of mutated chromosomes can vary from 1 to number_of_mutation_chromosomes.
+            
+            percentage_of_mutation_chromosomes
+                The percentage of mutated chromosomes in the population.
+                This value is applied to the population_size value and rounded to an integer value, giving the number of mutation chromosomes.
+                For example, if population_size has a value of 32, and percentage_of_mutation_chromosomes has a value of 10, the number of mutation chromosomes will be 3.
+                The calculated value is an upper bound - the actual number of mutated chromosomes can vary from 1 to the calculated value.
+                percentage_of_mutation_chromosomes only applies if number_of_mutation_chromosomes does not have a valid integer value equal to or higher than 0.
+            
+            parent_diversity_mutation_chromosome_selection
+                The selection algorithm for mutating chromosomes when population_mutation contains value “parent_diversity”.
+                It only applies when population_mutation has value “parent_diversity”. It determines the way how chromosomes are to be selected based on the diversity of their parents.
+            
+            must_mutate_for_same_parents
+                Indicates if completely the same parents must influence mutation for their children.
+                In other words, each child will be mutated if it has parents with a diversity value of 0.
+                If must_mutate_for_same_parents has the value True, the number of mutated chromosomes can outreach value determined by number_of_mutation_chromosomes or percentage_of_mutation_chromosomes
+            
+            chromosome_mutation
+                The type of mutation of genes in chromosomes.
+            
+            number_of_mutation_genes
+                The number of mutated genes in each chromosome.
+                In case it's value is equal to or higher than 0, it overrides percentage_of_mutation_genes.
+                This value is the upper bound - the number of mutated genes can vary from 1 to number_of_mutation_genes.
+            
+            percentage_of_mutation_genes
+                The percentage of mutated genes in each chromosome.
+                It applies to the chromosome size (number of genes in each chromosome), and the calculated value rounds to an integer value.
+                The calculated value is the upper bound - the actual number of mutated genes can vary from 1 to the calculated value.
+                percentage_of_mutation_genes only applies if number_of_mutations_genes does not have a valid integer value equal to or higher than 0.
+            
+            cross_diversity_mutation_gene_selection
+                The selection algorithm for mutating chromosomes when chromosome_mutation has value “cross_diversity”.
+                It only applies when chromosome_mutation has value “cross_diversity” . It determines the way how genes are to be selected based on the cross-diversity.
+            
+            immigration_number
+                Refers to the “Random Immigrants” concepts. This strategy introduces a certain number of individuals into the population during the evolution process.
+                These new individuals are generated randomly and injected into the population.
+            
+            logging
+                If this parameter has a True value, the log file will be created in the current working directory.
+                The log file contains the flow of genetic algorithm execution, along with values of chromosomes, genes and cost functions in each generation
+            
+            timeout
+                A number of seconds after which the genetic algorithm optimisation will exit, regardless of whether exit_check criteria is reached.
         """
         self.cost_function = cost_function
         self.population_size = population_size
@@ -247,9 +272,9 @@ class GA:
         A type of mutation for the entire population.
         
         Supported values:
-            - “cost_diversity” - It applies to the number of mutation chromosomes. “cost_diversity” determines the number of mutated chromosomes adaptively, using the diversity of costs in the population. Lower cost diversity means a higher number of mutated chromosomes. The minimal value of mutated chromosomes is 0, and the maximal value is determined by the value of number_of_mutation_chromosomes or percentage_of_mutation_chromosomes parameters. If population_mutation has a value other than “cost_diversity”, the number of mutation chromosomes is a random value from 1 to number_of_mutation_chromosomes value (or to value determined by percentage_of_mutation_chromosomes value). “cost_diversity” means that the “parent_diversity” method is selected to select chromosomes to be mutated. This method only determines the number of mutated chromosomes, but not how chromosomes are selected for the mutation.
-            - “parent_diversity” - It applies to the way how mutation chromosomes will be selected. “parent_diversity” selects chromosomes to be mutated using the diversity of their parents. The more similar parents (lower parent diversity) mean a higher probability of mutation for the child. Based on the calculated parent diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the parent_diversity_mutation_chromosome_selection parameter.
-            - “random” - It applies to the number of mutation chromosomes and to the way how mutation chromosomes will be selected. “random” selects chromosomes to be mutated randomly, and randomly determines the number of mutated chromosomes (with the upper bound of number_of_mutation_chromosomes)
+            “cost_diversity” - It applies to the number of mutation chromosomes. “cost_diversity” determines the number of mutated chromosomes adaptively, using the diversity of costs in the population. Lower cost diversity means a higher number of mutated chromosomes. The minimal value of mutated chromosomes is 0, and the maximal value is determined by the value of number_of_mutation_chromosomes or percentage_of_mutation_chromosomes parameters. If population_mutation has a value other than “cost_diversity”, the number of mutation chromosomes is a random value from 1 to number_of_mutation_chromosomes value (or to value determined by percentage_of_mutation_chromosomes value). “cost_diversity” means that the “parent_diversity” method is selected to select chromosomes to be mutated. This method only determines the number of mutated chromosomes, but not how chromosomes are selected for the mutation.
+            “parent_diversity” - It applies to the way how mutation chromosomes will be selected. “parent_diversity” selects chromosomes to be mutated using the diversity of their parents. The more similar parents (lower parent diversity) mean a higher probability of mutation for the child. Based on the calculated parent diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the parent_diversity_mutation_chromosome_selection parameter.
+            “random” - It applies to the number of mutation chromosomes and to the way how mutation chromosomes will be selected. “random” selects chromosomes to be mutated randomly, and randomly determines the number of mutated chromosomes (with the upper bound of number_of_mutation_chromosomes)
         """
         return self._population_mutation
 

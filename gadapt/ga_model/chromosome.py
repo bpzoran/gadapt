@@ -1,3 +1,6 @@
+"""
+Chromosome
+"""
 from typing import List
 from gadapt.ga_model.gene import Gene
 from gadapt.ga_model.genetic_variable import GeneticVariable
@@ -34,7 +37,7 @@ class Chromosome (RankingModel):
         self.genes = []
         
     def __str__(self):
-        return self.get_chromosome_string()
+        return self._get_chromosome_string()
     
     def __getitem__(self, index):
         return self.genes[index]
@@ -45,7 +48,7 @@ class Chromosome (RankingModel):
     def __len__(self):
         return len(self.genes)
 
-    def get_sorted(self, key: None = None, reverse: bool = False):
+    def _get_sorted(self, key: None = None, reverse: bool = False):
         return sorted(self.genes, key=key, reverse=reverse)
 
     def append(self, g: Gene):
@@ -61,13 +64,18 @@ class Chromosome (RankingModel):
         self.genes.clear()
 
     def to_string(self):
+        """
+        Converts the chromosome to the string
+        """
         return ga_strings.chromosome_to_string(self)
+    
+    def set_chromosome_string_none(self):
+        """
+        Sets the chromosome string to None
+        """
+        self._chromosome_string  = None 
 
-    def set_chromosome_string(self, value: str):
-        if value is None:
-           self._chromosome_string  = None 
-
-    def get_chromosome_string(self):
+    def _get_chromosome_string(self):
         if self._chromosome_string is None:
             self._chromosome_string = self.to_string()
         return self._chromosome_string
@@ -172,6 +180,9 @@ class Chromosome (RankingModel):
         self._father_id = value
 
     def add_gene(self, gen_var: GeneticVariable, gen_var_value: float = definitions.FLOAT_NAN):
+        """
+        Adds a gene to the chromosome
+        """
         g = Gene(gen_var, gen_var_value)
         self.append(g)
 
@@ -259,9 +270,12 @@ class Chromosome (RankingModel):
         Indicates if mutation should be applied on both sides
         """
         return self._mutation_on_both_sides
-    
+        
     @mutation_on_both_sides.setter
     def mutation_on_both_sides(self, value: bool):
+        """
+        Indicates if mutation of the chromosome shouls be applied with the same probability of lower and higher value comparing with the current value
+        """
         self._mutation_on_both_sides = value
 
     @property

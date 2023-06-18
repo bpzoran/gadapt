@@ -183,3 +183,4 @@ create_documentation.bat
 test*.py
 
 documentation/
+pypi.bat
