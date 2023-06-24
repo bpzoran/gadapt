@@ -14,7 +14,7 @@ class CrossDiversityChromosomeMutator(RandomChromosomeMutator):
     
     def __init__(self, sampling: BaseSampling) -> None:
         super().__init__()
-        self.sampling = sampling
+        self._sampling = sampling
     
     def mutate_chromosome(self, c: Chromosome, number_of_mutation_genes: int):
         if number_of_mutation_genes == 0:
@@ -24,7 +24,7 @@ class CrossDiversityChromosomeMutator(RandomChromosomeMutator):
         if number_of_mutation_genes > len(x_genes):
             number_of_mutation_genes = len(x_genes)
         number_of_mutation_genes = random.randint(1, number_of_mutation_genes)
-        genes_for_mutation = self.sampling.get_sample(x_genes, number_of_mutation_genes, lambda g: g.genetic_variable.relative_standard_deviation)        
+        genes_for_mutation = self._sampling.get_sample(x_genes, number_of_mutation_genes, lambda g: g.genetic_variable.relative_standard_deviation)        
         for g in genes_for_mutation:
             self.make_mutation(g, c)        
     

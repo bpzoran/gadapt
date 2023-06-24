@@ -28,7 +28,7 @@ class RankingModel:
     def cummulative_probability(self, value):
         self._cummulative_probability = value
 
-    def replace_rank(self, rank):
+    def set_rank(self, rank):
         self.rank = rank
         return self
 

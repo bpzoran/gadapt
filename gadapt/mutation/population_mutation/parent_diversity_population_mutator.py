@@ -13,7 +13,7 @@ class ParentDiversityPopulationMutator(BasePopulationMutator):
         
     def __init__(self, sampling: BaseSampling, options: GAOptions) -> None:
         super().__init__(options)
-        self.sampling = sampling
+        self._sampling = sampling
             
     def sort_key_parent_diversity_random(self, c: Chromosome):
         return (c.parent_diversity, random.random())      
@@ -34,7 +34,7 @@ class ParentDiversityPopulationMutator(BasePopulationMutator):
                 chromosomes_for_mutation = [c for c in unallocated_chromosomes if (not c.parent_diversity == 0)]
             else:
                 chromosomes_for_mutation = [c for c in unallocated_chromosomes]
-            chromosomes_for_mutation = self.sampling.get_sample(chromosomes_for_mutation, rest_number, lambda c: c.parent_diversity)       
+            chromosomes_for_mutation = self._sampling.get_sample(chromosomes_for_mutation, rest_number, lambda c: c.parent_diversity)       
         for c in chromosomes_for_mutation:
             c.mutate(self.options.number_of_mutation_genes)
         return len(chromosomes_for_mutation)

@@ -6,6 +6,11 @@ class BaseExitChecker:
 
     """
     Base class for exit check
+    Parameters
+    ------------
+        max_attempt_no: int
+            Maximal number of attempts with no improvement, for the given criteria.
+            After this number of attempts with no improvements, the GA exits
     """
 
     def __init__(self, max_attempt_no: int) -> None:
@@ -25,7 +30,7 @@ class BaseExitChecker:
         if time_diff >= population.options.timeout:
             population.timeout_expired = True
             return True
-        if self.is_exit(population):
+        if self._is_exit(population):
             self.attempt_no += 1
         else:
             self.attempt_no = 0
@@ -34,5 +39,5 @@ class BaseExitChecker:
             return True
         return False
     
-    def is_exit(self, population) -> bool:
+    def _is_exit(self, population) -> bool:
         raise Exception(definitions.NOT_IMPLEMENTED)

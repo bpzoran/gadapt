@@ -63,7 +63,7 @@ class GAFactory:
         Chromosome Mutator Instance
         """
         if self._ga.chromosome_mutation.strip() == definitions.CROSS_DIVERSITY:
-            return CrossDiversityChromosomeMutator(self.get_sampling_method(self._ga.cross_diversity_mutation_gene_selection))
+            return CrossDiversityChromosomeMutator(self._get_sampling_method(self._ga.cross_diversity_mutation_gene_selection))
         elif self._ga.chromosome_mutation.strip() == definitions.RANDOM:
             return RandomChromosomeMutator()
         else:
@@ -88,9 +88,9 @@ class GAFactory:
         if population_mutator_string.find(definitions.PARAM_SEPARATOR) > -1:
             return self.get_population_mutator_combined()
         elif population_mutator_string == definitions.COST_DIVERSITY:
-            return CostDiversityPopulationMutator(self._options, ParentDiversityPopulationMutator(self.get_sampling_method(self._ga.parent_diversity_mutation_chromosome_selection), self._options))
+            return CostDiversityPopulationMutator(self._options, ParentDiversityPopulationMutator(self._get_sampling_method(self._ga.parent_diversity_mutation_chromosome_selection), self._options))
         elif population_mutator_string == definitions.PARENT_DIVERSITY:
-            return ParentDiversityPopulationMutator(self.get_sampling_method(self._ga.parent_diversity_mutation_chromosome_selection), self._options)
+            return ParentDiversityPopulationMutator(self._get_sampling_method(self._ga.parent_diversity_mutation_chromosome_selection), self._options)
         elif population_mutator_string == definitions.RANDOM:
             return RandomPopulationMutator(self._options)
         else:
@@ -104,10 +104,10 @@ class GAFactory:
         if (self._is_cost_diversity_random(mutator_strings)):
             return CostDiversityPopulationMutator(self._options, RandomPopulationMutator(self._options))
         if (self._is_cost_diversity_parent_diversity(mutator_strings)):
-            return CostDiversityPopulationMutator(self._options, ParentDiversityPopulationMutator(self.get_sampling_method(self._ga.parent_diversity_mutation_chromosome_selection), self._options))
+            return CostDiversityPopulationMutator(self._options, ParentDiversityPopulationMutator(self._get_sampling_method(self._ga.parent_diversity_mutation_chromosome_selection), self._options))
         if self._is_cost_diversity_parent_diversity_random(mutator_strings):
             composedPopulationMutator = ComposedPopulationMutator(self._options)
-            composedPopulationMutator.append(ParentDiversityPopulationMutator(self.get_sampling_method(
+            composedPopulationMutator.append(ParentDiversityPopulationMutator(self._get_sampling_method(
                 self._ga.parent_diversity_mutation_chromosome_selection), self._options))
             composedPopulationMutator.append(
                 RandomPopulationMutator(self._options))
@@ -145,9 +145,9 @@ class GAFactory:
         """
         Parent Selector Instance
         """
-        return SamplingParentSelector(self.get_sampling_method(self._ga.parent_selection))
+        return SamplingParentSelector(self._get_sampling_method(self._ga.parent_selection))
 
-    def get_sampling_method(self, str) -> BaseSampling:
+    def _get_sampling_method(self, str) -> BaseSampling:
         """
         Sampling Methos Instance
         """

@@ -8,22 +8,22 @@ from gadapt.gene_combination.base_gene_combination import BaseGeneCombination
 class UniformCrossover(BaseCrossover):
 
     """
-    Uniform Crossover
+    Uniform Crossover.
+    Genes from parents' chromosomes are combined in a uniform way
     """
     
     def __init__(self, var_combination: BaseGeneCombination, mutator: BaseChromosomeMutator, immigrator: BaseChromosomeImmigrator):
         super(UniformCrossover, self).__init__(var_combination, mutator, immigrator)
-        self.gene_combination = var_combination
     
-    def get_mother_father_genes(self, mother: Chromosome, father: Chromosome):
-        father_gene = father[self.current_gene_number]
-        mother_gene = mother[self.current_gene_number]
+    def _get_mother_father_genes(self, mother: Chromosome, father: Chromosome):
+        father_gene = father[self._current_gene_number]
+        mother_gene = mother[self._current_gene_number]
         return mother_gene, father_gene
     
-    def combine(self, mother_gene: Gene, father_gene: Gene):
-        if self.gene_combination is None:
+    def _combine(self, mother_gene: Gene, father_gene: Gene):
+        if self._gene_combination is None:
             raise Exception("gene_combination must not be null!")
-        return self.gene_combination.combine(mother_gene, father_gene)
+        return self._gene_combination.combine(mother_gene, father_gene)
     
     
     

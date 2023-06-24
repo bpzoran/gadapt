@@ -10,5 +10,5 @@ class FromTopToBottomSampling(BaseSampling):
 
     def prepare_sample(self, lst: List[RankingModel]) -> List[RankingModel]:
         members_for_action = sorted(lst, key=self.sort_key)
-        return [m.replace_rank(rank) for rank, m in enumerate(members_for_action[:self.max_num])]
+        return [m.set_rank(rank) for rank, m in enumerate(members_for_action[:self.max_num])]
         

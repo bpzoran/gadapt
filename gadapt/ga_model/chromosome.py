@@ -20,48 +20,48 @@ class Chromosome (RankingModel):
         super().__init__()
         self._mutator = mutator
         self._immigrator = immigrator
-        self.cost_value = definitions.FLOAT_NAN
+        self._cost_value = definitions.FLOAT_NAN
         self._is_immigrant = False
-        self.population_generation = population_generation
+        self._population_generation = population_generation
         self._chromosome_id = None
         self._mutated_variables_id_list = []
-        self.first_mutant_generation = 0
-        self.first_immigrant_generation = 0
-        self.last_mutant_generation = 0
-        self.last_immigrant_generation = 0
+        self._first_mutant_generation = 0
+        self._first_immigrant_generation = 0
+        self._last_mutant_generation = 0
+        self._last_immigrant_generation = 0
         self._chromosome_string = None
         self._mother_id = -1
-        self.father_id = -1
+        self._father_id = -1
         self._is_mutated = False
         self._is_immigrant = False
-        self.genes = []
+        self._genes = []
         
     def __str__(self):
         return self._get_chromosome_string()
     
     def __getitem__(self, index):
-        return self.genes[index]
+        return self._genes[index]
 
     def __next__(self):
-        return next(self.genes)
+        return next(self._genes)
 
     def __len__(self):
-        return len(self.genes)
+        return len(self._genes)
 
     def _get_sorted(self, key: None = None, reverse: bool = False):
-        return sorted(self.genes, key=key, reverse=reverse)
+        return sorted(self._genes, key=key, reverse=reverse)
 
     def append(self, g: Gene):
         """
         Appends a new gene into the chromosom
         """
-        self.genes.append(g)
+        self._genes.append(g)
 
     def clear(self):
         """
         Clears all genes from the chromosome
         """
-        self.genes.clear()
+        self._genes.clear()
 
     def to_string(self):
         """
