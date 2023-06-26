@@ -12,12 +12,9 @@ class BaseCostFinder:
         """
         Executes the cost function
         
-        Parameters
-        ------------
-            cost_function:
-                Function to execute
-            c: Chromosome
-                The chromosome with genes containing values for the function execution.
+        Args:
+            cost_function: Function to execute
+            c: (Chromosome): The chromosome with genes containing values for the function execution.
         """
         dict = {}
         for g in c:
@@ -35,9 +32,7 @@ class BaseCostFinder:
         """
         Finds costs for the population
         
-        Parameters
-        ------------
-            population:
-                The population to find costs for each chromosome
+        Args:
+            population (Population): The population to find costs for each chromosome
         """
         raise Exception(definitions.NOT_IMPLEMENTED)

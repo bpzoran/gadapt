@@ -10,12 +10,9 @@ class GAExecutor:
     """
     Executor for the genetic algorithm
     
-    Parameters
-    ------------
-        ga_options: GAOptions
-            Options for GA execution
-        factory: GAFactory
-            Factory for objects creation
+    Args:
+        ga_options (GAOptions): Options for GA execution
+        factory (GAFactory): Factory for objects creation
     """
 
     def __init__(self, ga_options: GAOptions, factory: GAFactory) -> None:

@@ -8,19 +8,13 @@ import gadapt.ga_model.definitions as definitions
 
 class BaseCrossover:
 
-    """
-    Base Crossover Class
+    """Base Crossover Class
     
-    Parameters
-    ------------
-        gene_combination: BaseGeneCombination
-            the algorithm for how genes are to be combined
-        mutator: BaseChromosomeMutator
-            mutation algorithm to be passed to offspring chromosomes
-        immigrator: BaseChromosomeImmigrator
-            immigration algorithm to be passed to offspring chromosomes
-        mutation_on_both_sides: bool
-            indicates if offspring chromosomes should be mutated on both sides with the same probability
+    Args:
+        gene_combination (BaseGeneCombination): the algorithm for how genes are to be combined
+        mutator (BaseChromosomeMutator): mutation algorithm to be passed to offspring chromosomes
+        immigrator (BaseChromosomeImmigrator): immigration algorithm to be passed to offspring chromosomes
+        mutation_on_both_sides (bool): indicates if offspring chromosomes should be mutated on both sides with the same probability
     """
     def __init__(self, gene_combination: BaseGeneCombination, mutator: BaseChromosomeMutator, immigrator: BaseChromosomeImmigrator, mutation_on_both_sides: bool = True):
         self._mutation_on_both_sides = True
@@ -31,23 +25,16 @@ class BaseCrossover:
   
     
     def mate(self, mother: Chromosome, father: Chromosome, population_generation: int):
-        """ Returns two offspring chromosomes using parents' genetic material
+        """Returns two offspring chromosomes using parents' genetic material
         
-        Parameters
-        ------------
-            mother: Chromosome
-                The first chromosome for mating
-            father: Chromosome
-                The second chromosome for mating
-            population_generation: int
-                Current generation in the population
+        Args:
+            mother (Chromosome): The first chromosome for mating
+            father (Chromosome): The second chromosome for mating
+            population_generation (int): Current generation in the population
 
-        Return
-        -----------
-            offspring1 : Chromosome
-                the first offspring chromosome
-            offspring2 : Chromosome
-                the second offspring chromosome
+        Returns:
+            Chromosome: offspring1: the first offspring chromosome            
+            Chromosome: offspring2: the second offspring chromosome
         """
         def get_genetic_diversity(g_m: Gene, g_f: Gene) -> float:
             return abs(g_m.variable_value - g_f.variable_value) / (g_f.genetic_variable.max_value - g_f.genetic_variable.min_value)
