@@ -21,10 +21,6 @@ import gadapt.ga_model.definitions as definitions
 
 class Population:
 
-    """
-    Population for the genetic algorithm. It contains a collection of chromosomes, as well as additional parameters
-    """
-
     def __init__(self, options: GAOptions,
                  chromosome_mutator: BaseChromosomeMutator,
                  population_mutator: BasePopulationMutator,
@@ -35,28 +31,20 @@ class Population:
                  parent_selector: BaseParentSelector,
                  crossover: BaseCrossover,
                  variable_updater: BaseVariableUpdater):
-        """
-        Initializator for the Population class.
+        """Population for the genetic algorithm. It contains a collection of chromosomes, as well as additional parameters
 
-        options: Genetic Algorithm Options
+        Args:
 
-        chromosome_mutator: Chromosome Mutator Instance
-
-        population_mutator: Population Mutator Instance
-
-        exit_checker: Exit Checker Instance
-
-        cost_finder: Cost Finder Instance
-
-        population_immigrator: Population Immigrator Instance
-
-        chromosome_immigrator: Chromosome Immigrator Instance
-
-        parent_selector: Parent Selector Instance
-
-        crossover: Crossover Instance
-
-        variable_updater: Variable Updater Instance
+            options (GAOptions): Genetic Algorithm Options
+            chromosome_mutator (BaseChromosomeMutator): Chromosome Mutator Instance
+            population_mutator (BasePopulationMutator): Population Mutator Instance
+            exit_checker (BaseExitChecker): Exit Checker Instance
+            cost_finder (BaseCostFinder): Cost Finder Instance
+            population_immigrator (BasePopulationImmigrator): Population Immigrator Instance
+            chromosome_immigrator (BaseChromosomeImmigrator): Chromosome Immigrator Instance
+            parent_selector (BaseParentSelector): Parent Selector Instance
+            crossover (BaseCrossover): Crossover Instance
+            variable_updater (BaseVariableUpdater): Variable Updater Instance
         """
         if options.population_size < 4:
             raise Exception("Population size 4 must be higher than 3")        
@@ -70,7 +58,7 @@ class Population:
         self.parent_selector = parent_selector
         self.crossover = crossover
         self.variable_updater = variable_updater
-        self.set_init_values()
+        self._set_init_values()
         self.last_chromosome_id = 1
         self._population_generation = 0
         self.options = options
@@ -89,9 +77,14 @@ class Population:
         return len(self.chromosomes)
     
     def __str__(self):
-        return self.to_string()
+        return self._to_string()
 
-    def get_sorted(self, key: None = None, reverse: bool = False):
+    def get_sorted(self, key = None, reverse: bool = False):
+        """Sorted list of chromosomes
+        Args:
+            key: Sorted key
+            reverse (bool=False): is reversed
+        """
         return sorted(self.chromosomes, key=key, reverse=reverse)
 
     def append(self, c: Chromosome):
@@ -101,10 +94,10 @@ class Population:
         for i in range(self.options.population_size):
             self.add_new_chromosome()
 
-    def to_string(self):
+    def _to_string(self):
         return ga_strings.population_to_string(self)
 
-    def set_init_values(self):
+    def _set_init_values(self):
         float_init_value = definitions.FLOAT_NAN
         self.avg_cost = float_init_value
         self.previous_avg_cost = float_init_value
@@ -370,6 +363,8 @@ class Population:
     def clear_and_add_chromosomes(self, chromosomes: List[Chromosome]):
         """
         Clears chromosomes and adds new ones
+        Args:
+            chromosomes(List[Chromosome]): chromosomes to add
         """
         self.chromosomes.clear()
         self.add_chromosomes(chromosomes)
@@ -377,6 +372,8 @@ class Population:
     def add_chromosomes(self, chromosomes):
         """
         Adds chromosomes to population
+        Args:
+            chromosomes(List[Chromosome]): chromosomes to add
         """
         for c in chromosomes:
             self.add_chromosome(c)
@@ -392,6 +389,8 @@ class Population:
     def add_chromosome(self, chromosome):
         """
         Adds chromosome to the population
+        Args:
+            chromosome: chromosome to add
         """
         if len(self) >= self.options.population_size:
             return

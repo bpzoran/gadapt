@@ -63,7 +63,7 @@ class Chromosome (RankingModel):
         """
         self._genes.clear()
 
-    def to_string(self):
+    def _to_string(self):
         """
         Converts the chromosome to the string
         """
@@ -77,7 +77,7 @@ class Chromosome (RankingModel):
 
     def _get_chromosome_string(self):
         if self._chromosome_string is None:
-            self._chromosome_string = self.to_string()
+            self._chromosome_string = self._to_string()
         return self._chromosome_string
 
     @property

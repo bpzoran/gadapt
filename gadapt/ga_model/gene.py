@@ -24,9 +24,9 @@ class Gene(RankingModel):
             self.set_random_value()
 
     def __str__(self) -> str:
-        return self.to_string()
+        return self._to_string()
     
-    def to_string(self):
+    def _to_string(self):
         return ga_strings.gene_to_string(self)
 
     @property
