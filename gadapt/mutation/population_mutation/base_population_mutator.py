@@ -15,13 +15,7 @@ class BasePopulationMutator:
         self._mutate_population(population, number_of_mutated_chromosomes)
     
     def __init__(self, options: GAOptions) -> None:
-        self.options = options
-
-    def before_exit_check(self, population):
-        pass
-
-    def after_first_execution(self, population):
-        pass        
+        self.options = options     
 
     def _mutate_population(self, population, number_of_mutated_chromosomes):
         raise Exception(definitions.NOT_IMPLEMENTED)

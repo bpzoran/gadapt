@@ -30,12 +30,6 @@ class CommonCostFinder(BaseCostFinder):
         self._log_population(population)
         population.clear_and_add_chromosomes(better_chromosomes)
         population.update_variables()
-        self._cost_found_first_time(population, better_chromosomes)
-        
-    def _cost_found_first_time(self, population: Population, better_chromosomes: List[Chromosome] ):
-        if math.isnan(population.first_cost):
-            population.first_cost = ga_utils.average([c.cost_value for c in better_chromosomes])
-            population.population_mutator.after_first_execution(population)
 
     def _log_population(self, population: Population):
         if population.options.logging:

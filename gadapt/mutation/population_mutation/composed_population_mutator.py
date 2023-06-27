@@ -26,11 +26,3 @@ class ComposedPopulationMutator(BasePopulationMutator):
         for m in self.mutators:
             if nmc < number_of_mutation_chromosomes:
                 nmc += m._mutate_population(population, number_of_mutation_chromosomes - nmc) 
-
-    def before_exit_check(self, population):
-        for m in self.mutators:
-            m.before_exit_check(population)
-
-    def after_first_execution(self, population):
-        for m in self.mutators:
-            m.after_first_execution(population) 

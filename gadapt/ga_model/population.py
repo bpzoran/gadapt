@@ -103,7 +103,6 @@ class Population:
         self.previous_avg_cost = float_init_value
         self.min_cost = float_init_value
         self.previous_min_cost = float_init_value
-        self.first_cost = float_init_value
 
     @property
     def options(self) -> GAOptions:
@@ -159,17 +158,6 @@ class Population:
     @previous_min_cost.setter
     def previous_min_cost(self, value: float) -> float:
         self._previous_min_cost = value
-
-    @property
-    def first_cost(self) -> float:
-        """
-        First cost found
-        """
-        return self._first_cost
-
-    @first_cost.setter
-    def first_cost(self, value: float):
-        self._first_cost = value
 
     @property
     def best_individual(self) -> Chromosome:
@@ -316,7 +304,6 @@ class Population:
         Check exit from the GA
         """
         self.population_generation += 1
-        self.population_mutator.before_exit_check(self)
         return self.exit_checker.check(self)
 
     def immigrate(self):

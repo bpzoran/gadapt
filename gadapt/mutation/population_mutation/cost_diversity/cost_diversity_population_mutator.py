@@ -16,18 +16,6 @@ class CostDiversityPopulationMutator(BasePopulationMutator):
     def __init__(self, options: GAOptions, population_mutator_for_execution: BasePopulationMutator) -> None:
         super().__init__(options)
         self._population_mutator_for_execution = population_mutator_for_execution
-        self.first_cost = definitions.FLOAT_NAN
-        
-    @property
-    def first_cost(self) -> float:
-        return self._first_cost
-
-    @first_cost.setter
-    def first_cost(self, value: float):
-        self._first_cost = value       
-
-    def after_first_execution(self, population):
-        self.first_cost = population.first_cost 
     
     def _get_number_of_mutation_cromosomes(self, allocated_chromosomes, number_of_mutation_chromosomes) -> int:
         def get_mutation_rate() -> float:
