@@ -16,7 +16,7 @@ class ComposedPopulationMutator(BasePopulationMutator):
     def append(self, mutator: BasePopulationMutator):
         self.mutators.append(mutator)         
     
-    def mutate_population(self, population, number_of_mutation_chromosomes):        
+    def _mutate_population(self, population, number_of_mutation_chromosomes):        
         if population is None:
             raise Exception("Population must not be null")
         if len(self.mutators) == 0:
@@ -25,7 +25,7 @@ class ComposedPopulationMutator(BasePopulationMutator):
         nmc = 0
         for m in self.mutators:
             if nmc < number_of_mutation_chromosomes:
-                nmc += m.mutate_population(population, number_of_mutation_chromosomes - nmc) 
+                nmc += m._mutate_population(population, number_of_mutation_chromosomes - nmc) 
 
     def before_exit_check(self, population):
         for m in self.mutators:

@@ -14,7 +14,7 @@ class BaseCostFinder:
         
         Args:
             cost_function: Function to execute
-            c: (Chromosome): The chromosome with genes containing values for the function execution.
+            c (Chromosome): The chromosome with genes containing values for the function execution.
         """
         dict = {}
         for g in c:

@@ -364,7 +364,7 @@ class Population:
         """
         Clears chromosomes and adds new ones
         Args:
-            chromosomes(List[Chromosome]): chromosomes to add
+            chromosomes (List[Chromosome]): chromosomes to add
         """
         self.chromosomes.clear()
         self.add_chromosomes(chromosomes)
@@ -373,7 +373,7 @@ class Population:
         """
         Adds chromosomes to population
         Args:
-            chromosomes(List[Chromosome]): chromosomes to add
+            chromosomes (List[Chromosome]): chromosomes to add
         """
         for c in chromosomes:
             self.add_chromosome(c)

@@ -15,14 +15,14 @@ class ParentDiversityPopulationMutator(BasePopulationMutator):
         super().__init__(options)
         self._sampling = sampling
             
-    def sort_key_parent_diversity_random(self, c: Chromosome):
+    def _sort_key_parent_diversity_random(self, c: Chromosome):
         return (c.parent_diversity, random.random())      
     
-    def mutate_population(self, population, number_of_mutation_chromosomes):
+    def _mutate_population(self, population, number_of_mutation_chromosomes):
         if population is None:
             raise Exception("Population must not be null")
-        unallocated_chromosomes: List[Chromosome] = self.get_unallocated_chromosomes(
-            population, self.sort_key_parent_diversity_random)
+        unallocated_chromosomes: List[Chromosome] = self._get_unallocated_chromosomes(
+            population, self._sort_key_parent_diversity_random)
         chromosomes_for_mutation: List[Chromosome] = []
         if self.options.must_mutate_for_same_parents:
             chromosomes_for_mutation = [

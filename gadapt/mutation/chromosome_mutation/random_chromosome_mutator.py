@@ -19,9 +19,9 @@ class RandomChromosomeMutator(BaseChromosomeMutator):
         var_num = random.randint(1, number_of_mutation_genes)
         genes_to_mutate = genes_to_mutate[:var_num]        
         for g in genes_to_mutate[:var_num]:
-            self.set_random_value(g, c)
+            self._set_random_value(g, c)
         return var_num
 
-    def set_random_value(self, g: Gene, c: Chromosome):
+    def _set_random_value(self, g: Gene, c: Chromosome):
         g.variable_value = round(g.genetic_variable.make_random_value(), g.genetic_variable.decimal_places)
-        self.gene_mutated(g, c)
+        self._gene_mutated(g, c)

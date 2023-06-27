@@ -15,7 +15,7 @@ class CostDiversityPopulationMutator(BasePopulationMutator):
     
     def __init__(self, options: GAOptions, population_mutator_for_execution: BasePopulationMutator) -> None:
         super().__init__(options)
-        self.population_mutator_for_execution = population_mutator_for_execution
+        self._population_mutator_for_execution = population_mutator_for_execution
         self.first_cost = definitions.FLOAT_NAN
         
     @property
@@ -28,16 +28,8 @@ class CostDiversityPopulationMutator(BasePopulationMutator):
 
     def after_first_execution(self, population):
         self.first_cost = population.first_cost 
-
-    @property
-    def population_mutator_for_execution(self) -> BasePopulationMutator:
-        return self._population_mutator_for_execution
-
-    @population_mutator_for_execution.setter
-    def population_mutator_for_execution(self, value: BasePopulationMutator):
-        self._population_mutator_for_execution = value 
     
-    def get_number_of_mutation_cromosomes(self, allocated_chromosomes, number_of_mutation_chromosomes) -> int:
+    def _get_number_of_mutation_cromosomes(self, allocated_chromosomes, number_of_mutation_chromosomes) -> int:
         def get_mutation_rate() -> float:
             current_costs = []
             current_min_value = min(allocated_chromosomes, key=lambda x: x.cost_value)
@@ -58,10 +50,10 @@ class CostDiversityPopulationMutator(BasePopulationMutator):
         f_return_value = mutation_rate * float(number_of_mutation_chromosomes)
         return round(f_return_value)
     
-    def mutate_population(self, population, number_of_mutation_chromosomes):
+    def _mutate_population(self, population, number_of_mutation_chromosomes):
         if population is None:
             raise Exception("Population must not be null")
         allocated_chromosomes = [c for c in population if not math.isnan(c.cost_value)]
-        current_number_of_mutation_chromosomes = self.get_number_of_mutation_cromosomes(allocated_chromosomes,
+        current_number_of_mutation_chromosomes = self._get_number_of_mutation_cromosomes(allocated_chromosomes,
             number_of_mutation_chromosomes)
-        return self.population_mutator_for_execution.mutate_population(population, current_number_of_mutation_chromosomes)
+        return self._population_mutator_for_execution._mutate_population(population, current_number_of_mutation_chromosomes)
