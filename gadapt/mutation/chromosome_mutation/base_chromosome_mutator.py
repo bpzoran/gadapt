@@ -13,10 +13,10 @@ class BaseChromosomeMutator:
         Number of mutated genes is determined by the parameter "number_of_mutation_genes"
         """
         self._before_mutated(c)
-        self.mutate_chromosome(c, number_of_mutation_genes)
+        self._mutate_chromosome(c, number_of_mutation_genes)
         self._chromosome_mutated(c)
     
-    def mutate_chromosome(self, c, number_of_mutation_genes: int):
+    def _mutate_chromosome(self, c, number_of_mutation_genes: int):
         raise Exception(definitions.NOT_IMPLEMENTED)
     
     def _gene_mutated(self, g, c):

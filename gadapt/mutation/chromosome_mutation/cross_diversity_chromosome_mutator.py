@@ -16,7 +16,7 @@ class CrossDiversityChromosomeMutator(RandomChromosomeMutator):
         super().__init__()
         self._sampling = sampling
     
-    def mutate_chromosome(self, c: Chromosome, number_of_mutation_genes: int):
+    def _mutate_chromosome(self, c: Chromosome, number_of_mutation_genes: int):
         if number_of_mutation_genes == 0:
             return
         x_genes = [g for g in c]

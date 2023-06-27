@@ -11,7 +11,7 @@ class RandomChromosomeMutator(BaseChromosomeMutator):
     """
     Class for the random mutation of chromosome.
     """ 
-    def mutate_chromosome(self, c: Chromosome, number_of_mutation_genes: int):
+    def _mutate_chromosome(self, c: Chromosome, number_of_mutation_genes: int):
         if number_of_mutation_genes == 0:
             return
         genes_to_mutate = list(c)
