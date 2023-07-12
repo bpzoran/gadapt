@@ -3,13 +3,14 @@ Genetic algorithm options
 """
 from typing import List
 from gadapt.ga_model.genetic_variable import GeneticVariable
-class GAOptions():
-   
-    """
-    Genetic algorithm options class
-    """
-    
+class GAOptions:
+           
     def __init__(self, ga) -> None:
+        """
+        Genetic algorithm options class
+        Args:
+            ga: Genetic algorithm class, containing data to initialize options
+        """
         super().__init__()           
         self._population_size = ga.population_size
         self._cost_function = ga.cost_function                

@@ -132,9 +132,8 @@ class GA:
 
    
     def execute(self) -> GAResults: 
-        """Executes genetic algorithm optimization base on the provided parameters and arguments.
-        Returns: 
-            GAResults: Genetic Algorithm Results.s
+        """
+        Executes genetic algorithm optimization base on the provided parameters and arguments.
         """ 
         validator = CommonOptionsValidator(self)
         validator.validate()

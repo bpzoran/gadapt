@@ -9,7 +9,7 @@ from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChro
 class RandomChromosomeMutator(BaseChromosomeMutator):
 
     """
-    Class for the random mutation of chromosome.
+    Random mutation of the chromosome.
     """ 
     def _mutate_chromosome(self, c: Chromosome, number_of_mutation_genes: int):
         if number_of_mutation_genes == 0:

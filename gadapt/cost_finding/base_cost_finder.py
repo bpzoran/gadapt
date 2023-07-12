@@ -8,7 +8,7 @@ class BaseCostFinder:
     """
     Base class for cost finding
     """
-    def execute_function(self, cost_function, c: Chromosome):
+    def _execute_function(self, cost_function, c: Chromosome):
         """
         Executes the cost function
         
@@ -28,11 +28,14 @@ class BaseCostFinder:
             c.succ = False
             c.cost_value = sys.float_info.max
 
-    def find_costs_for_population(self, population):
+    def _find_costs_for_population(self, population):
+        raise Exception(definitions.NOT_IMPLEMENTED)
+    
+    def find_costs(self, population):
         """
         Finds costs for the population
         
         Args:
             population (Population): The population to find costs for each chromosome
         """
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        self._find_costs_for_population(population)

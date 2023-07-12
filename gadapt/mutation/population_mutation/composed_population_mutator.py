@@ -4,16 +4,20 @@ from gadapt.ga_model.ga_options import GAOptions
 from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
 
 class ComposedPopulationMutator(BasePopulationMutator):
-
-    """
-    Population mutator that consists of more different population mutators
-    """
         
     def __init__(self, options: GAOptions) -> None:
+        """
+        Population mutator that consists of more different population mutators
+        Args:
+            options: genetic algorithm options
+        """
         super().__init__(options)
         self.mutators = []
             
     def append(self, mutator: BasePopulationMutator):
+        """
+        Appends mutator to the composition of mutators
+        """
         self.mutators.append(mutator)         
     
     def _mutate_population(self, population, number_of_mutation_chromosomes):        

@@ -9,7 +9,7 @@ class CommonPopulationImmigrator(BasePopulationImmigrator):
     In kept part of the population lower ranked chromosomes are replaced with new ones
     """
     
-    def immigrate(self, population):
+    def _immigrate_population(self, population):
         if population.options.immigration_number < 1:
             return
         keep_number = population.options.keep_number

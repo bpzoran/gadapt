@@ -11,12 +11,16 @@ import gadapt.ga_model.definitions as definitions
 import gadapt.string_operation.ga_strings as ga_strings
 class Chromosome (RankingModel):
     
-    """
-    Chromosome class.
-    Chromosome is a part of the Population. Chromosome consists of Genes
-    """
+    
     
     def __init__(self, mutator: BaseChromosomeMutator, immigrator: BaseChromosomeImmigrator, population_generation: int):
+        """
+        Chromosome class.
+        Chromosome is a part of the Population. Chromosome consists of Genes.
+        Args:
+            immigrator (BaseChromosomeImmigrator): Immigration algorithm
+            population_generation (int): Generation in which the chromosome is created in the population
+        """
         super().__init__()
         self._mutator = mutator
         self._immigrator = immigrator

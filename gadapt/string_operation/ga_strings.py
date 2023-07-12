@@ -5,9 +5,19 @@ Genetic algorithm string operations
 """
 
 def gene_to_string(g):
+    """
+    Creates string  from the gene
+    Args:
+        g: Gene for string representation
+    """
     return str(g.genetic_variable.variable_id) + ": " + str(round(g.variable_value, 2))
 
 def chromosome_to_string(c):
+    """
+    Creates string  from the chromosome
+    Args:
+        c: Chromosome for string representation
+    """
     str_res = "Chromosome "
     id_str = str(c.chromosome_id)
     while len(id_str) < 4:
@@ -36,6 +46,11 @@ def chromosome_to_string(c):
     return str_res
 
 def population_to_string_list(p):
+    """
+    Creates string list from the population
+    Args:
+        p: Population for string list representation
+    """
     str_list = []
     population_for_log = [c for c in p if not math.isnan(c.cost_value)]
     population_for_log.sort(key=lambda c: c.cost_value)
@@ -44,6 +59,11 @@ def population_to_string_list(p):
     return str_list
 
 def population_to_string(p):
+    """
+    Creates string from the population
+    Args:
+        gp Population for string representation
+    """
     str_res = ""
     new_line = "\n"
     str_res += "Population number: " + str(p.population_generation) + new_line
@@ -55,6 +75,11 @@ def population_to_string(p):
     return str_res
 
 def results_to_string(r):
+    """
+    Creates string from the results
+    Args:
+        r: Results for string representation
+    """
     mess = r._get_message()
     mess_exists = not (mess is None or len(mess) == 0)
     if r.success:
@@ -72,6 +97,11 @@ def results_to_string(r):
     return rslt
 
 def get_results_message(r):
+    """
+    Creates a string from the list of messages in the results
+    Args:
+        r: Results containing the list of messages
+    """
     message = ""
     new_line = "\n"
     for m in r.messages:

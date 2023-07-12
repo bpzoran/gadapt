@@ -33,8 +33,8 @@ class BaseCrossover:
             population_generation (int): Current generation in the population
 
         Returns:
-            Chromosome: offspring1: the first offspring chromosome            
-            Chromosome: offspring2: the second offspring chromosome
+            Chromosome: the first offspring chromosome            
+            Chromosome: the second offspring chromosome
         """
         def get_genetic_diversity(g_m: Gene, g_f: Gene) -> float:
             return abs(g_m.variable_value - g_f.variable_value) / (g_f.genetic_variable.max_value - g_f.genetic_variable.min_value)

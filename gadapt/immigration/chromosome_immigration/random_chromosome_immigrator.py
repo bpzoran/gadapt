@@ -7,7 +7,7 @@ class RandomChromosomeImmigrator(BaseChromosomeImmigrator):
     New immigrated chromosome with random genes
     """
 
-    def immigrate_chromosome(self, c: Chromosome):
+    def _immigrate_chromosome(self, c: Chromosome):
         for g in c:
             g.set_random_value()
         

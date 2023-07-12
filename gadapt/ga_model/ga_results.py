@@ -4,12 +4,11 @@ Results for the genetic algorithm execution
 import gadapt.string_operation.ga_strings as ga_strings
 
 class GAResults:
-
-    """
-    Results class for the genetic algorithm execution
-    """
-
+    
     def __init__(self) -> None:
+        """
+        Results class for the genetic algorithm execution
+        """
         self._success = True
         self.result_values = {}
         self._messages = []

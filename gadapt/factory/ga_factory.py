@@ -3,7 +3,7 @@ from gadapt.exit_check.base_exit_checker import BaseExitChecker
 from gadapt.exit_check.min_cost_exit_checker import MinCostExitChecker
 from gadapt.exit_check.requested_cost_exit_checker import RequestedCostExitChecker
 from gadapt.cost_finding.base_cost_finder import BaseCostFinder
-from gadapt.cost_finding.common_cost_finder import CommonCostFinder
+from gadapt.cost_finding.common_cost_finder import ElitismCostFinder
 from gadapt.crossover.base_crossover import BaseCrossover
 from gadapt.crossover.uniform_crossover import UniformCrossover
 from gadapt.ga_model.ga_options import GAOptions
@@ -16,7 +16,7 @@ from gadapt.mutation.chromosome_mutation.cross_diversity_chromosome_mutator impo
 from gadapt.mutation.chromosome_mutation.random_chromosome_mutator import RandomChromosomeMutator
 from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
 from gadapt.mutation.population_mutation.composed_population_mutator import ComposedPopulationMutator
-from gadapt.mutation.population_mutation.cost_diversity.cost_diversity_population_mutator import CostDiversityPopulationMutator
+from gadapt.mutation.population_mutation.cost_diversity_population_mutator import CostDiversityPopulationMutator
 from gadapt.mutation.population_mutation.parent_diversity_population_mutator import ParentDiversityPopulationMutator
 from gadapt.mutation.population_mutation.random_population_mutator import RandomPopulationMutator
 from gadapt.parent_selection.base_parent_selector import BaseParentSelector
@@ -44,7 +44,7 @@ class GAFactory:
         """
         Cost Finder instance
         """
-        return CommonCostFinder()
+        return ElitismCostFinder()
 
     def get_population_immigrator(self) -> BasePopulationImmigrator:
         """

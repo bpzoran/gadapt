@@ -7,14 +7,15 @@ from gadapt.ga_model.ranking_model import RankingModel
 import gadapt.string_operation.ga_strings as ga_strings
 import gadapt.ga_model.definitions as definitions
 class Gene(RankingModel):
-
-    """
-    Gene class. Gene is a part of chromosome.
-    It contains concrete values for genetic variables.
-    
-    """
-    
+        
     def __init__(self, gen_variable, var_value = None):
+        """
+        Gene class. Gene is a part of chromosome.
+        It contains concrete values for genetic variables.
+        Args:
+            gen_variable: Genetic variable which defines the gene
+            var_value: Value of the gene
+        """
         super().__init__()
         self.genetic_variable = gen_variable        
         self.variable_value = var_value
@@ -31,6 +32,9 @@ class Gene(RankingModel):
 
     @property
     def genetic_variable(self) -> GeneticVariable:
+        """
+        Genetic variable which defines the gene
+        """
         return self._genetic_variable
     
     @genetic_variable.setter
@@ -39,6 +43,9 @@ class Gene(RankingModel):
 
     @property
     def variable_value(self):
+        """
+        Value of the gene
+        """
         return self._variable_value
     
     @variable_value.setter
@@ -46,4 +53,7 @@ class Gene(RankingModel):
         self._variable_value = value
 
     def set_random_value(self):
+        """
+        Sets a random value for the variable_value property
+        """
         self.variable_value = self.genetic_variable.make_random_value()

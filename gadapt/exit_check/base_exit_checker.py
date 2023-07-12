@@ -8,8 +8,8 @@ class BaseExitChecker:
     Base class for exit check
     Args:
         max_attempt_no (int): Maximal number of attempts with no improvement, for the given criteria.
-        
-        After this number of attempts with no improvements, the GA exits
+            
+            After this number of attempts with no improvements, the GA exits
     """
 
     def __init__(self, max_attempt_no: int) -> None:

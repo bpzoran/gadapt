@@ -6,19 +6,19 @@ from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.population import Population
 import gadapt.utils.ga_utils as ga_utils
 
-class CommonCostFinder(BaseCostFinder):
+class ElitismCostFinder(BaseCostFinder):
 
     """
-    Common class for cost finding
+    Finding costs for a better half of the population
     """
 
-    def find_costs_for_population(self, population: Population):
+    def _find_costs_for_population(self, population: Population):
         if (population is None):
             raise Exception("population must not be null!")
         chromosomes_for_execution: List[Chromosome] = [
             c for c in population if (math.isnan(c.cost_value)) or (c.is_immigrant and c.population_generation == population.population_generation)]
         for c in chromosomes_for_execution:
-            self.execute_function(population.options.cost_function, c)        
+            self._execute_function(population.options.cost_function, c)        
         better_chromosomes: List[Chromosome] = population.get_sorted(key=lambda x: x.cost_value)[:
             population.options.keep_number]        
         population.best_individual = better_chromosomes[0]       

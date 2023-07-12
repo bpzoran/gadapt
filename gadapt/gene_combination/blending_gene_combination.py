@@ -11,7 +11,7 @@ class BlendingGeneCombination(BaseGeneCombination):
     corresponding values of the parental genes
     """
 
-    def combine(self, mother_gene: Gene, father_gene: Gene):
+    def _combine_genes(self, mother_gene: Gene, father_gene: Gene):
         genetic_variable = father_gene.genetic_variable
         val_father = father_gene.variable_value
         val_mother = mother_gene.variable_value

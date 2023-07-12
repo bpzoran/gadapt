@@ -339,7 +339,7 @@ class Population:
         """
         self.previous_avg_cost = self.avg_cost
         self.previous_min_cost = self.min_cost
-        self.cost_finder.find_costs_for_population(self)
+        self.cost_finder.find_costs(self)
 
     def clear(self):
         """

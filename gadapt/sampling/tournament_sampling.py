@@ -13,11 +13,11 @@ class TournamentSampling(BaseSampling):
         super().__init__()
         self.group_size = group_size
     
-    def prepare_sample(self, lst: List[RankingModel]) -> List[RankingModel]:
+    def _prepare_sample(self, lst: List[RankingModel]) -> List[RankingModel]:
         ls = []
-        ls = sorted(lst, key=self.sort_key)
+        ls = sorted(lst, key=self._sort_key)
         groups = self._get_groups(ls)
-        self._play_tournament(groups, self.sort_key)
+        self._play_tournament(groups, self._sort_key)
         return self._make_ranking(groups)
     
     def _get_groups(self, lst: List[RankingModel]) -> List[List[RankingModel]]:

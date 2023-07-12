@@ -6,4 +6,12 @@ class BasePopulationImmigrator:
     """
 
     def immigrate(self, population):
+        """
+        Immigrates chromosomes into the population
+        Args:
+            population: Population to immigrate new chromosomes
+        """
+        self._immigrate_population(population)
+    
+    def _immigrate_population(self, population):
         raise Exception(definitions.NOT_IMPLEMENTED)
