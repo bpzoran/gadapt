@@ -6,11 +6,11 @@ class BaseParentSelector:
     """
     Base Parent Selector
 
-    Selects mates for mating from the population
+    Selects individuals for mating from the population
     """
     def select_mates(self, population) -> List[Tuple[Chromosome, Chromosome]]:
         """
-        Selects and returns mates for the crossover from the population
+        Selects and returns individuals for the crossover from the population
         Args:
             population: the population for the mates selection
         """

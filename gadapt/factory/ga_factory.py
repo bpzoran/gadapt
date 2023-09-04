@@ -3,7 +3,7 @@ from gadapt.exit_check.base_exit_checker import BaseExitChecker
 from gadapt.exit_check.min_cost_exit_checker import MinCostExitChecker
 from gadapt.exit_check.requested_cost_exit_checker import RequestedCostExitChecker
 from gadapt.cost_finding.base_cost_finder import BaseCostFinder
-from gadapt.cost_finding.common_cost_finder import ElitismCostFinder
+from gadapt.cost_finding.elitism_cost_finder import ElitismCostFinder
 from gadapt.crossover.base_crossover import BaseCrossover
 from gadapt.crossover.uniform_crossover import UniformCrossover
 from gadapt.ga_model.ga_options import GAOptions
