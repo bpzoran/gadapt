@@ -1,5 +1,6 @@
+from abc import ABC, abstractmethod
 import gadapt.ga_model.definitions as definitions
-class BasePopulationImmigrator:
+class BasePopulationImmigrator(ABC):
 
     """
     Base class for population immigration
@@ -13,5 +14,6 @@ class BasePopulationImmigrator:
         """
         self._immigrate_population(population)
     
+    @abstractmethod
     def _immigrate_population(self, population):
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        pass

@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.gene import Gene
 from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
@@ -6,7 +7,7 @@ from gadapt.gene_combination.base_gene_combination import BaseGeneCombination
 import gadapt.utils.ga_utils as ga_utils
 import gadapt.ga_model.definitions as definitions
 
-class BaseCrossover:
+class BaseCrossover(ABC):
 
     """Base Crossover Class
     
@@ -69,11 +70,13 @@ class BaseCrossover:
         self._increase_generation(offspring1, offspring2, mother, father)
         return offspring1, offspring2
 
+    @abstractmethod
     def _get_mother_father_genes(self, mother: Chromosome, father: Chromosome):
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        pass
 
+    @abstractmethod
     def _combine(self, mother_gene: Gene, father_gene: Gene):
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        pass
     
     def _increase_generation(self, offspring1: Chromosome, offspring2: Chromosome, mother: Chromosome, father: Chromosome):
         current_generation = mother.chromosome_generation

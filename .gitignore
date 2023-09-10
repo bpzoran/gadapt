@@ -37,6 +37,7 @@ sdist/
 var/
 wheels/
 share/python-wheels/
+venv/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -184,3 +185,5 @@ test*.py
 
 documentation/
 pypi.bat
+/pyproject.toml
+/poetry.lock

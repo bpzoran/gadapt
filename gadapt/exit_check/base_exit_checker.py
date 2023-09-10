@@ -1,8 +1,9 @@
+from abc import ABC, abstractmethod
 import logging
 from datetime import datetime
 import gadapt.ga_model.definitions as definitions
 
-class BaseExitChecker:
+class BaseExitChecker(ABC):
 
     """
     Base class for exit check
@@ -38,5 +39,6 @@ class BaseExitChecker:
             return True
         return False
     
+    @abstractmethod
     def _is_exit(self, population) -> bool:
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        pass

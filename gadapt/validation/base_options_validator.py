@@ -1,8 +1,9 @@
+from abc import ABC, abstractmethod
 from typing import List, Tuple
 import gadapt.ga_model.message_levels as message_levels
 import gadapt.ga_model.definitions as definitions
 
-class BaseOptionsValidator:
+class BaseOptionsValidator(ABC):
 
 
     def __init__(self, options) -> None:
@@ -21,8 +22,9 @@ class BaseOptionsValidator:
         """
         self._validate_options()
     
+    @abstractmethod
     def _validate_options(self) -> bool:
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        pass
     
     @property
     def validation_messages(self):

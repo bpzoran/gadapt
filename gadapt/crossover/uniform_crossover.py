@@ -1,3 +1,4 @@
+from typing import Tuple
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.crossover.base_crossover import BaseCrossover
 from gadapt.ga_model.gene import Gene
@@ -15,7 +16,7 @@ class UniformCrossover(BaseCrossover):
     def __init__(self, var_combination: BaseGeneCombination, mutator: BaseChromosomeMutator, immigrator: BaseChromosomeImmigrator):
         super(UniformCrossover, self).__init__(var_combination, mutator, immigrator)
     
-    def _get_mother_father_genes(self, mother: Chromosome, father: Chromosome):
+    def _get_mother_father_genes(self, mother: Chromosome, father: Chromosome) -> Tuple[Gene, Gene]:
         father_gene = father[self._current_gene_number]
         mother_gene = mother[self._current_gene_number]
         return mother_gene, father_gene

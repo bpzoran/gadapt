@@ -1,10 +1,11 @@
+from abc import ABC, abstractmethod
 import math
 import random
 from typing import List
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.ga_options import GAOptions
 import gadapt.ga_model.definitions as definitions
-class BasePopulationMutator:    
+class BasePopulationMutator(ABC):    
 
     def mutate(self, population):
         """
@@ -23,8 +24,9 @@ class BasePopulationMutator:
         """
         self.options = options     
 
+    @abstractmethod
     def _mutate_population(self, population, number_of_mutated_chromosomes):
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        pass
     
     def _get_unallocated_chromosomes(self, population, sort_key_function = None) -> List[Chromosome]:
         def unallocated_chromosomes_condition(c: Chromosome) -> bool:

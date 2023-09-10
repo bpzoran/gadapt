@@ -1,7 +1,8 @@
+from abc import ABC, abstractmethod
 from typing import List
 from gadapt.ga_model.ranking_model import RankingModel
 import gadapt.ga_model.definitions as definitions
-class BaseSampling:
+class BaseSampling(ABC):
 
     """
     The algorithm for extracting a sample from the population.
@@ -26,5 +27,6 @@ class BaseSampling:
         self._sort_key = sort_key
         return self._prepare_sample(lst)
     
+    @abstractmethod
     def _prepare_sample(self, lst: List[RankingModel]) -> List[RankingModel]:
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        pass

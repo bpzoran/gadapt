@@ -1,9 +1,11 @@
+from abc import ABC, abstractmethod
 import gadapt.ga_model.definitions as definitions
-class BaseVariableUpdater:
+class BaseVariableUpdater(ABC):
 
     """
     Base class for variable update
     """
 
+    @abstractmethod
     def update_variables(self, population):
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        pass

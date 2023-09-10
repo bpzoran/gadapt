@@ -1,10 +1,11 @@
+from abc import ABC, abstractmethod
 import sys
 import traceback
 from typing import List
 from gadapt.ga_model.chromosome import Chromosome
 import gadapt.ga_model.definitions as definitions
 
-class BaseCostFinder:
+class BaseCostFinder(ABC):
     """
     Base class for cost finding
     """
@@ -28,8 +29,9 @@ class BaseCostFinder:
             c.succ = False
             c.cost_value = sys.float_info.max
 
+    @abstractmethod
     def _find_costs_for_population(self, population):
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        pass
     
     def find_costs(self, population):
         """

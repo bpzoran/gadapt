@@ -1,5 +1,6 @@
+from abc import ABC, abstractmethod
 import gadapt.ga_model.definitions as definitions
-class BaseChromosomeImmigrator:
+class BaseChromosomeImmigrator(ABC):
 
     """
     Base class for chromosome immigration
@@ -14,8 +15,9 @@ class BaseChromosomeImmigrator:
         self._immigrate_chromosome(c)
         self._chromosome_immigrated(c)
 
+    @abstractmethod
     def _immigrate_chromosome(self, c):
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        pass
 
     def _chromosome_immigrated(self, c):
         c.is_immigrant = True

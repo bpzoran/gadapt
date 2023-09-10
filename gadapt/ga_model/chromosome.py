@@ -38,12 +38,12 @@ class Chromosome (RankingModel):
         self._father_id = -1
         self._is_mutated = False
         self._is_immigrant = False
-        self._genes = []
+        self._genes: list[Gene] = []
         
-    def __str__(self):
+    def __str__(self) -> str:
         return self._get_chromosome_string()
     
-    def __getitem__(self, index):
+    def __getitem__(self, index) -> Gene:
         return self._genes[index]
 
     def __next__(self):

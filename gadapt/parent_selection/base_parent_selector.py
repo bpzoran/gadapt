@@ -1,8 +1,9 @@
+from abc import ABC, abstractmethod
 from typing import List, Tuple
 from gadapt.ga_model.chromosome import Chromosome
 import gadapt.ga_model.definitions as definitions
 
-class BaseParentSelector:    
+class BaseParentSelector(ABC):    
     """
     Base Parent Selector
 
@@ -16,5 +17,6 @@ class BaseParentSelector:
         """
         return self._select_mates_from_population(population)
     
+    @abstractmethod
     def _select_mates_from_population(self, population) -> List[Tuple[Chromosome, Chromosome]]:
-        raise Exception(definitions.NOT_IMPLEMENTED)
+        pass
