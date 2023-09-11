@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-import gadapt.ga_model.definitions as definitions
+
+
 class BaseVariableUpdater(ABC):
 
     """

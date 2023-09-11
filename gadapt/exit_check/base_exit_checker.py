@@ -1,22 +1,23 @@
 from abc import ABC, abstractmethod
 import logging
 from datetime import datetime
-import gadapt.ga_model.definitions as definitions
+
 
 class BaseExitChecker(ABC):
 
     """
     Base class for exit check
     Args:
-        max_attempt_no (int): Maximal number of attempts with no improvement, for the given criteria.
-            
+        max_attempt_no (int): Maximal number of attempts with no improvement,
+        for the given criteria.
+
             After this number of attempts with no improvements, the GA exits
     """
 
     def __init__(self, max_attempt_no: int) -> None:
         self.max_attempt_no = max_attempt_no
-        self.attempt_no = 0              
-    
+        self.attempt_no = 0
+
     @property
     def attempt_no(self) -> int:
         return self._attempt_no
@@ -38,7 +39,7 @@ class BaseExitChecker(ABC):
             logging.info("function exit.")
             return True
         return False
-    
+
     @abstractmethod
     def _is_exit(self, population) -> bool:
         pass

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-import gadapt.ga_model.definitions as definitions
+
+
 class BasePopulationImmigrator(ABC):
 
     """
@@ -13,7 +14,7 @@ class BasePopulationImmigrator(ABC):
             population: Population to immigrate new chromosomes
         """
         self._immigrate_population(population)
-    
+
     @abstractmethod
     def _immigrate_population(self, population):
         pass

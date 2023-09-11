@@ -1,5 +1,6 @@
 from gadapt.exit_check.base_exit_checker import BaseExitChecker
 
+
 class RequestedCostExitChecker(BaseExitChecker):
 
     """

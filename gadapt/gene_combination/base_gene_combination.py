@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
-from ast import Tuple
-from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.gene import Gene
-import gadapt.ga_model.definitions as definitions
+
 
 class BaseGeneCombination(ABC):
 
@@ -18,7 +16,7 @@ class BaseGeneCombination(ABC):
             father_gene (Gene): Second gene to combine
         """
         return self._combine_genes(mother_gene, father_gene)
-    
+
     @abstractmethod
     def _combine_genes(self, mother_gene: Gene, father_gene: Gene):
         pass

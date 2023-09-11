@@ -8,30 +8,41 @@ from gadapt.crossover.base_crossover import BaseCrossover
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.gene import Gene
-from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
-from gadapt.immigration.population_immigration.base_population_immigrator import BasePopulationImmigrator
-from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
-from gadapt.mutation.population_mutation.base_population_mutator import BasePopulationMutator
-from gadapt.mutation.population_mutation.composed_population_mutator import ComposedPopulationMutator
+from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import (
+    BaseChromosomeImmigrator,
+)
+from gadapt.immigration.population_immigration.base_population_immigrator import (
+    BasePopulationImmigrator,
+)
+from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import (
+    BaseChromosomeMutator,
+)
+from gadapt.mutation.population_mutation.base_population_mutator import (
+    BasePopulationMutator,
+)
 from gadapt.parent_selection.base_parent_selector import BaseParentSelector
 from gadapt.variable_update.base_variable_updater import BaseVariableUpdater
 import gadapt.string_operation.ga_strings as ga_strings
 from datetime import datetime
 import gadapt.ga_model.definitions as definitions
 
-class Population:
 
-    def __init__(self, options: GAOptions,
-                 chromosome_mutator: BaseChromosomeMutator,
-                 population_mutator: BasePopulationMutator,
-                 exit_checker: BaseExitChecker,
-                 cost_finder: BaseCostFinder,
-                 population_immigrator: BasePopulationImmigrator,
-                 chromosome_immigrator: BaseChromosomeImmigrator,
-                 parent_selector: BaseParentSelector,
-                 crossover: BaseCrossover,
-                 variable_updater: BaseVariableUpdater):
-        """Population for the genetic algorithm. It contains a collection of chromosomes, as well as additional parameters
+class Population:
+    def __init__(
+        self,
+        options: GAOptions,
+        chromosome_mutator: BaseChromosomeMutator,
+        population_mutator: BasePopulationMutator,
+        exit_checker: BaseExitChecker,
+        cost_finder: BaseCostFinder,
+        population_immigrator: BasePopulationImmigrator,
+        chromosome_immigrator: BaseChromosomeImmigrator,
+        parent_selector: BaseParentSelector,
+        crossover: BaseCrossover,
+        variable_updater: BaseVariableUpdater,
+    ):
+        """Population for the genetic algorithm. It contains a collection of\
+            chromosomes, as well as additional parameters
 
         Args:
 
@@ -40,14 +51,16 @@ class Population:
             population_mutator (BasePopulationMutator): Population Mutator Instance
             exit_checker (BaseExitChecker): Exit Checker Instance
             cost_finder (BaseCostFinder): Cost Finder Instance
-            population_immigrator (BasePopulationImmigrator): Population Immigrator Instance
-            chromosome_immigrator (BaseChromosomeImmigrator): Chromosome Immigrator Instance
+            population_immigrator (BasePopulationImmigrator):
+            Population Immigrator Instance
+            chromosome_immigrator (BaseChromosomeImmigrator):
+            Chromosome Immigrator Instance
             parent_selector (BaseParentSelector): Parent Selector Instance
             crossover (BaseCrossover): Crossover Instance
             variable_updater (BaseVariableUpdater): Variable Updater Instance
         """
         if options.population_size < 4:
-            raise Exception("Population size 4 must be higher than 3")        
+            raise Exception("Population size 4 must be higher than 3")
         self.options = options
         self.chromosome_mutator = chromosome_mutator
         self.population_mutator = population_mutator
@@ -62,10 +75,13 @@ class Population:
         self.last_chromosome_id = 1
         self._population_generation = 0
         self.options = options
-        self.chromosomes = []
+        self.chromosomes: List[Chromosome] = []
         self.generate_initial_population()
         self.start_time = datetime.now()
         self.timeout_expired = False
+
+    def __iter__(self):
+        return PopulationIterator(self)
 
     def __getitem__(self, index):
         return self.chromosomes[index]
@@ -75,11 +91,11 @@ class Population:
 
     def __len__(self):
         return len(self.chromosomes)
-    
+
     def __str__(self):
         return self._to_string()
 
-    def get_sorted(self, key = None, reverse: bool = False):
+    def get_sorted(self, key=None, reverse: bool = False):
         """Sorted list of chromosomes
         Args:
             key: Sorted key
@@ -145,7 +161,7 @@ class Population:
         return self._min_cost
 
     @min_cost.setter
-    def min_cost(self, value: float) -> float:
+    def min_cost(self, value: float):
         self._min_cost = value
 
     @property
@@ -156,7 +172,7 @@ class Population:
         return self._previous_min_cost
 
     @previous_min_cost.setter
-    def previous_min_cost(self, value: float) -> float:
+    def previous_min_cost(self, value: float):
         self._previous_min_cost = value
 
     @property
@@ -203,14 +219,6 @@ class Population:
     def population_mutator(self, value: BasePopulationMutator):
         self._population_mutator = value
 
-    def append_population_mutator(self, value: BasePopulationMutator):
-        """
-        Appends population mutator algorithm
-        """
-        if self._population_mutator is None or not isinstance(self._population_mutator, ComposedPopulationMutator):
-            self.population_mutator = ComposedPopulationMutator(self.options)
-        self.population_mutator.append(value)
-
     @property
     def cost_finder(self) -> BaseCostFinder:
         """
@@ -245,14 +253,14 @@ class Population:
         self._population_immigrator = value
 
     @property
-    def chromosome_immigrator(self) -> BasePopulationImmigrator:
+    def chromosome_immigrator(self) -> BaseChromosomeImmigrator:
         """
         Chromosome immigration algorithm
         """
         return self._chromosome_immigrator
 
     @chromosome_immigrator.setter
-    def chromosome_immigrator(self, value: BasePopulationImmigrator):
+    def chromosome_immigrator(self, value: BaseChromosomeImmigrator):
         self._chromosome_immigrator = value
 
     @property
@@ -276,17 +284,6 @@ class Population:
     @variable_updater.setter
     def variable_updater(self, value: BaseVariableUpdater):
         self._variable_updater = value
-
-    @property
-    def cost_finder(self) -> BaseCostFinder:
-        """
-        Cost finding algorithm
-        """
-        return self._cost_finder
-
-    @cost_finder.setter
-    def cost_finder(self, value: BaseCostFinder):
-        self._cost_finder = value
 
     @property
     def exit_checker(self) -> BaseExitChecker:
@@ -324,7 +321,9 @@ class Population:
         """
         chromosome_pairs = self.select_mates()
         for chromosome1, chromosome2 in chromosome_pairs:
-            offspring1, offspring2 = self.crossover.mate(chromosome1, chromosome2, self.population_generation)
+            offspring1, offspring2 = self.crossover.mate(
+                chromosome1, chromosome2, self.population_generation
+            )
             self.add_chromosomes((offspring1, offspring2))
 
     def mutate(self):
@@ -369,7 +368,11 @@ class Population:
         """
         Adds new chromosomes to the population
         """
-        chromosome = Chromosome(self.chromosome_mutator, self.chromosome_immigrator, self.population_generation)
+        chromosome = Chromosome(
+            self.chromosome_mutator,
+            self.chromosome_immigrator,
+            self.population_generation,
+        )
         chromosome.chromosome_generation = 1
         self.add_chromosome(chromosome)
 
@@ -382,8 +385,8 @@ class Population:
         if len(self) >= self.options.population_size:
             return
         if chromosome.chromosome_id is None or chromosome.chromosome_id == -1:
-            chromosome.chromosome_id = self.last_chromosome_id            
-            self.last_chromosome_id += 1            
+            chromosome.chromosome_id = self.last_chromosome_id
+            self.last_chromosome_id += 1
         if len(chromosome) == 0:
             for gv in self.options.genetic_variables:
                 g = Gene(gv)
@@ -395,4 +398,20 @@ class Population:
         Updates genetic variables
         """
         self.variable_updater.update_variables(self)
-    
+
+
+class PopulationIterator:
+    def __init__(self, population):
+        self.population = population
+        self.index = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.index < len(self.population.chromosomes):
+            result = self.population.chromosomes[self.index]
+            self.index += 1
+            return result
+        else:
+            raise StopIteration

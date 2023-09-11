@@ -1,13 +1,11 @@
-
 from functools import reduce
-import math
 import random
 from typing import List
-import gadapt.ga_model.definitions as definitions
 
 """
 Genetic algorithm utility
 """
+
 
 def get_rand_bool():
     """
@@ -15,6 +13,7 @@ def get_rand_bool():
     """
     rand_int = random.getrandbits(1)
     return bool(rand_int)
+
 
 def get_rand_bool_with_probability(probability: float):
     """
@@ -27,6 +26,7 @@ def get_rand_bool_with_probability(probability: float):
         return True
     return False
 
+
 def average(lst: List):
     """
     Average value of elements in the list
@@ -34,6 +34,7 @@ def average(lst: List):
         lst: List for finding the average value
     """
     return reduce(lambda a, b: a + b, lst) / len(lst)
+
 
 def try_get_int(s):
     """
@@ -48,9 +49,10 @@ def try_get_int(s):
         try:
             n = int(s)
             return n
-        except:
+        except Exception:
             return s
     return s
+
 
 def try_get_float(s):
     """
@@ -65,9 +67,10 @@ def try_get_float(s):
         try:
             n = float(s)
             return n
-        except:
+        except Exception:
             return s
     return s
+
 
 def try_get_bool(s):
     """
@@ -82,9 +85,10 @@ def try_get_bool(s):
         try:
             n = bool(s)
             return n
-        except:
+        except Exception:
             return s
     return s
+
 
 def prepare_string(s: str):
     """

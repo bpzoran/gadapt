@@ -1,5 +1,8 @@
 from gadapt.ga_model.chromosome import Chromosome
-from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import BaseChromosomeImmigrator
+from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import (
+    BaseChromosomeImmigrator,
+)
+
 
 class RandomChromosomeImmigrator(BaseChromosomeImmigrator):
 
@@ -10,4 +13,3 @@ class RandomChromosomeImmigrator(BaseChromosomeImmigrator):
     def _immigrate_chromosome(self, c: Chromosome):
         for g in c:
             g.set_random_value()
-        

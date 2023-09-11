@@ -1,14 +1,18 @@
 from abc import ABC, abstractmethod
 from typing import List
 from gadapt.ga_model.ranking_model import RankingModel
-import gadapt.ga_model.definitions as definitions
+from typing import TypeVar
+
+T = TypeVar("T", bound=RankingModel)
+
+
 class BaseSampling(ABC):
 
     """
     The algorithm for extracting a sample from the population.
     """
 
-    def get_sample(self, lst: List[RankingModel], max_num, sort_key=None) -> List[RankingModel]:
+    def get_sample(self, lst: List[T], max_num, sort_key=None) -> List[T]:
         """
         Gets the sample from the list of RankingModel objects.
         Args:
@@ -26,7 +30,7 @@ class BaseSampling(ABC):
             self.max_num = max_num
         self._sort_key = sort_key
         return self._prepare_sample(lst)
-    
+
     @abstractmethod
-    def _prepare_sample(self, lst: List[RankingModel]) -> List[RankingModel]:
+    def _prepare_sample(self, lst: List[T]) -> List[T]:
         pass

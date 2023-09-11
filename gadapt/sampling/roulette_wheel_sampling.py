@@ -1,15 +1,16 @@
 import random
 from typing import List
-from gadapt.ga_model.ranking_model import RankingModel
-from gadapt.sampling.base_sampling import BaseSampling
+from gadapt.sampling.base_sampling import T, BaseSampling
+
 
 class RouletteWheelSampling(BaseSampling):
-    
+
     """
-    "RouletteWheel" (also known as "Weighted Random Pairing") algorithm for extracting a sample from the population.
+    "RouletteWheel" (also known as "Weighted Random Pairing") algorithm for\
+        extracting a sample from the population.
     """
-    
-    def _prepare_sample(self, lst: List[RankingModel]) -> List[RankingModel]:
+
+    def _prepare_sample(self, lst: List[T]) -> List[T]:
         rank_sum = sum(range(1, len(lst) + 1))
         cummultative_probability_list: List[float] = []
         action_probability = 0.0
@@ -21,7 +22,7 @@ class RouletteWheelSampling(BaseSampling):
             cummultative_probability_list.append(action_probability)
         rank = 0
         unallocated_members = [rm for rm in lst]
-        unallocated_members.sort(key = self._sort_key, reverse=True)        
+        unallocated_members.sort(key=self._sort_key, reverse=True)
         members_for_action = []
         for j in range(self.max_num):
             if len(unallocated_members) == 0:
@@ -30,10 +31,14 @@ class RouletteWheelSampling(BaseSampling):
             for i_c_p_l, m in enumerate(unallocated_members):
                 m.action_probability = cummultative_probability_list[i_c_p_l]
             rnd_value = random.random()
-            max_prob = (max(unallocated_members, key=lambda m: m.action_probability)).action_probability
-            rnd_value = rnd_value*max_prob
-            mem = next(mb for mb in unallocated_members if mb.action_probability >= rnd_value)
-            if not mem is None:
+            max_prob = (
+                max(unallocated_members, key=lambda m: m.action_probability)
+            ).action_probability
+            rnd_value = rnd_value * max_prob
+            mem = next(
+                mb for mb in unallocated_members if mb.action_probability >= rnd_value
+            )
+            if mem is not None:
                 rank += 1
                 mem.rank = rank
                 members_for_action.append(mem)

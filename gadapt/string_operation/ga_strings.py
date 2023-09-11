@@ -4,6 +4,7 @@ import math
 Genetic algorithm string operations
 """
 
+
 def gene_to_string(g):
     """
     Creates string  from the gene
@@ -11,6 +12,7 @@ def gene_to_string(g):
         g: Gene for string representation
     """
     return str(g.genetic_variable.variable_id) + ": " + str(round(g.variable_value, 2))
+
 
 def chromosome_to_string(c):
     """
@@ -24,26 +26,43 @@ def chromosome_to_string(c):
         id_str = " " + id_str
     str_res = str_res + id_str + " - "
     for g in c:
-        str_res += str(g.genetic_variable.variable_id) + ": " + str(round(g.variable_value, 2)) + "; " 
-    str_res += "Cost value: " + str(c.cost_value) + "; " 
-    str_res += "Chromosome generation: " + str(c.chromosome_generation) + "; "    
-    if not (c.mother_id == -1 or c.father_id == -1 or c.mother_id is None or c.father_id is None):
-        str_res += "Mother: " + str(c.mother_id) + ", Father: " + str(c.father_id) + "; "
+        str_res += (
+            str(g.genetic_variable.variable_id)
+            + ": "
+            + str(round(g.variable_value, 2))
+            + "; "
+        )
+    str_res += "Cost value: " + str(c.cost_value) + "; "
+    str_res += "Chromosome generation: " + str(c.chromosome_generation) + "; "
+    if not (
+        c.mother_id == -1
+        or c.father_id == -1
+        or c.mother_id is None
+        or c.father_id is None
+    ):
+        str_res += (
+            "Mother: " + str(c.mother_id) + ", Father: " + str(c.father_id) + "; "
+        )
     if c.is_mutated and len(c.mutated_variables_id_list) > 0:
         str_res += "Chromosome mutated. Mutated variables: "
         for mv in c.mutated_variables_id_list:
-            str_res += str(mv) + ", "        
-    if (c.first_mutant_generation > 0):
+            str_res += str(mv) + ", "
+    if c.first_mutant_generation > 0:
         str_res += "First mutant generation: " + str(c.first_mutant_generation) + "; "
-    if (c.last_mutant_generation > 0):
+    if c.last_mutant_generation > 0:
         str_res += "Last mutant generation: " + str(c.last_mutant_generation) + "; "
     if c.is_immigrant:
         str_res += "Chromosome immigrated. "
-    if (c.first_immigrant_generation > 0):
-        str_res += "First immigrant generation: " + str(c.first_immigrant_generation) + "; "
-    if (c.last_immigrant_generation > 0):
-        str_res += "Last immigrant generation: " + str(c.last_immigrant_generation) + "; "
+    if c.first_immigrant_generation > 0:
+        str_res += (
+            "First immigrant generation: " + str(c.first_immigrant_generation) + "; "
+        )
+    if c.last_immigrant_generation > 0:
+        str_res += (
+            "Last immigrant generation: " + str(c.last_immigrant_generation) + "; "
+        )
     return str_res
+
 
 def population_to_string_list(p):
     """
@@ -58,6 +77,7 @@ def population_to_string_list(p):
         str_list.append(str(c))
     return str_list
 
+
 def population_to_string(p):
     """
     Creates string from the population
@@ -67,12 +87,19 @@ def population_to_string(p):
     str_res = ""
     new_line = "\n"
     str_res += "Population number: " + str(p.population_generation) + new_line
-    str_res += "Min Cost: " + str(round(p.min_cost, 2)) + "; Avg cost: " + str(round(p.avg_cost, 2)) + "; "
-    str_res +=  "Best individual variable values: " + str(p.best_individual)
+    str_res += (
+        "Min Cost: "
+        + str(round(p.min_cost, 2))
+        + "; Avg cost: "
+        + str(round(p.avg_cost, 2))
+        + "; "
+    )
+    str_res += "Best individual variable values: " + str(p.best_individual)
     str_list = population_to_string_list(p)
     for s in str_list:
         str_res += new_line + s
     return str_res
+
 
 def results_to_string(r):
     """
@@ -85,16 +112,17 @@ def results_to_string(r):
     if r.success:
         rslt = "Min cost: " + str(r.min_cost)
         rslt += "\nNumber of iterations: " + str(r.number_of_iterations)
-        rslt += "\nParameter values:"     
+        rslt += "\nParameter values:"
         for x in r.result_values:
-            rslt += "\n" + str(x) + ": " + str(r.result_values[x])      
+            rslt += "\n" + str(x) + ": " + str(r.result_values[x])
         if mess_exists:
-            rslt += "\n" + mess                 
+            rslt += "\n" + mess
     elif not mess_exists:
         rslt = "\nCalculation not succesful."
     else:
-        rslt = "\n" + mess            
+        rslt = "\n" + mess
     return rslt
+
 
 def get_results_message(r):
     """
@@ -107,5 +135,5 @@ def get_results_message(r):
     for m in r.messages:
         message += m[0] + ": " + m[1] + new_line
     if message.endswith(new_line):
-        message = message[:-len(new_line)]
+        message = message[: -len(new_line)]
     return message

@@ -1,26 +1,28 @@
 """
 Results for the genetic algorithm execution
 """
+from typing import List
 import gadapt.string_operation.ga_strings as ga_strings
 
+
 class GAResults:
-    
     def __init__(self) -> None:
         """
         Results class for the genetic algorithm execution
         """
         self._success = True
         self.result_values = {}
-        self._messages = []
+        self._messages: List[str] = []
 
     def __str__(self) -> str:
-       return ga_strings.results_to_string(self)
-      
+        return ga_strings.results_to_string(self)
+
     @property
     def result_values(self):
         """
         The dictionary that contains variables' optimized values.
-        The key of this dictionary is the sequence number of variable adding, and also the argument index in the cost function.
+        The key of this dictionary is the sequence number of variable adding, and\
+            also the argument index in the cost function.
         The value of this dictionary is the optimized value for the variable.
         """
         return self._result_values
@@ -50,7 +52,6 @@ class GAResults:
     @number_of_iterations.setter
     def number_of_iterations(self, value: float):
         self._number_of_iterations = value
-
 
     @property
     def success(self) -> bool:
@@ -83,5 +84,3 @@ class GAResults:
 
     def _get_message(self):
         return ga_strings.get_results_message(self)
-
-    

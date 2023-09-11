@@ -1,7 +1,7 @@
 import random
 from typing import List
-from gadapt.ga_model.ranking_model import RankingModel
-from gadapt.sampling.base_sampling import BaseSampling
+from gadapt.sampling.base_sampling import T, BaseSampling
+
 
 class TournamentSampling(BaseSampling):
 
@@ -9,32 +9,32 @@ class TournamentSampling(BaseSampling):
     "Tournament" algorithm for extracting a sample from the population.
     """
 
-    def __init__(self, group_size = None) -> None:
+    def __init__(self, group_size=None) -> None:
         super().__init__()
         self.group_size = group_size
-    
-    def _prepare_sample(self, lst: List[RankingModel]) -> List[RankingModel]:
+
+    def _prepare_sample(self, lst: List[T]) -> List[T]:
         ls = []
         ls = sorted(lst, key=self._sort_key)
         groups = self._get_groups(ls)
         self._play_tournament(groups, self._sort_key)
         return self._make_ranking(groups)
-    
-    def _get_groups(self, lst: List[RankingModel]) -> List[List[RankingModel]]:
+
+    def _get_groups(self, lst: List[T]) -> List[List[T]]:
         size = len(lst)
         ls = [rm for rm in lst]
         if self.group_size is None or self.group_size > len(ls):
             self.group_size = self._calculate_group_size(ls)
         num_of_groups = size // self.group_size
-        #if size % self.group_size > 0:
+        # if size % self.group_size > 0:
         #    num_of_groups += 1
         groups = []
-        for i in range(num_of_groups):
-            l: list[RankingModel] = []
-            groups.append(l)
+        for _ in range(num_of_groups):
+            l_groups: List[T] = []
+            groups.append(l_groups)
         for i in range(self.group_size):
             for g in groups:
-                random_index = random.randint(0, len(ls)-1)
+                random_index = random.randint(0, len(ls) - 1)
                 element = ls.pop(random_index)
                 g.append(element)
                 if len(ls) == 0:
@@ -44,8 +44,8 @@ class TournamentSampling(BaseSampling):
         if len(ls) > 0:
             groups.append(ls)
         return groups
-    
-    def _calculate_group_size(self, ls: List[RankingModel]):
+
+    def _calculate_group_size(self, ls: List[T]):
         size = len(ls)
         if size <= 3:
             return len(ls)
@@ -56,11 +56,11 @@ class TournamentSampling(BaseSampling):
             group_size += 1
         return group_size
 
-    def _play_tournament(self, groups: List[List[RankingModel]], sort_key):
+    def _play_tournament(self, groups: List[List[T]], sort_key):
         for g in groups:
             g.sort(key=sort_key)
 
-    def _make_ranking(self,  groups: List[List[RankingModel]]):
+    def _make_ranking(self, groups: List[List[T]]):
         rank = 0
         members_for_action = []
         number_of_groups = len(groups)
@@ -76,4 +76,4 @@ class TournamentSampling(BaseSampling):
                 rank += 1
             if number_of_empty_groups == number_of_groups:
                 break
-        return members_for_action[:self.max_num]
+        return members_for_action[: self.max_num]

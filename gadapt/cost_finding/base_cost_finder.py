@@ -1,21 +1,22 @@
 from abc import ABC, abstractmethod
 import sys
 import traceback
-from typing import List
 from gadapt.ga_model.chromosome import Chromosome
-import gadapt.ga_model.definitions as definitions
+
 
 class BaseCostFinder(ABC):
     """
     Base class for cost finding
     """
+
     def _execute_function(self, cost_function, c: Chromosome):
         """
         Executes the cost function
-        
+
         Args:
             cost_function: Function to execute
-            c (Chromosome): The chromosome with genes containing values for the function execution.
+            c (Chromosome): The chromosome with
+            genes containing values for the function execution.
         """
         dict = {}
         for g in c:
@@ -32,11 +33,11 @@ class BaseCostFinder(ABC):
     @abstractmethod
     def _find_costs_for_population(self, population):
         pass
-    
+
     def find_costs(self, population):
         """
         Finds costs for the population
-        
+
         Args:
             population (Population): The population to find costs for each chromosome
         """

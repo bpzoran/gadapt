@@ -1,6 +1,7 @@
 import logging
 import datetime
 
+
 class TimestampFormatter(logging.Formatter):
 
     """
@@ -13,5 +14,5 @@ class TimestampFormatter(logging.Formatter):
         Args:
             record: Record to format
         """
-        record.asctime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        record.asctime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         return super().format(record)
