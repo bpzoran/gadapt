@@ -4,6 +4,7 @@ The main genetic algorithm module
 import sys
 from typing import List
 from gadapt.execution.ga_executor import GAExecutor
+from gadapt.factory.ga_base_factory import BaseGAFactory
 from gadapt.factory.ga_factory import GAFactory
 from gadapt.ga_model.genetic_variable import GeneticVariable
 from gadapt.ga_model.ga_options import GAOptions
@@ -42,6 +43,7 @@ class GA:
         immigration_number=0,
         logging=False,
         timeout=120,
+        factory: BaseGAFactory = None
     ) -> None:
         """
         The constructor of the GA class accepts all parameters required to
@@ -165,6 +167,8 @@ class GA:
             timeout: A number of seconds after which the genetic algorithm
             optimisation will exit, regardless of whether
             exit_check criteria is reached.
+
+            factory: Factory for creating object
         """
         self.cost_function = cost_function
         self.population_size = population_size
@@ -190,6 +194,7 @@ class GA:
         )
         self.timeout = timeout
         self._current_gv_id = 0
+        self._factory = factory
 
     def execute(self) -> GAResults:
         """
@@ -204,8 +209,15 @@ class GA:
             results.messages = validator.validation_messages
             return results
         ga_options = GAOptions(self)
-        return GAExecutor(ga_options, GAFactory(self, ga_options)).execute()
+        factory: BaseGAFactory = self.get_factory()
+        factory.initialize_factory(self)
+        return GAExecutor(ga_options, factory).execute()
 
+    def get_factory(self) -> BaseGAFactory:
+        if self._factory:
+            return self._factory
+        return GAFactory()
+    
     @property
     def population_size(self) -> int:
         """

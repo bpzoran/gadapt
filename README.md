@@ -181,7 +181,7 @@ means that the corresponding parameter can have values between 1.0 and 4.0, and 
 The order in which the variables are added must match the indices of the variables in the cost function. For example, for the given function:
 ```python
 def some_func(args):
-      return math.sqrt(abs(args[0])) + math.pow((args[1]))
+      return math.sqrt(abs(args[0])) + math.pow(args[1], 2)
 ```
 and instantiation of the genetic algorithm object:
 ```python
@@ -256,4 +256,45 @@ Number of iterations: 21
 Parameter values:
 0: 0.0
 1: 0.0
+```
+
+# GA Customisation
+GAdapt has been developed in common with clean architecture and SOLID principles and therefore it can be customized easily. Customization can be applied by creating new implementation of abstract classes and passing them to the gnetic algorithm through factory object. Abstract classes are all classes in "operation" folder with names starting with "Base". Please consult  [GAdapt API Documentation](https://www.gadapt.com/api/) for more information about GAdapt classes.
+
+Example of customisation of GAdapt by introducing a new class for mutation of population:
+
+```python
+import math
+from gadapt.factory.ga_factory import GAFactory
+from gadapt.ga import GA
+from gadapt.operations.mutation.population_mutation.base_population_mutator import BasePopulationMutator
+
+class BottomPopulationMutator(BasePopulationMutator):
+    """
+    Population mutator which selects mutating chromosomes from the bottom of
+    existing unallocated chromosoms 
+    """
+
+    def _mutate_population(self, population, number_of_mutation_chromosomes):
+        if population is None:
+            raise Exception("population must not be None")
+        unallocated_chromosomes = self._get_unallocated_chromosomes(
+            population, None
+        )
+        chromosomes_for_mutation = unallocated_chromosomes[
+            len(unallocated_chromosomes) - number_of_mutation_chromosomes : 
+        ]
+        for c in chromosomes_for_mutation:
+            c.mutate(population.options.number_of_mutation_genes)
+
+def some_func(args):
+      return math.sqrt(abs(args[0])) + math.pow(args[1], 2)
+
+custom_factory = GAFactory()
+custom_factory.population_mutator = BottomPopulationMutator()
+ga = GA(cost_function=some_func, factory=custom_factory)
+ga.add(-25, 25, 1)
+ga.add(-5, 5, 0.1) 
+
+print(ga.execute())
 ```

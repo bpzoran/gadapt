@@ -15,10 +15,9 @@ class CostDiversityPopulationMutator(BasePopulationMutator):
 
     def __init__(
         self,
-        options: GAOptions,
         population_mutator_for_execution: BasePopulationMutator,
     ) -> None:
-        super().__init__(options)
+        super().__init__()
         self._population_mutator_for_execution = population_mutator_for_execution
 
     def _get_number_of_mutation_cromosomes(

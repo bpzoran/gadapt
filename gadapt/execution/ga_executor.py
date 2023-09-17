@@ -44,10 +44,7 @@ class GAExecutor:
             population_immigrator = self.factory.get_population_immigrator()
             chromosome_immigrator = self.factory.get_chromosome_immigrator()
             selector = self.factory.get_parent_selector()
-            gene_combination = self.factory.get_gene_combination()
-            crossover = self.factory.get_crossover(
-                gene_combination, chromosome_mutator, chromosome_immigrator
-            )
+            crossover = self.factory.get_crossover()
             variable_updater = variable_updater = self.factory.get_variable_updater()
             population = Population(
                 self.ga_options,

@@ -1,3 +1,4 @@
+from gadapt.factory.ga_base_factory import BaseGAFactory
 from gadapt.operations.exit_check.avg_cost_exit_checker import AvgCostExitChecker
 from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
 from gadapt.operations.exit_check.min_cost_exit_checker import MinCostExitChecker
@@ -56,34 +57,30 @@ from gadapt.operations.variable_update.common_variable_updater import CommonVari
 import gadapt.ga_model.definitions as definitions
 
 
-class GAFactory:
+class GAFactory(BaseGAFactory):
     """
-    Factory for creating  class instances based on GA options
-    """
-
-    def __init__(self, ga, options: GAOptions) -> None:
-        self._ga = ga
-        self._options = options
-
-    def get_cost_finder(self) -> BaseCostFinder:
+    Factory implementatiopn for creating  class instances based on GA options
+    """    
+    
+    def _get_cost_finder(self) -> BaseCostFinder:
         """
         Cost Finder instance
         """
         return ElitismCostFinder()
 
-    def get_population_immigrator(self) -> BasePopulationImmigrator:
+    def _get_population_immigrator(self) -> BasePopulationImmigrator:
         """
         Population Immigrator Instance
         """
         return CommonPopulationImmigrator()
 
-    def get_chromosome_immigrator(self) -> BaseChromosomeImmigrator:
+    def _get_chromosome_immigrator(self) -> BaseChromosomeImmigrator:
         """
         Chromosome Immigrator Instance
         """
         return RandomChromosomeImmigrator()
 
-    def get_chromosome_mutator(self) -> BaseChromosomeMutator:
+    def _get_chromosome_mutator(self) -> BaseChromosomeMutator:
         """
         Chromosome Mutator Instance
         """
@@ -109,7 +106,7 @@ class GAFactory:
             if s.strip() not in definitions.POPULATION_MUTATOR_STRINGS:
                 raise Exception(s + " is not defined as option for population mutation")
 
-    def get_population_mutator(
+    def _make_population_mutator(
         self, population_mutator_string=None
     ) -> BasePopulationMutator:
         """
@@ -119,15 +116,13 @@ class GAFactory:
         if population_mutator_string is None:
             population_mutator_string = self._ga.population_mutation.strip()
         if population_mutator_string.find(definitions.PARAM_SEPARATOR) > -1:
-            return self.get_population_mutator_combined()
+            return self._get_population_mutator_combined()
         elif population_mutator_string == definitions.COST_DIVERSITY:
             return CostDiversityPopulationMutator(
-                self._options,
                 ParentDiversityPopulationMutator(
                     self._get_sampling_method(
                         self._ga.parent_diversity_mutation_chromosome_selection
                     ),
-                    self._options,
                 ),
             )
         elif population_mutator_string == definitions.PARENT_DIVERSITY:
@@ -135,14 +130,20 @@ class GAFactory:
                 self._get_sampling_method(
                     self._ga.parent_diversity_mutation_chromosome_selection
                 ),
-                self._options,
             )
         elif population_mutator_string == definitions.RANDOM:
-            return RandomPopulationMutator(self._options)
+            return RandomPopulationMutator()
         else:
             raise Exception("unknown population mutation")
+        
+    def _get_population_mutator(self) -> BasePopulationMutator:
+        """
+        Population Mutator Instance
+        """
+        return self._make_population_mutator()
+       
 
-    def get_population_mutator_combined(self) -> BasePopulationMutator:
+    def _get_population_mutator_combined(self) -> BasePopulationMutator:
         """
         Population Mutator Instance - combined
         """
@@ -156,12 +157,10 @@ class GAFactory:
             )
         if self._is_cost_diversity_parent_diversity(mutator_strings):
             return CostDiversityPopulationMutator(
-                self._options,
                 ParentDiversityPopulationMutator(
                     self._get_sampling_method(
                         self._ga.parent_diversity_mutation_chromosome_selection
                     ),
-                    self._options,
                 ),
             )
         if self._is_cost_diversity_parent_diversity_random(mutator_strings):
@@ -171,16 +170,15 @@ class GAFactory:
                     self._get_sampling_method(
                         self._ga.parent_diversity_mutation_chromosome_selection
                     ),
-                    self._options,
                 )
             )
             composedPopulationMutator.append(RandomPopulationMutator(self._options))
             return CostDiversityPopulationMutator(
-                self._options, composedPopulationMutator
+                composedPopulationMutator
             )
         composedPopulationMutator = ComposedPopulationMutator(self._options)
         for ms in mutator_strings:
-            composedPopulationMutator.append(self.get_population_mutator(ms))
+            composedPopulationMutator.append(self._make_population_mutator(ms))
         return composedPopulationMutator
 
     def _is_cost_diversity_random(self, mutator_strings: list):
@@ -220,7 +218,7 @@ class GAFactory:
             return True
         return False
 
-    def get_parent_selector(self) -> BaseParentSelector:
+    def _get_parent_selector(self) -> BaseParentSelector:
         """
         Parent Selector Instance
         """
@@ -249,13 +247,13 @@ class GAFactory:
             return RandomSampling()
         return RouletteWheelSampling()
 
-    def get_gene_combination(self) -> BaseGeneCombination:
+    def _get_gene_combination(self) -> BaseGeneCombination:
         """
         Gene Combination Instance
         """
         return BlendingGeneCombination()
 
-    def get_exit_checker(self) -> BaseExitChecker:
+    def _get_exit_checker(self) -> BaseExitChecker:
         """
         Exit Checker Instance
         """
@@ -265,18 +263,13 @@ class GAFactory:
             return MinCostExitChecker(self._ga.max_attempt_no)
         return RequestedCostExitChecker(self._ga.requested_cost)
 
-    def get_crossover(
-        self,
-        gene_combination: BaseGeneCombination,
-        mutator: BaseChromosomeMutator,
-        immigrator: BaseChromosomeImmigrator,
-    ) -> BaseCrossover:
+    def _get_crossover(self) -> BaseCrossover:
         """
         Crossover Instance
         """
-        return UniformCrossover(gene_combination, mutator, immigrator)
+        return UniformCrossover(self.get_gene_combination(), self.get_chromosome_mutator(), self.get_chromosome_immigrator())
 
-    def get_variable_updater(self):
+    def _get_variable_updater(self):
         """
         Variable Updater Instance
         """

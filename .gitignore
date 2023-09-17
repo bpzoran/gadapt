@@ -187,3 +187,4 @@ documentation/
 pypi.bat
 /pyproject.toml
 /poetry.lock
+/gadapt/create_diagrams.bat

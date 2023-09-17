@@ -12,19 +12,19 @@ class BasePopulationMutator(ABC):
         Mutates chromosomes in the population
         Args:
             population: Population to mutate
-        """
+        """        
         number_of_mutated_chromosomes = (
             population.options.number_of_mutation_chromosomes
         )
         self._mutate_population(population, number_of_mutated_chromosomes)
 
-    def __init__(self, options: GAOptions) -> None:
+    def __init__(self) -> None:
         """
         Base class for mutating chromosomes in population
         Args:
             options: genetic algorithm options
         """
-        self.options = options
+        super().__init__()
 
     @abstractmethod
     def _mutate_population(self, population, number_of_mutated_chromosomes):

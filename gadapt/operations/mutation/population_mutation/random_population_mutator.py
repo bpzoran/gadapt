@@ -10,13 +10,13 @@ class RandomPopulationMutator(BasePopulationMutator):
     Random population mutator
     """
 
-    def __init__(self, options: GAOptions) -> None:
-        super().__init__(options)
+    def __init__(self) -> None:
+        super().__init__()
 
     def _mutate_population(self, population, number_of_mutation_chromosomes):
         if population is None:
             raise Exception("population must not be None")
-        number_of_mutation_genes = self.options.number_of_mutation_genes
+        number_of_mutation_genes = population.options.number_of_mutation_genes
         unallocated_chromosomes = self._get_unallocated_chromosomes(
             population, self._sort_key_random
         )
