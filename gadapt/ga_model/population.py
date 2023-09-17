@@ -2,27 +2,27 @@
 Population
 """
 from typing import List, Tuple
-from gadapt.exit_check.base_exit_checker import BaseExitChecker
-from gadapt.cost_finding.base_cost_finder import BaseCostFinder
-from gadapt.crossover.base_crossover import BaseCrossover
+from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
+from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
+from gadapt.operations.crossover.base_crossover import BaseCrossover
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.gene import Gene
-from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import (
+from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
 )
-from gadapt.immigration.population_immigration.base_population_immigrator import (
+from gadapt.operations.immigration.population_immigration.base_population_immigrator import (
     BasePopulationImmigrator,
 )
-from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import (
+from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import (
     BaseChromosomeMutator,
 )
-from gadapt.mutation.population_mutation.base_population_mutator import (
+from gadapt.operations.mutation.population_mutation.base_population_mutator import (
     BasePopulationMutator,
 )
-from gadapt.parent_selection.base_parent_selector import BaseParentSelector
-from gadapt.variable_update.base_variable_updater import BaseVariableUpdater
-import gadapt.string_operation.ga_strings as ga_strings
+from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
+from gadapt.operations.variable_update.base_variable_updater import BaseVariableUpdater
+import gadapt.adapters.string_operation.ga_strings as ga_strings
 from datetime import datetime
 import gadapt.ga_model.definitions as definitions
 

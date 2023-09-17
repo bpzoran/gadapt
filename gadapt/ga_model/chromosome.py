@@ -5,14 +5,14 @@ from typing import List
 from gadapt.ga_model.gene import Gene
 from gadapt.ga_model.genetic_variable import GeneticVariable
 from gadapt.ga_model.ranking_model import RankingModel
-from gadapt.immigration.chromosome_immigration.base_chromosome_immigrator import (
+from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
 )
-from gadapt.mutation.chromosome_mutation.base_chromosome_mutator import (
+from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import (
     BaseChromosomeMutator,
 )
 import gadapt.ga_model.definitions as definitions
-import gadapt.string_operation.ga_strings as ga_strings
+import gadapt.adapters.string_operation.ga_strings as ga_strings
 
 
 class Chromosome(RankingModel):

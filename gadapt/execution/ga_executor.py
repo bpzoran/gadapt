@@ -1,5 +1,5 @@
 from gadapt.factory.ga_factory import GAFactory
-from gadapt.ga_logging.logging_settings import init_logging
+from gadapt.adapters.ga_logging.logging_settings import init_logging
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.ga_results import GAResults
 from gadapt.ga_model.population import Population

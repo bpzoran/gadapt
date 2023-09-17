@@ -10,7 +10,7 @@ from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.ga_results import GAResults
 import gadapt.utils.ga_utils as ga_utils
 import gadapt.ga_model.definitions as definitions
-from gadapt.validation.common_options_validator import CommonOptionsValidator
+from gadapt.adapters.validation.common_options_validator import CommonOptionsValidator
 
 
 class GA:
