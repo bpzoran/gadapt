@@ -11,14 +11,8 @@ class CommonVariableUpdater:
 
     def update_variables(self, population):
         def scale_values(gv: GeneticVariable, values):
-            rslt = []
-            max_val = max(values)
-            diff = gv.max_value - max_val
-            if gv.min_value < 0:
-                diff = diff - gv.min_value
-            for f in values:
-                rslt.append(f + diff)
-            return rslt
+            min_val = min(values)
+            return [(v - min_val) / (gv.max_value - gv.min_value) for v in values]
 
         unique_values_per_variables = {}
         values_per_variables = {}
@@ -48,7 +42,9 @@ class CommonVariableUpdater:
                 key.relative_standard_deviation = 0.0
                 continue
             scaled_values = scale_values(key, values_per_variables[key])
-            stddev = stat.stdev(scaled_values)
-            avg_val = ga_utils.average(scaled_values)
-            rel_st_dev = stddev / avg_val
-            key.relative_standard_deviation = rel_st_dev
+            range = max(scaled_values) - min(scaled_values)
+            if range == 0:
+                key.relative_standard_deviation = 0.0
+            else:
+                rel_st_dev = stat.stdev(scaled_values) / ga_utils.average(scaled_values)
+                key.relative_standard_deviation = range / rel_st_dev
