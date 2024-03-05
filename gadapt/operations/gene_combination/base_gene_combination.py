@@ -3,7 +3,6 @@ from gadapt.ga_model.gene import Gene
 
 
 class BaseGeneCombination(ABC):
-
     """
     Base class for gene combination
     """

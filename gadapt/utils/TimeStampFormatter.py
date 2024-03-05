@@ -3,7 +3,6 @@ import datetime
 
 
 class TimestampFormatter(logging.Formatter):
-
     """
     Formatter for timestamps
     """

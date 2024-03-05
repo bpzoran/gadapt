@@ -1,6 +1,7 @@
 """
 Genetic algorithm options
 """
+
 from typing import List
 from gadapt.ga_model.genetic_variable import GeneticVariable
 

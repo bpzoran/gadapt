@@ -6,7 +6,6 @@ from gadapt.operations.immigration.population_immigration.base_population_immigr
 
 
 class CommonPopulationImmigrator(BasePopulationImmigrator):
-
     """
     Common class for the population immigration.
     In kept part of the population lower ranked chromosomes are replaced with new ones

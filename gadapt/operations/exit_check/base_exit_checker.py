@@ -4,7 +4,6 @@ from datetime import datetime
 
 
 class BaseExitChecker(ABC):
-
     """
     Base class for exit check
     Args:

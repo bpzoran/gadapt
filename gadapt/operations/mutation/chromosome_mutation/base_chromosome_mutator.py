@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class BaseChromosomeMutator(ABC):
-
     """
     Base class for the mutation of chromosome.
     Mutates specific genes in the chromosome.

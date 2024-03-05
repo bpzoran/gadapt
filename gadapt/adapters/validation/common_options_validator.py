@@ -3,7 +3,6 @@ import gadapt.ga_model.definitions as definitions
 
 
 class CommonOptionsValidator(BaseOptionsValidator):
-
     """
     Common class for options validation
     """

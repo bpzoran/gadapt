@@ -7,13 +7,13 @@ from gadapt.operations.mutation.population_mutation.base_population_mutator impo
 
 
 class ComposedPopulationMutator(BasePopulationMutator):
-    def __init__(self, options: GAOptions) -> None:
+    def __init__(self) -> None:
         """
         Population mutator that consists of more different population mutators
         Args:
             options: genetic algorithm options
         """
-        super().__init__(options)
+        super().__init__()
         self.mutators: List[BasePopulationMutator] = []
 
     def append(self, mutator: BasePopulationMutator):

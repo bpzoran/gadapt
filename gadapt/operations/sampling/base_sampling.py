@@ -7,7 +7,6 @@ T = TypeVar("T", bound=RankingModel)
 
 
 class BaseSampling(ABC):
-
     """
     The algorithm for extracting a sample from the population.
     """

@@ -3,7 +3,6 @@ import math
 import random
 from typing import List
 from gadapt.ga_model.chromosome import Chromosome
-from gadapt.ga_model.ga_options import GAOptions
 
 
 class BasePopulationMutator(ABC):
@@ -12,7 +11,7 @@ class BasePopulationMutator(ABC):
         Mutates chromosomes in the population
         Args:
             population: Population to mutate
-        """        
+        """
         number_of_mutated_chromosomes = (
             population.options.number_of_mutation_chromosomes
         )

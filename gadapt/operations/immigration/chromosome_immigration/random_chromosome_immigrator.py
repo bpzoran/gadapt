@@ -5,7 +5,6 @@ from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigr
 
 
 class RandomChromosomeImmigrator(BaseChromosomeImmigrator):
-
     """
     New immigrated chromosome with random genes
     """

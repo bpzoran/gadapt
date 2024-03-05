@@ -4,7 +4,6 @@ import gadapt.utils.ga_utils as ga_utils
 
 
 class CommonVariableUpdater:
-
     """
     Common variable updater
     """

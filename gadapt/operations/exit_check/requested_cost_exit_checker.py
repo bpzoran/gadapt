@@ -2,7 +2,6 @@ from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
 
 
 class RequestedCostExitChecker(BaseExitChecker):
-
     """
     Exit check based on requested cost.
     The GA exits when the minimum cost reaches a defined value.

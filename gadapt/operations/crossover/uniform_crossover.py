@@ -12,7 +12,6 @@ from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCom
 
 
 class UniformCrossover(BaseCrossover):
-
     """
     Uniform Crossover.
     Genes from parents' chromosomes are combined in a uniform way

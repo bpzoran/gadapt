@@ -9,7 +9,6 @@ import gadapt.utils.ga_utils as ga_utils
 
 
 class CrossDiversityChromosomeMutator(RandomChromosomeMutator):
-
     """
     Mutation of chromosome based on cross diversity of genetic\
         variables in the population.

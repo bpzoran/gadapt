@@ -3,7 +3,6 @@ from gadapt.operations.sampling.base_sampling import T, BaseSampling
 
 
 class FromTopToBottomSampling(BaseSampling):
-
     """
     "From Top To Bottom" algorithm for extracting a sample from the population.
     """

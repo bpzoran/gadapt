@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class BaseChromosomeImmigrator(ABC):
-
     """
     Base class for chromosome immigration
     """

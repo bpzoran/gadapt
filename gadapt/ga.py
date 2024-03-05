@@ -1,6 +1,7 @@
 """
 The main genetic algorithm module
 """
+
 import sys
 from typing import List
 from gadapt.execution.ga_executor import GAExecutor
@@ -43,7 +44,7 @@ class GA:
         immigration_number=0,
         logging=False,
         timeout=120,
-        factory: BaseGAFactory = None
+        factory: BaseGAFactory = None,
     ) -> None:
         """
         The constructor of the GA class accepts all parameters required to
@@ -217,7 +218,7 @@ class GA:
         if self._factory:
             return self._factory
         return GAFactory()
-    
+
     @property
     def population_size(self) -> int:
         """

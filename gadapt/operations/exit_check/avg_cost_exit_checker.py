@@ -2,7 +2,6 @@ from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
 
 
 class AvgCostExitChecker(BaseExitChecker):
-
     """
     Exit check based on average cost.
     The GA exits when there is no improvement in

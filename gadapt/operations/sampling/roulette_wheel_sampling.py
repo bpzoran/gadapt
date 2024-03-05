@@ -4,7 +4,6 @@ from gadapt.operations.sampling.base_sampling import T, BaseSampling
 
 
 class RouletteWheelSampling(BaseSampling):
-
     """
     "RouletteWheel" (also known as "Weighted Random Pairing") algorithm for\
         extracting a sample from the population.

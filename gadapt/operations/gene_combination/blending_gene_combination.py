@@ -4,7 +4,6 @@ from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCom
 
 
 class BlendingGeneCombination(BaseGeneCombination):
-
     """
     Blending gene combination combines
     gene values from the two parents into new variable values in offsprings.

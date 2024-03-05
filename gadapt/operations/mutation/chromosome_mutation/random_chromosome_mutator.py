@@ -8,7 +8,6 @@ from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator impo
 
 
 class RandomChromosomeMutator(BaseChromosomeMutator):
-
     """
     Random mutation of the chromosome.
     """

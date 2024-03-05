@@ -1,7 +1,6 @@
 from ast import List
 import random
 from gadapt.ga_model.chromosome import Chromosome
-from gadapt.ga_model.ga_options import GAOptions
 from gadapt.operations.mutation.population_mutation.base_population_mutator import (
     BasePopulationMutator,
 )
@@ -9,7 +8,6 @@ from gadapt.operations.sampling.base_sampling import BaseSampling
 
 
 class ParentDiversityPopulationMutator(BasePopulationMutator):
-
     """
     Population mutator based on parent diversity
     """

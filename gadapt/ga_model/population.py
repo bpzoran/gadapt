@@ -1,6 +1,7 @@
 """
 Population
 """
+
 from typing import List, Tuple
 from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
 from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder

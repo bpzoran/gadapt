@@ -12,7 +12,6 @@ import gadapt.utils.ga_utils as ga_utils
 
 
 class BaseCrossover(ABC):
-
     """Base Crossover Class
 
     Args:

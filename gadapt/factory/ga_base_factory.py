@@ -6,17 +6,25 @@ from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
 from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
 )
-from gadapt.operations.immigration.population_immigration.base_population_immigrator import BasePopulationImmigrator
-from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import BaseChromosomeMutator
-from gadapt.operations.mutation.population_mutation.base_population_mutator import BasePopulationMutator
+from gadapt.operations.immigration.population_immigration.base_population_immigrator import (
+    BasePopulationImmigrator,
+)
+from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import (
+    BaseChromosomeMutator,
+)
+from gadapt.operations.mutation.population_mutation.base_population_mutator import (
+    BasePopulationMutator,
+)
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
 from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCombination
 
 """
     Factory definition for creating  class instances based on GA options
 """
+
+
 class BaseGAFactory(ABC):
-    
+
     def __init__(self) -> None:
         super().__init__()
         self.cost_finder = None
@@ -29,12 +37,11 @@ class BaseGAFactory(ABC):
         self.exit_checker = None
         self.variable_updater = None
         self.crossover = None
-        
 
     def initialize_factory(self, ga):
         self._ga = ga
         self._options = GAOptions(ga)
-    
+
     def get_cost_finder(self) -> BaseCostFinder:
         """
         Cost Finder instance
@@ -60,12 +67,12 @@ class BaseGAFactory(ABC):
         return self.chromosome_immigrator
 
     def get_chromosome_mutator(self) -> BaseChromosomeMutator:
-         """
-         Chromosome Mutator Instance
-         """
-         if self.chromosome_mutator is None:
+        """
+        Chromosome Mutator Instance
+        """
+        if self.chromosome_mutator is None:
             self.chromosome_mutator = self._get_chromosome_mutator()
-         return self.chromosome_mutator
+        return self.chromosome_mutator
 
     def get_population_mutator(self) -> BasePopulationMutator:
         """
@@ -106,7 +113,7 @@ class BaseGAFactory(ABC):
         if self.variable_updater is None:
             self.variable_updater = self._get_variable_updater()
         return self.variable_updater
-    
+
     def get_crossover(self) -> BaseCrossover:
         """
         Crossover Instance
@@ -115,14 +122,13 @@ class BaseGAFactory(ABC):
             self.crossover = self._get_crossover()
         return self.crossover
 
-
     @abstractmethod
     def _get_cost_finder(self) -> BaseCostFinder:
         """
         Cost Finder instance
         """
         pass
-    
+
     @abstractmethod
     def _get_population_immigrator(self) -> BasePopulationImmigrator:
         """
@@ -130,6 +136,7 @@ class BaseGAFactory(ABC):
         """
         pass
 
+    @abstractmethod
     def _get_chromosome_immigrator(self) -> BaseChromosomeImmigrator:
         """
         Chromosome Immigrator Instance

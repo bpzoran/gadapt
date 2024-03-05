@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class BasePopulationImmigrator(ABC):
-
     """
     Base class for population immigration
     """

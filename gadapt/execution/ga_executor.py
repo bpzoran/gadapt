@@ -1,4 +1,4 @@
-from gadapt.factory.ga_factory import GAFactory
+from gadapt.factory.ga_factory import BaseGAFactory
 from gadapt.adapters.ga_logging.logging_settings import init_logging
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.ga_results import GAResults
@@ -7,7 +7,6 @@ import gadapt.ga_model.message_levels as message_levels
 
 
 class GAExecutor:
-
     """
     Executor for the genetic algorithm
 
@@ -16,7 +15,7 @@ class GAExecutor:
         factory (GAFactory): Factory for objects creation
     """
 
-    def __init__(self, ga_options: GAOptions, factory: GAFactory) -> None:
+    def __init__(self, ga_options: GAOptions, factory: BaseGAFactory) -> None:
         if ga_options is not None:
             self.ga_options = ga_options
         self.factory = factory

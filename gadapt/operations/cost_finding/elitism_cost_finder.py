@@ -7,7 +7,6 @@ from gadapt.ga_model.population import Population
 
 
 class ElitismCostFinder(BaseCostFinder):
-
     """
     Finding costs for a better half of the population
     """

@@ -4,7 +4,6 @@ from gadapt.operations.sampling.base_sampling import T, BaseSampling
 
 
 class TournamentSampling(BaseSampling):
-
     """
     "Tournament" algorithm for extracting a sample from the population.
     """

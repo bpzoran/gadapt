@@ -5,7 +5,6 @@ from gadapt.operations.sampling.base_sampling import BaseSampling
 
 
 class SamplingParentSelector(BaseParentSelector):
-
     """
     Parent Selector based on sampling.
     Sampling is the algorithm for extracting a sample from the population,

@@ -1,6 +1,7 @@
 """
 Gene
 """
+
 import math
 from gadapt.ga_model.genetic_variable import GeneticVariable
 from gadapt.ga_model.ranking_model import RankingModel

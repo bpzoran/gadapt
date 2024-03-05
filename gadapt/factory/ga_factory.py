@@ -2,12 +2,13 @@ from gadapt.factory.ga_base_factory import BaseGAFactory
 from gadapt.operations.exit_check.avg_cost_exit_checker import AvgCostExitChecker
 from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
 from gadapt.operations.exit_check.min_cost_exit_checker import MinCostExitChecker
-from gadapt.operations.exit_check.requested_cost_exit_checker import RequestedCostExitChecker
+from gadapt.operations.exit_check.requested_cost_exit_checker import (
+    RequestedCostExitChecker,
+)
 from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
 from gadapt.operations.cost_finding.elitism_cost_finder import ElitismCostFinder
 from gadapt.operations.crossover.base_crossover import BaseCrossover
 from gadapt.operations.crossover.uniform_crossover import UniformCrossover
-from gadapt.ga_model.ga_options import GAOptions
 from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
 )
@@ -45,23 +46,31 @@ from gadapt.operations.mutation.population_mutation.random_population_mutator im
     RandomPopulationMutator,
 )
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
-from gadapt.operations.parent_selection.sampling_parent_selector import SamplingParentSelector
+from gadapt.operations.parent_selection.sampling_parent_selector import (
+    SamplingParentSelector,
+)
 from gadapt.operations.sampling.base_sampling import BaseSampling
-from gadapt.operations.sampling.from_top_to_bottom_sampling import FromTopToBottomSampling
+from gadapt.operations.sampling.from_top_to_bottom_sampling import (
+    FromTopToBottomSampling,
+)
 from gadapt.operations.sampling.random_sampling import RandomSampling
 from gadapt.operations.sampling.roulette_wheel_sampling import RouletteWheelSampling
 from gadapt.operations.sampling.tournament_sampling import TournamentSampling
 from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCombination
-from gadapt.operations.gene_combination.blending_gene_combination import BlendingGeneCombination
-from gadapt.operations.variable_update.common_variable_updater import CommonVariableUpdater
+from gadapt.operations.gene_combination.blending_gene_combination import (
+    BlendingGeneCombination,
+)
+from gadapt.operations.variable_update.common_variable_updater import (
+    CommonVariableUpdater,
+)
 import gadapt.ga_model.definitions as definitions
 
 
 class GAFactory(BaseGAFactory):
     """
     Factory implementatiopn for creating  class instances based on GA options
-    """    
-    
+    """
+
     def _get_cost_finder(self) -> BaseCostFinder:
         """
         Cost Finder instance
@@ -135,13 +144,12 @@ class GAFactory(BaseGAFactory):
             return RandomPopulationMutator()
         else:
             raise Exception("unknown population mutation")
-        
+
     def _get_population_mutator(self) -> BasePopulationMutator:
         """
         Population Mutator Instance
         """
         return self._make_population_mutator()
-       
 
     def _get_population_mutator_combined(self) -> BasePopulationMutator:
         """
@@ -153,7 +161,7 @@ class GAFactory(BaseGAFactory):
         ]
         if self._is_cost_diversity_random(mutator_strings):
             return CostDiversityPopulationMutator(
-                self._options, RandomPopulationMutator(self._options)
+                RandomPopulationMutator()
             )
         if self._is_cost_diversity_parent_diversity(mutator_strings):
             return CostDiversityPopulationMutator(
@@ -164,7 +172,7 @@ class GAFactory(BaseGAFactory):
                 ),
             )
         if self._is_cost_diversity_parent_diversity_random(mutator_strings):
-            composedPopulationMutator = ComposedPopulationMutator(self._options)
+            composedPopulationMutator = ComposedPopulationMutator()
             composedPopulationMutator.append(
                 ParentDiversityPopulationMutator(
                     self._get_sampling_method(
@@ -172,11 +180,9 @@ class GAFactory(BaseGAFactory):
                     ),
                 )
             )
-            composedPopulationMutator.append(RandomPopulationMutator(self._options))
-            return CostDiversityPopulationMutator(
-                composedPopulationMutator
-            )
-        composedPopulationMutator = ComposedPopulationMutator(self._options)
+            composedPopulationMutator.append(RandomPopulationMutator())
+            return CostDiversityPopulationMutator(composedPopulationMutator)
+        composedPopulationMutator = ComposedPopulationMutator()
         for ms in mutator_strings:
             composedPopulationMutator.append(self._make_population_mutator(ms))
         return composedPopulationMutator
@@ -267,7 +273,11 @@ class GAFactory(BaseGAFactory):
         """
         Crossover Instance
         """
-        return UniformCrossover(self.get_gene_combination(), self.get_chromosome_mutator(), self.get_chromosome_immigrator())
+        return UniformCrossover(
+            self.get_gene_combination(),
+            self.get_chromosome_mutator(),
+            self.get_chromosome_immigrator(),
+        )
 
     def _get_variable_updater(self):
         """
