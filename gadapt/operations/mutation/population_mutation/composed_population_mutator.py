@@ -1,6 +1,5 @@
 import random
 from typing import List
-from gadapt.ga_model.ga_options import GAOptions
 from gadapt.operations.mutation.population_mutation.base_population_mutator import (
     BasePopulationMutator,
 )

@@ -38,6 +38,7 @@ class GA:
         parent_diversity_mutation_chromosome_selection=definitions.ROULETTE_WHEEL,
         must_mutate_for_same_parents=True,
         chromosome_mutation=definitions.CROSS_DIVERSITY,
+        gene_mutation=definitions.EXTREME_POINTED,
         number_of_mutation_genes=-1,
         percentage_of_mutation_genes=10.0,
         cross_diversity_mutation_gene_selection=definitions.ROULETTE_WHEEL,
@@ -127,6 +128,8 @@ class GA:
 
             chromosome_mutation: The type of mutation of genes in chromosomes.
 
+            gene_mutation: The type of assigning values to genes in the mutation
+
             number_of_mutation_genes: The number of mutated genes in each chromosome.
                 In case it's value is equal to or higher than 0, it overrides
                 percentage_of_mutation_genes.
@@ -184,6 +187,7 @@ class GA:
         self.number_of_mutation_genes = number_of_mutation_genes
         self.percentage_of_mutation_genes = percentage_of_mutation_genes
         self.chromosome_mutation = chromosome_mutation
+        self.gene_mutation = gene_mutation
         self.immigration_number = immigration_number
         self.logging = logging
         self._genetic_variables: List[GeneticVariable] = []
@@ -469,6 +473,29 @@ class GA:
     @chromosome_mutation.setter
     def chromosome_mutation(self, value: str):
         self._chromosome_mutation = ga_utils.prepare_string(value)
+
+    @property
+    def gene_mutation(self) -> str:
+        """
+        Way of assigning the value to the gene
+
+        Supported values:
+
+        **"normal_distribution"** - assignes normally distributed random number to the variable selected for mutation
+
+                **"extreme_pointed"** - Considers the diversity of genes of the same
+        type in the population. Lower diversity can mean
+        that this genetic variable approaches sub-optimal value.
+                In that case, this mutator increases chances to mutate extreme values (minimum or maximum),
+                while keeping the chances to mutate to the other extreme value.
+
+        **"random"** - Random values are assigned to genes
+        """
+        return self._gene_mutation
+
+    @gene_mutation.setter
+    def gene_mutation(self, value: str):
+        self._gene_mutation = ga_utils.prepare_string(value)
 
     @property
     def cross_diversity_mutation_gene_selection(self) -> str:

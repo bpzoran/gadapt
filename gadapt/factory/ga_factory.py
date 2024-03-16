@@ -30,6 +30,16 @@ from gadapt.operations.mutation.chromosome_mutation.cross_diversity_chromosome_m
 from gadapt.operations.mutation.chromosome_mutation.random_chromosome_mutator import (
     RandomChromosomeMutator,
 )
+from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
+from gadapt.operations.mutation.gene_mutation.extreme_pointed_gene_mutator import (
+    ExtremePointedGeneMutator,
+)
+from gadapt.operations.mutation.gene_mutation.normal_distribution_gene_mutator import (
+    NormalDistributionGeneMutator,
+)
+from gadapt.operations.mutation.gene_mutation.random_gene_mutator import (
+    RandomGeneMutator,
+)
 from gadapt.operations.mutation.population_mutation.base_population_mutator import (
     BasePopulationMutator,
 )
@@ -104,6 +114,19 @@ class GAFactory(BaseGAFactory):
         else:
             raise Exception("unknown chromosome mutation")
 
+    def _get_gene_mutator(self) -> BaseGeneMutator:
+        """
+        Chromosome Mutator Instance
+        """
+        if self._ga.gene_mutation.strip() == definitions.EXTREME_POINTED:
+            return ExtremePointedGeneMutator()
+        elif self._ga.gene_mutation.strip() == definitions.RANDOM:
+            return RandomGeneMutator()
+        elif self._ga.gene_mutation.strip() == definitions.NORMAL_DISTRIBUTION:
+            return NormalDistributionGeneMutator()
+        else:
+            raise Exception("unknown gene mutation")
+
     def _population_mutator_options_validation(self):
         """
         Validates population mutator options
@@ -160,9 +183,7 @@ class GAFactory(BaseGAFactory):
             for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
         ]
         if self._is_cost_diversity_random(mutator_strings):
-            return CostDiversityPopulationMutator(
-                RandomPopulationMutator()
-            )
+            return CostDiversityPopulationMutator(RandomPopulationMutator())
         if self._is_cost_diversity_parent_diversity(mutator_strings):
             return CostDiversityPopulationMutator(
                 ParentDiversityPopulationMutator(

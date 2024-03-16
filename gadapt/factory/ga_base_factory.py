@@ -12,6 +12,7 @@ from gadapt.operations.immigration.population_immigration.base_population_immigr
 from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import (
     BaseChromosomeMutator,
 )
+from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 from gadapt.operations.mutation.population_mutation.base_population_mutator import (
     BasePopulationMutator,
 )
@@ -31,6 +32,7 @@ class BaseGAFactory(ABC):
         self.population_immigrator = None
         self.chromosome_immigrator = None
         self.chromosome_mutator = None
+        self.gene_mutator = None
         self.population_mutator = None
         self.parent_selector = None
         self.gene_combination = None
@@ -73,6 +75,14 @@ class BaseGAFactory(ABC):
         if self.chromosome_mutator is None:
             self.chromosome_mutator = self._get_chromosome_mutator()
         return self.chromosome_mutator
+
+    def get_gene_mutator(self) -> BaseGeneMutator:
+        """
+        Gene Mutator Instance
+        """
+        if self.gene_mutator is None:
+            self.gene_mutator = self._get_gene_mutator()
+        return self.gene_mutator
 
     def get_population_mutator(self) -> BasePopulationMutator:
         """
@@ -151,6 +161,13 @@ class BaseGAFactory(ABC):
         pass
 
     @abstractmethod
+    def _get_gene_mutator(self) -> BaseGeneMutator:
+        """
+        Gene Mutator Instance
+        """
+        pass
+
+    @abstractmethod
     def _get_population_mutator(self) -> BasePopulationMutator:
         """
         Population Mutator Instance
@@ -164,6 +181,7 @@ class BaseGAFactory(ABC):
         """
         pass
 
+    @abstractmethod
     def _get_gene_combination(self) -> BaseGeneCombination:
         """
         Gene Combination Instance

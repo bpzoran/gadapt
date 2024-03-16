@@ -57,6 +57,9 @@ class Gene(RankingModel):
     def variable_value(self, value):
         self._variable_value = value
 
+    def mutate(self):
+        self.genetic_variable.gene_mutator.mutate(self)
+
     def set_random_value(self):
         """
         Sets a random value for the variable_value property

@@ -18,6 +18,7 @@ class GeneticVariable:
         """
         self.variable_id = id
         self._standard_deviation = definitions.FLOAT_NAN
+        self._gene_mutator = None
 
     def __eq__(self, other):
         if not isinstance(other, GeneticVariable):
@@ -106,6 +107,14 @@ class GeneticVariable:
     @relative_standard_deviation.setter
     def relative_standard_deviation(self, value: float):
         self._standard_deviation = value
+
+    @property
+    def gene_mutator(self):
+        return self._gene_mutator
+
+    @gene_mutator.setter
+    def gene_mutator(self, value):
+        self._gene_mutator = value
 
     def make_random_value(self):
         """

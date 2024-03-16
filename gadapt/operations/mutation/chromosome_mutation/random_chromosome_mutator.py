@@ -1,5 +1,4 @@
 from gadapt.ga_model.chromosome import Chromosome
-from gadapt.ga_model.gene import Gene
 import random
 
 from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import (
@@ -19,11 +18,7 @@ class RandomChromosomeMutator(BaseChromosomeMutator):
         random.shuffle(genes_to_mutate)
         var_num = random.randint(1, number_of_mutation_genes)
         for g in genes_to_mutate[:var_num]:
-            self._set_random_value(g, c)
-        return var_num
+            g.mutate()
+            self._gene_mutated(g, c)
 
-    def _set_random_value(self, g: Gene, c: Chromosome):
-        g.variable_value = round(
-            g.genetic_variable.make_random_value(), g.genetic_variable.decimal_places
-        )
-        self._gene_mutated(g, c)
+        return var_num

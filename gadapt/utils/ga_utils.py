@@ -1,6 +1,8 @@
 from functools import reduce
 import random
 from typing import List
+import numpy as np
+
 
 """
 Genetic algorithm utility
@@ -102,3 +104,9 @@ def prepare_string(s: str):
     while " " in str_return or "\n" in str_return:
         str_return = str_return.replace(" ", "").replace("\n", "")
     return str_return
+
+
+def normally_distributed_random(mean, std_dev, lower_bound, upper_bound):
+    num = np.random.normal(mean, std_dev)
+    num = np.clip(num, lower_bound, upper_bound)
+    return num
