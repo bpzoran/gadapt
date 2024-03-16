@@ -153,10 +153,16 @@ Supported values:
     
 **must_mutate_for_same_parents**=*True* - Indicates if completely the same parents must influence mutation for their children. In other words, each child will be mutated if it has parents with a diversity value of 0. If *must_mutate_for_same_parents* has the value True, the number of mutated chromosomes can outreach value determined by *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes*
 
-**chromosome_mutation**=*"cross_diversity"* - The type of mutation of genes in chromosomes.  
+**chromosome_mutation**=*"cross_diversity"* - The type of gene selection in chromosomes for mutation  
 Supported values:
 - *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this genetic variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_selection* parameter.  
 - *"random"* - Genes are randomly selected for the mutation
+
+**gene_mutation**=*"extreme_pointed"* - The type of assigning mutated values to genes
+Supported values:
+- *"extreme_pointed"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this genetic variable approaches sub-optimal value. In that case, this mutator increases chances to mutate extreme values (minimum or maximum), while keeping the chances to mutate to the other extreme value. 
+- *"normal_distribution"* - assignes normally distributed random number to the variable selected for mutation
+- *"random"* - Random values are assigned to genes
 
 **cross_diversity_mutation_gene_selection**=*"roulette_wheel"* - the selection algorithm for mutating chromosomes when *chromosome_mutation* has value *"cross_diversity"*. It only applies when *chromosome_mutation* has value *"cross_diversity"* . It determines the way how genes are to be selected based on the cross-diversity.  
 Supported values:
