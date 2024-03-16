@@ -38,7 +38,7 @@ class GA:
         parent_diversity_mutation_chromosome_selection=definitions.ROULETTE_WHEEL,
         must_mutate_for_same_parents=True,
         chromosome_mutation=definitions.CROSS_DIVERSITY,
-        gene_mutation=definitions.EXTREME_POINTED,
+        gene_mutation=definitions.NORMAL_DISTRIBUTION,
         number_of_mutation_genes=-1,
         percentage_of_mutation_genes=10.0,
         cross_diversity_mutation_gene_selection=definitions.ROULETTE_WHEEL,
@@ -482,12 +482,6 @@ class GA:
         Supported values:
 
         **"normal_distribution"** - assignes normally distributed random number to the variable selected for mutation
-
-                **"extreme_pointed"** - Considers the diversity of genes of the same
-        type in the population. Lower diversity can mean
-        that this genetic variable approaches sub-optimal value.
-                In that case, this mutator increases chances to mutate extreme values (minimum or maximum),
-                while keeping the chances to mutate to the other extreme value.
 
         **"random"** - Random values are assigned to genes
         """

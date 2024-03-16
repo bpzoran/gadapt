@@ -6,6 +6,7 @@ from gadapt.operations.mutation.gene_mutation.random_gene_mutator import (
 from gadapt.utils.ga_utils import get_rand_bool, get_rand_bool_with_probability
 
 
+# *** Obsolete ***
 class ExtremePointedGeneMutator(RandomGeneMutator):
 
     def _make_mutated_value(self, g: Gene):
