@@ -243,6 +243,8 @@ class GA:
             step (float): the step that will be used in changing the
             variables values during the optimization
         """
+        if step < 0.000000000000001:
+            step = 0.000000000000001
         if (not isinstance(min_value, float) and not isinstance(min_value, int)) or (
             not isinstance(max_value, float) and not isinstance(max_value, int)
         ):

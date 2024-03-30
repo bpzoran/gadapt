@@ -47,3 +47,6 @@ class BasePopulationMutator(ABC):
 
     def _sort_key_random(self, c: Chromosome):
         return random.random()
+    
+    def requires_continuous_execution_in_composed_mutation(self) -> bool:
+        return False

@@ -2,6 +2,7 @@
 Population
 """
 
+import math
 from typing import List, Tuple
 from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
 from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
@@ -26,6 +27,7 @@ from gadapt.operations.variable_update.base_variable_updater import BaseVariable
 import gadapt.adapters.string_operation.ga_strings as ga_strings
 from datetime import datetime
 import gadapt.ga_model.definitions as definitions
+import gadapt.utils.ga_utils as ga_utils
 
 
 class Population:
@@ -80,6 +82,7 @@ class Population:
         self.generate_initial_population()
         self.start_time = datetime.now()
         self.timeout_expired = False
+        self.average_cost_step_in_first_population = float("NaN")
 
     def __iter__(self):
         return PopulationIterator(self)
@@ -399,6 +402,12 @@ class Population:
         Updates genetic variables
         """
         self.variable_updater.update_variables(self)
+
+    def calculate_average_cost_step(self):
+        allocated_values = [c.cost_value for c in self.chromosomes if c.cost_value is not None and not math.isnan(c.cost_value)]        
+        if allocated_values:
+            return ga_utils.average_difference(allocated_values)
+        return float("NaN")
 
 
 class PopulationIterator:

@@ -45,3 +45,6 @@ class ParentDiversityPopulationMutator(BasePopulationMutator):
         for c in chromosomes_for_mutation:
             c.mutate(population.options.number_of_mutation_genes)
         return len(chromosomes_for_mutation)
+
+    def requires_continuous_execution_in_composed_mutation(self) -> bool:
+        return True

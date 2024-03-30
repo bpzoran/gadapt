@@ -49,6 +49,7 @@ from gadapt.operations.mutation.population_mutation.composed_population_mutator 
 from gadapt.operations.mutation.population_mutation.cost_diversity_population_mutator import (
     CostDiversityPopulationMutator,
 )
+from gadapt.operations.mutation.population_mutation.cross_diversity_population_mutator import CrossDiversityPopulationMutator
 from gadapt.operations.mutation.population_mutation.parent_diversity_population_mutator import (
     ParentDiversityPopulationMutator,
 )
@@ -163,6 +164,14 @@ class GAFactory(BaseGAFactory):
                     self._ga.parent_diversity_mutation_chromosome_selection
                 ),
             )
+        elif population_mutator_string == definitions.CROSS_DIVERSITY:
+            return CrossDiversityPopulationMutator(
+                ParentDiversityPopulationMutator(
+                    self._get_sampling_method(
+                        self._ga.parent_diversity_mutation_chromosome_selection
+                    ),
+                ),
+            )
         elif population_mutator_string == definitions.RANDOM:
             return RandomPopulationMutator()
         else:
@@ -203,6 +212,51 @@ class GAFactory(BaseGAFactory):
             )
             composedPopulationMutator.append(RandomPopulationMutator())
             return CostDiversityPopulationMutator(composedPopulationMutator)
+        if self._is_cross_diversity_random(mutator_strings):
+            return CrossDiversityPopulationMutator(RandomPopulationMutator())
+        if self._is_cross_diversity_parent_diversity(mutator_strings):
+            return CrossDiversityPopulationMutator(
+                ParentDiversityPopulationMutator(
+                    self._get_sampling_method(
+                        self._ga.parent_diversity_mutation_chromosome_selection
+                    ),
+                ),
+            ) 
+        if self._is_cross_diversity_parent_diversity_random(mutator_strings):
+            composedPopulationMutator = ComposedPopulationMutator()
+            composedPopulationMutator.append(
+                ParentDiversityPopulationMutator(
+                    self._get_sampling_method(
+                        self._ga.parent_diversity_mutation_chromosome_selection
+                    ),
+                )
+            )
+            composedPopulationMutator.append(RandomPopulationMutator())
+            return CrossDiversityPopulationMutator(composedPopulationMutator)
+        if self._is_cross_diversity_cost_diversity_parent_diversity(mutator_strings):
+            composedPopulationMutator = ComposedPopulationMutator()
+            parent_diversity_population_mutator = ParentDiversityPopulationMutator(
+                    self._get_sampling_method(
+                        self._ga.parent_diversity_mutation_chromosome_selection
+                    ),
+                )
+            composedPopulationMutator.append(CrossDiversityPopulationMutator(parent_diversity_population_mutator))
+            composedPopulationMutator.append(CostDiversityPopulationMutator(parent_diversity_population_mutator))
+            return composedPopulationMutator
+        if self._is_cross_diversity_cost_diversity_parent_diversity_random(mutator_strings):
+            composedPopulationMutator1 = ComposedPopulationMutator()
+            composedPopulationMutator1.append(RandomPopulationMutator())
+            composedPopulationMutator1.append(
+                ParentDiversityPopulationMutator(
+                    self._get_sampling_method(
+                        self._ga.parent_diversity_mutation_chromosome_selection
+                    ),
+                )
+            )
+            composedPopulationMutator2 = ComposedPopulationMutator()
+            composedPopulationMutator2.append(CrossDiversityPopulationMutator(composedPopulationMutator1))
+            composedPopulationMutator2.append(CostDiversityPopulationMutator(composedPopulationMutator1))
+            return composedPopulationMutator2
         composedPopulationMutator = ComposedPopulationMutator()
         for ms in mutator_strings:
             composedPopulationMutator.append(self._make_population_mutator(ms))
@@ -231,6 +285,7 @@ class GAFactory(BaseGAFactory):
         ):
             return True
         return False
+        
 
     def _is_cost_diversity_parent_diversity_random(self, mutator_strings: list):
         """
@@ -240,6 +295,70 @@ class GAFactory(BaseGAFactory):
             len(mutator_strings) == 3
             and definitions.COST_DIVERSITY in mutator_strings
             and definitions.PARENT_DIVERSITY in mutator_strings
+            and definitions.RANDOM in mutator_strings
+        ):
+            return True
+        return False    
+    
+    def _is_cross_diversity_parent_diversity(self, mutator_strings: list):
+        """
+        Is population mutator cost diversity and parent diversity
+        """
+        if (
+            len(mutator_strings) == 2
+            and definitions.CROSS_DIVERSITY in mutator_strings
+            and definitions.PARENT_DIVERSITY in mutator_strings
+        ):
+            return True
+        return False
+    
+    def _is_cross_diversity_random(self, mutator_strings: list):
+        """
+        Is population mutator cost diversity and parent diversity
+        """
+        if (
+            len(mutator_strings) == 2
+            and definitions.CROSS_DIVERSITY in mutator_strings
+            and definitions.RANDOM in mutator_strings
+        ):
+            return True
+        return False
+    
+    def _is_cross_diversity_cost_diversity_parent_diversity(self, mutator_strings: list):
+        """
+        Is population mutator cost diversity and parent diversity
+        """
+        if (
+            len(mutator_strings) == 3
+            and definitions.CROSS_DIVERSITY in mutator_strings
+            and definitions.PARENT_DIVERSITY in mutator_strings
+            and definitions.COST_DIVERSITY in mutator_strings
+        ):
+            return True
+        return False
+    
+    def _is_cross_diversity_parent_diversity_random(self, mutator_strings: list):
+        """
+        Is population mutator cost diversity, parent diversity and random
+        """
+        if (
+            len(mutator_strings) == 3
+            and definitions.CROSS_DIVERSITY in mutator_strings
+            and definitions.PARENT_DIVERSITY in mutator_strings
+            and definitions.RANDOM in mutator_strings
+        ):
+            return True
+        return False
+    
+    def _is_cross_diversity_cost_diversity_parent_diversity_random(self, mutator_strings: list):
+        """
+        Is population mutator cost diversity and parent diversity
+        """
+        if (
+            len(mutator_strings) == 4
+            and definitions.CROSS_DIVERSITY in mutator_strings
+            and definitions.PARENT_DIVERSITY in mutator_strings
+            and definitions.COST_DIVERSITY in mutator_strings
             and definitions.RANDOM in mutator_strings
         ):
             return True

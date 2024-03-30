@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import math
 import sys
 import traceback
 from gadapt.ga_model.chromosome import Chromosome
@@ -42,3 +43,5 @@ class BaseCostFinder(ABC):
             population (Population): The population to find costs for each chromosome
         """
         self._find_costs_for_population(population)
+        if math.isnan(population.average_cost_step_in_first_population):
+            population.average_cost_step_in_first_population = population.calculate_average_cost_step()

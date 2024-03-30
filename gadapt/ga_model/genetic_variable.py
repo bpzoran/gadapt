@@ -73,11 +73,16 @@ class GeneticVariable:
         self._decimal_places = self._get_decimal_places(value)
         self._step = value
 
-    def _get_decimal_places(self, f: float) -> int:
-        dp = str(f)[::-1].find(".")
-        if dp == -1:
+    def _get_decimal_places(self, num):
+        num_str = str(num)
+        if 'e-' in num_str:
+            num_str = num_str.split('e-')[-1]
+            return int(num_str)
+        if '.' in num_str:
+            _, fractional_part = num_str.split('.')
+            return len(fractional_part)
+        else:
             return 0
-        return dp
 
     @property
     def decimal_places(self) -> int:
@@ -98,14 +103,14 @@ class GeneticVariable:
         self._stacked = value
 
     @property
-    def relative_standard_deviation(self) -> float:
+    def cross_diversity_coefficient(self) -> float:
         """
         Relative standard deviation of all genes for the same genetic variable
         """
         return self._standard_deviation
 
-    @relative_standard_deviation.setter
-    def relative_standard_deviation(self, value: float):
+    @cross_diversity_coefficient.setter
+    def cross_diversity_coefficient(self, value: float):
         self._standard_deviation = value
 
     @property

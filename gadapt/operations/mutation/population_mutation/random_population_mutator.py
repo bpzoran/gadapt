@@ -24,3 +24,6 @@ class RandomPopulationMutator(BasePopulationMutator):
         for c in chromosomes_for_mutation:
             c.mutate(number_of_mutation_genes)
         return number_of_mutation_chromosomes
+
+    def requires_continuous_execution_in_composed_mutation(self) -> bool:
+        return True

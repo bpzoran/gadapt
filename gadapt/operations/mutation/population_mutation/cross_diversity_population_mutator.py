@@ -1,4 +1,5 @@
 import math
+from gadapt.ga_model.population import Population
 from gadapt.operations.mutation.population_mutation.base_population_mutator import (
     BasePopulationMutator,
 )
@@ -6,9 +7,9 @@ import gadapt.utils.ga_utils as ga_utils
 import statistics as stat
 
 
-class CostDiversityPopulationMutator(BasePopulationMutator):
+class CrossDiversityPopulationMutator(BasePopulationMutator):
     """
-    Population mutator based on cost diversity
+    Population mutator based on cross diversity
     """
 
     def __init__(
@@ -19,15 +20,15 @@ class CostDiversityPopulationMutator(BasePopulationMutator):
         self._population_mutator_for_execution = population_mutator_for_execution
 
     def _get_number_of_mutation_cromosomes(
-        self, population, number_of_mutation_chromosomes
+        self, population: Population, number_of_mutation_chromosomes
     ) -> int:
-        def get_mutation_rate() -> float:            
-            if not population.average_cost_step_in_first_population or math.isnan(population.average_cost_step_in_first_population):
-                return 1
-            cost_step_ratio = population.calculate_average_cost_step() / population.average_cost_step_in_first_population
-            if cost_step_ratio > 1:
-                cost_step_ratio = 1
-            return  1 - cost_step_ratio
+        def get_mutation_rate() -> float:
+            avg_rsd = ga_utils.average([gv.cross_diversity_coefficient for gv in population.options.genetic_variables])
+            if (avg_rsd > 1):
+                avg_rsd = 1
+            if (avg_rsd < 0):
+                avg_rsd = 0
+            return 1 - avg_rsd
 
         mutation_rate = get_mutation_rate()
         f_return_value = mutation_rate * float(number_of_mutation_chromosomes)

@@ -28,8 +28,18 @@ class ComposedPopulationMutator(BasePopulationMutator):
             raise Exception("at least one mutator must be added")
         random.shuffle(self.mutators)
         nmc = 0
-        for m in self.mutators:
-            if nmc < number_of_mutation_chromosomes:
-                nmc += m._mutate_population(
+        if not self.requires_continuous_execution_in_composed_mutation():
+            nmc = self.mutators[0]._mutate_population(
                     population, number_of_mutation_chromosomes - nmc
                 )
+        else:
+            for m in self.mutators:            
+                if nmc < number_of_mutation_chromosomes:
+                    mc = m._mutate_population(
+                        population, number_of_mutation_chromosomes - nmc
+                    )
+                    nmc += mc
+        return nmc
+    
+    def requires_continuous_execution_in_composed_mutation(self):
+        return all([m.requires_continuous_execution_in_composed_mutation() for m in self.mutators])
