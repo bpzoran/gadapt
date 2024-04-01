@@ -24,9 +24,9 @@ class CrossDiversityPopulationMutator(BasePopulationMutator):
     ) -> int:
         def get_mutation_rate() -> float:
             avg_rsd = ga_utils.average([gv.cross_diversity_coefficient for gv in population.options.genetic_variables])
-            if (avg_rsd > 1):
+            if avg_rsd > 1:
                 avg_rsd = 1
-            if (avg_rsd < 0):
+            if avg_rsd < 0:
                 avg_rsd = 0
             return 1 - avg_rsd
 

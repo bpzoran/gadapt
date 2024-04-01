@@ -9,9 +9,15 @@ class CommonVariableUpdater:
     """
 
     def update_variables(self, population):
+
         def scale_values(gv: GeneticVariable, values):
-            min_val = min(values)
-            scaled_values = [(v - min_val) / (gv.max_value - gv.min_value) for v in values]
+            scaled_values = []
+            if gv.min_value == gv.max_value:
+                return [0.5] * len(values)  # If min_val and max_val are the same, return a list of 0.5s
+
+            for value in values:
+                scaled_value = (value - gv.min_value) / (gv.max_value - gv.min_value)
+                scaled_values.append(scaled_value)
             return scaled_values
 
         # def scale_values(data):
@@ -19,7 +25,6 @@ class CommonVariableUpdater:
         #     max_val = max(data)
         #     scaled_data = [(x - min_val) / (max_val - min_val) for x in data]
         #     return scaled_data
-        
 
         unique_values_per_variables = {}
         values_per_variables = {}
@@ -48,17 +53,11 @@ class CommonVariableUpdater:
             if key.stacked:
                 key.cross_diversity_coefficient = 0.0
                 continue
-            scaled_values = scale_values(key, values_per_variables[key])
-            range = max(scaled_values) - min(scaled_values)
-            if range == 0:
+            values_scaled = scale_values(key, values_per_variables[key])
+            st_dev = stat.stdev(values_scaled)
+            if key.initial_st_dev < 0:
+                key.initial_st_dev = st_dev
+            if max(values_scaled) - min(values_scaled) == 0:
                 key.cross_diversity_coefficient = 0.0
             else:
-                #!!!!! Obavezno proveriti koji od ovih nacina koristiti!!!!
-                rel_st_dev = stat.stdev(scaled_values) / ga_utils.average(scaled_values)
-                key.cross_diversity_coefficient = range / rel_st_dev
-                
-                # st_dev = stat.stdev(scaled_values)
-                # key.cross_diversity_coefficient = range / st_dev
-
-                #rel_st_dev = stat.stdev([v for v in values_per_variables[key]]) / ga_utils.average([v for v in values_per_variables[key]])
-                #key.cross_diversity_coefficient = range / rel_st_dev
+                key.cross_diversity_coefficient = st_dev / key.initial_st_dev

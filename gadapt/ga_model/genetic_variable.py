@@ -19,6 +19,7 @@ class GeneticVariable:
         self.variable_id = id
         self._standard_deviation = definitions.FLOAT_NAN
         self._gene_mutator = None
+        self._initial_st_dev = -1.0
 
     def __eq__(self, other):
         if not isinstance(other, GeneticVariable):
@@ -129,3 +130,11 @@ class GeneticVariable:
             0, round((self.max_value - self.min_value) / self.step)
         )
         return self.min_value + number_of_steps * self.step
+
+    @property
+    def initial_st_dev(self) -> float:
+        return self._initial_st_dev
+
+    @initial_st_dev.setter
+    def initial_st_dev(self, value: float):
+        self._initial_st_dev = value
