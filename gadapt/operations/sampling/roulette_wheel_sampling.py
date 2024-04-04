@@ -26,7 +26,6 @@ class RouletteWheelSampling(BaseSampling):
         for j in range(self.max_num):
             if len(unallocated_members) == 0:
                 continue
-            i_c_p_l = 0
             for i_c_p_l, m in enumerate(unallocated_members):
                 m.action_probability = cummultative_probability_list[i_c_p_l]
             rnd_value = random.random()

@@ -44,7 +44,7 @@ class GAExecutor:
             chromosome_immigrator = self.factory.get_chromosome_immigrator()
             selector = self.factory.get_parent_selector()
             crossover = self.factory.get_crossover()
-            variable_updater = variable_updater = self.factory.get_variable_updater()
+            variable_updater = self.factory.get_variable_updater()
             gene_mutator = self.factory.get_gene_mutator()
             for gv in self.ga_options.genetic_variables:
                 gv.gene_mutator = gene_mutator
