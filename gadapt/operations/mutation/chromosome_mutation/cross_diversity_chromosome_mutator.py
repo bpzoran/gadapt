@@ -20,14 +20,14 @@ class CrossDiversityChromosomeMutator(RandomChromosomeMutator):
         if number_of_mutation_genes == 0:
             return
         x_genes = [g for g in c]
-        x_genes.sort(key=lambda g: -g.genetic_variable.cross_diversity_coefficient)
+        x_genes.sort(key=lambda g: -g.decision_variable.cross_diversity_coefficient)
         if number_of_mutation_genes > len(x_genes):
             number_of_mutation_genes = len(x_genes)
         number_of_mutation_genes = random.randint(1, number_of_mutation_genes)
         genes_for_mutation = self._sampling.get_sample(
             x_genes,
             number_of_mutation_genes,
-            lambda g: g.genetic_variable.cross_diversity_coefficient,
+            lambda g: g.decision_variable.cross_diversity_coefficient,
         )
         for g in genes_for_mutation:
             g.mutate()

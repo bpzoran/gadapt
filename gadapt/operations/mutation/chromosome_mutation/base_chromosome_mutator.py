@@ -23,12 +23,12 @@ class BaseChromosomeMutator(ABC):
 
     def _set_gene_value(self, g, c):
         g.variable_value = round(
-            g.genetic_variable.make_random_value(), g.genetic_variable.decimal_places
+            g.decision_variable.make_random_value(), g.decision_variable.decimal_places
         )
         self._gene_mutated(g, c)
 
     def _gene_mutated(self, g, c):
-        c.mutated_variables_id_list.append(g.genetic_variable.variable_id)
+        c.mutated_variables_id_list.append(g.decision_variable.variable_id)
 
     def _chromosome_mutated(self, c):
         c.is_mutated = True

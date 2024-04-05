@@ -46,8 +46,8 @@ class GAExecutor:
             crossover = self.factory.get_crossover()
             variable_updater = self.factory.get_variable_updater()
             gene_mutator = self.factory.get_gene_mutator()
-            for gv in self.ga_options.genetic_variables:
-                gv.gene_mutator = gene_mutator
+            for dv in self.ga_options.decision_variables:
+                dv.gene_mutator = gene_mutator
             population = Population(
                 self.ga_options,
                 chromosome_mutator=chromosome_mutator,
@@ -72,7 +72,7 @@ class GAExecutor:
             results.min_cost = population.min_cost
             results.number_of_iterations = population.population_generation
             for g in best_individual:
-                results.result_values[g.genetic_variable.variable_id] = g.variable_value
+                results.result_values[g.decision_variable.variable_id] = g.variable_value
         except Exception as ex:
             results.success = False
             results.messages.append((message_levels.ERROR, str(ex)))

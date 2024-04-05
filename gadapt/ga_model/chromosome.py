@@ -4,7 +4,7 @@ Chromosome
 
 from typing import List
 from gadapt.ga_model.gene import Gene
-from gadapt.ga_model.genetic_variable import GeneticVariable
+from gadapt.ga_model.decision_variable import DecisionVariable
 from gadapt.ga_model.ranking_model import RankingModel
 from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
@@ -197,7 +197,7 @@ class Chromosome(RankingModel):
         self._father_id = value
 
     def add_gene(
-        self, gen_var: GeneticVariable, gen_var_value: float = definitions.FLOAT_NAN
+        self, gen_var: DecisionVariable, gen_var_value: float = definitions.FLOAT_NAN
     ):
         """
         Adds a gene to the chromosome

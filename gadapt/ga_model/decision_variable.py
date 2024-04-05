@@ -1,20 +1,20 @@
 """
-Genetic variable
+Decision variable
 """
 
 import random
 import gadapt.ga_model.definitions as definitions
 
 
-class GeneticVariable:
+class DecisionVariable:
     def __init__(self, id: int) -> None:
         """
-        Genetic variable class defines genes.
-        Each gene has a reference to one genetic variable.
-        Genetic variable contains common values for genes: variable id, maximal\
+        Decision variable class defines genes.
+        Each gene has a reference to one decision variable.
+        Decision variable contains common values for genes: variable id, maximal\
             value, minimal value, step.
         Args:
-            id (int): identifier of the genetic variable
+            id (int): identifier of the decision variable
         """
         self.variable_id = id
         self._standard_deviation = definitions.FLOAT_NAN
@@ -22,7 +22,7 @@ class GeneticVariable:
         self._initial_st_dev = -1.0
 
     def __eq__(self, other):
-        if not isinstance(other, GeneticVariable):
+        if not isinstance(other, DecisionVariable):
             return False
         return self.variable_id == other.variable_id
 
@@ -32,7 +32,7 @@ class GeneticVariable:
     @property
     def variable_id(self) -> int:
         """
-        Unique ID for genetic variable
+        Unique ID for decision variable
         """
         return self._variable_id
 
@@ -95,7 +95,7 @@ class GeneticVariable:
     @property
     def stacked(self) -> bool:
         """
-        Indicates if all genes have the same value for the same genetic variable
+        Indicates if all genes have the same value for the same decision variable
         """
         return self._stacked
 
@@ -106,7 +106,7 @@ class GeneticVariable:
     @property
     def cross_diversity_coefficient(self) -> float:
         """
-        Relative standard deviation of all genes for the same genetic variable
+        Relative standard deviation of all genes for the same decision variable
         """
         return self._standard_deviation
 

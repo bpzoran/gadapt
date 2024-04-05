@@ -7,7 +7,7 @@ from typing import List
 from gadapt.execution.ga_executor import GAExecutor
 from gadapt.factory.ga_base_factory import BaseGAFactory
 from gadapt.factory.ga_factory import GAFactory
-from gadapt.ga_model.genetic_variable import GeneticVariable
+from gadapt.ga_model.decision_variable import DecisionVariable
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.ga_results import GAResults
 import gadapt.utils.ga_utils as ga_utils
@@ -190,7 +190,7 @@ class GA:
         self.gene_mutation = gene_mutation
         self.immigration_number = immigration_number
         self.logging = logging
-        self._genetic_variables: List[GeneticVariable] = []
+        self._decision_variables: List[DecisionVariable] = []
         self.cross_diversity_mutation_gene_selection = (
             cross_diversity_mutation_gene_selection
         )
@@ -249,11 +249,11 @@ class GA:
             not isinstance(max_value, float) and not isinstance(max_value, int)
         ):
             raise Exception("min value, max value and step must be numerical values!")
-        genetic_variable = GeneticVariable(self._current_gv_id)
-        genetic_variable.min_value = min_value
-        genetic_variable.max_value = max_value
-        genetic_variable.step = step
-        self._genetic_variables.append(genetic_variable)
+        decision_variable = DecisionVariable(self._current_gv_id)
+        decision_variable.min_value = min_value
+        decision_variable.max_value = max_value
+        decision_variable.step = step
+        self._decision_variables.append(decision_variable)
         self._current_gv_id += 1
 
     @property
@@ -460,7 +460,7 @@ class GA:
 
         **"cross_diversity"** - Considers the diversity of genes of the same
         type in the population. Lower diversity can mean
-        that this genetic variable approaches some local
+        that this decision variable approaches some local
         minimums, and therefore such genes increase the
         chance for mutation. Based on the calculated
         cross-diversity, chromosomes may be selected by

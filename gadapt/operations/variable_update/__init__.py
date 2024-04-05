@@ -1,3 +1,3 @@
 """
-Algorithms for update of genetic variables.
+Algorithms for update of decision variables.
 """

@@ -1,5 +1,5 @@
 import statistics as stat
-from gadapt.ga_model.genetic_variable import GeneticVariable
+from gadapt.ga_model.decision_variable import DecisionVariable
 import gadapt.utils.ga_utils as ga_utils
 
 
@@ -10,13 +10,13 @@ class CommonVariableUpdater:
 
     def update_variables(self, population):
 
-        def scale_values(gv: GeneticVariable, values):
+        def scale_values(dv: DecisionVariable, values):
             scaled_values = []
-            if gv.min_value == gv.max_value:
+            if dv.min_value == dv.max_value:
                 return [0.5] * len(values)  # If min_val and max_val are the same, return a list of 0.5s
 
             for value in values:
-                scaled_value = (value - gv.min_value) / (gv.max_value - gv.min_value)
+                scaled_value = (value - dv.min_value) / (dv.max_value - dv.min_value)
                 scaled_values.append(scaled_value)
             return scaled_values
 
@@ -33,15 +33,15 @@ class CommonVariableUpdater:
                 continue
             for g in c:
                 unique_var_values = unique_values_per_variables.get(
-                    g.genetic_variable, None
+                    g.decision_variable, None
                 )
-                var_values = values_per_variables.get(g.genetic_variable, None)
+                var_values = values_per_variables.get(g.decision_variable, None)
                 if unique_var_values is None:
                     unique_var_values = set()
-                    unique_values_per_variables[g.genetic_variable] = unique_var_values
+                    unique_values_per_variables[g.decision_variable] = unique_var_values
                 if var_values is None:
                     var_values = []
-                    values_per_variables[g.genetic_variable] = var_values
+                    values_per_variables[g.decision_variable] = var_values
                 unique_var_values.add(g.variable_value)
                 var_values.append(g.variable_value)
         for key in unique_values_per_variables:

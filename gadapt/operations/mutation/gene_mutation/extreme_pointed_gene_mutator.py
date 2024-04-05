@@ -14,7 +14,7 @@ class ExtremePointedGeneMutator(RandomGeneMutator):
 
     def _make_rounded_random_value_below_or_above(self, g: Gene):
         return round(
-            self._make_random_value_below_or_above(g), g.genetic_variable.decimal_places
+            self._make_random_value_below_or_above(g), g.decision_variable.decimal_places
         )
 
     def _make_random_value_below_or_above(self, g: Gene):
@@ -23,31 +23,31 @@ class ExtremePointedGeneMutator(RandomGeneMutator):
         return self._make_random_value_below(g)
 
     def _make_random_value_below(self, g: Gene):
-        if g.variable_value == g.genetic_variable.min_value:
-            return g.genetic_variable.make_random_value()
+        if g.variable_value == g.decision_variable.min_value:
+            return g.decision_variable.make_random_value()
         number_of_steps = random.randint(
             0,
             round(
-                (g.variable_value - g.genetic_variable.min_value)
-                / g.genetic_variable.step
+                (g.variable_value - g.decision_variable.min_value)
+                / g.decision_variable.step
             ),
         )
-        return g.genetic_variable.min_value + number_of_steps * g.genetic_variable.step
+        return g.decision_variable.min_value + number_of_steps * g.decision_variable.step
 
     def _make_random_value_above(self, g: Gene):
-        if g.variable_value == g.genetic_variable.max_value:
-            return g.genetic_variable.make_random_value()
+        if g.variable_value == g.decision_variable.max_value:
+            return g.decision_variable.make_random_value()
         number_of_steps = random.randint(
             0,
             round(
-                (g.genetic_variable.max_value - g.variable_value)
-                / g.genetic_variable.step
+                (g.decision_variable.max_value - g.variable_value)
+                / g.decision_variable.step
             ),
         )
-        return g.variable_value + number_of_steps * g.genetic_variable.step
+        return g.variable_value + number_of_steps * g.decision_variable.step
 
     def _get_mutate_func(self, g: Gene):
-        prob = g.genetic_variable.cross_diversity_coefficient
+        prob = g.decision_variable.cross_diversity_coefficient
         if prob > 1.0:
             prob = 1.0
         should_mutate_random = get_rand_bool_with_probability(prob)

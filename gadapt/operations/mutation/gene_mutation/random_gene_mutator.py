@@ -6,5 +6,5 @@ class RandomGeneMutator(BaseGeneMutator):
 
     def _make_mutated_value(self, g: Gene):
         return round(
-            g.genetic_variable.make_random_value(), g.genetic_variable.decimal_places
+            g.decision_variable.make_random_value(), g.decision_variable.decimal_places
         )

@@ -53,7 +53,7 @@ class BaseCrossover(ABC):
 
         def get_genetic_diversity(g_m: Gene, g_f: Gene) -> float:
             return abs(g_m.variable_value - g_f.variable_value) / (
-                g_f.genetic_variable.max_value - g_f.genetic_variable.min_value
+                g_f.decision_variable.max_value - g_f.decision_variable.min_value
             )
 
         if len(mother) != len(father):
@@ -64,25 +64,25 @@ class BaseCrossover(ABC):
         genetic_diversity = []
         for self._current_gene_number in range(self.number_of_genes):
             mother_gene, father_gene = self._get_mother_father_genes(mother, father)
-            genetic_variable_father = father_gene.genetic_variable
-            genetic_variable_mother = mother_gene.genetic_variable
-            if genetic_variable_father != genetic_variable_mother:
-                genetic_variable_mother = next(
+            decision_variable_father = father_gene.decision_variable
+            decision_variable_mother = mother_gene.decision_variable
+            if decision_variable_father != decision_variable_mother:
+                decision_variable_mother = next(
                     (
-                        item.genetic_variable
+                        item.decision_variable
                         for item in mother
-                        if item.genetic_variable == genetic_variable_father
+                        if item.decision_variable == decision_variable_father
                     ),
                     None,
                 )
-            if genetic_variable_mother is None:
+            if decision_variable_mother is None:
                 raise Exception(
                     "chromosomes in crossover do not have the same structure!"
                 )
             genetic_diversity.append(get_genetic_diversity(mother_gene, father_gene))
             var1, var2 = self._combine(mother_gene, father_gene)
-            offspring1.add_gene(genetic_variable_father, var1)
-            offspring2.add_gene(genetic_variable_father, var2)
+            offspring1.add_gene(decision_variable_father, var1)
+            offspring2.add_gene(decision_variable_father, var2)
         parrents_diversity = round(ga_utils.average(genetic_diversity), 2)
         offspring1.parent_diversity = parrents_diversity
         offspring2.parent_diversity = parrents_diversity

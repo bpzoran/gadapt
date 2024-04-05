@@ -21,7 +21,7 @@ class BaseCostFinder(ABC):
         """
         dict = {}
         for g in c:
-            dict[g.genetic_variable.variable_id] = g.variable_value
+            dict[g.decision_variable.variable_id] = g.variable_value
         try:
             cost_value = cost_function(dict)
             c.cost_value = cost_value

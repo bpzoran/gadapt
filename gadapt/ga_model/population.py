@@ -392,14 +392,14 @@ class Population:
             chromosome.chromosome_id = self.last_chromosome_id
             self.last_chromosome_id += 1
         if len(chromosome) == 0:
-            for gv in self.options.genetic_variables:
-                g = Gene(gv)
+            for dv in self.options.decision_variables:
+                g = Gene(dv)
                 chromosome.append(g)
         self.append(chromosome)
 
     def update_variables(self):
         """
-        Updates genetic variables
+        Updates decision variables
         """
         self.variable_updater.update_variables(self)
 

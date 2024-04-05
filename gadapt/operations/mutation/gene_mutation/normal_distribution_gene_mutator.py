@@ -40,17 +40,17 @@ class NormalDistributionGeneMutator(RandomGeneMutator):
         min_std_dev = 0.05
         max_std_dev = 0.5
         std_dev_range = max_std_dev - min_std_dev
-        gv_rsd = np.clip(g.genetic_variable.cross_diversity_coefficient, 0, 1)        
+        gv_rsd = np.clip(g.decision_variable.cross_diversity_coefficient, 0, 1)        
         return min_std_dev + (std_dev_range * gv_rsd)
     
     def _make_normally_distributed_random_value(self, g: Gene):
         curr_value = g.variable_value
         if math.isnan(curr_value):
-            curr_value = g.genetic_variable.make_random_value()
-        range = g.genetic_variable.max_value - g.genetic_variable.min_value
-        mean = (curr_value - g.genetic_variable.min_value) / (range)
+            curr_value = g.decision_variable.make_random_value()
+        range = g.decision_variable.max_value - g.decision_variable.min_value
+        mean = (curr_value - g.decision_variable.min_value) / (range)
         normal_distribution_random_value = normally_distributed_random(mean, self._calculate_nd_standard_deviation(g), 0, 1)
         number_of_steps = round(
-            (normal_distribution_random_value * range) / g.genetic_variable.step
+            (normal_distribution_random_value * range) / g.decision_variable.step
         )
-        return g.genetic_variable.min_value + number_of_steps * g.genetic_variable.step
+        return g.decision_variable.min_value + number_of_steps * g.decision_variable.step
