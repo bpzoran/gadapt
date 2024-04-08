@@ -13,8 +13,8 @@ from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator impo
     BaseChromosomeMutator,
 )
 from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
-from gadapt.operations.mutation.population_mutation.base_population_mutator import (
-    BasePopulationMutator,
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
+    BaseChromosomeMutationRateDeterminator,
 )
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
 from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCombination
@@ -84,7 +84,7 @@ class BaseGAFactory(ABC):
             self.gene_mutator = self._get_gene_mutator()
         return self.gene_mutator
 
-    def get_population_mutator(self) -> BasePopulationMutator:
+    def get_population_mutator(self) -> BaseChromosomeMutationRateDeterminator:
         """
         Population Mutator Instance
         """
@@ -168,7 +168,7 @@ class BaseGAFactory(ABC):
         pass
 
     @abstractmethod
-    def _get_population_mutator(self) -> BasePopulationMutator:
+    def _get_population_mutator(self) -> BaseChromosomeMutationRateDeterminator:
         """
         Population Mutator Instance
         """

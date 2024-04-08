@@ -19,8 +19,8 @@ from gadapt.operations.immigration.population_immigration.base_population_immigr
 from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import (
     BaseChromosomeMutator,
 )
-from gadapt.operations.mutation.population_mutation.base_population_mutator import (
-    BasePopulationMutator,
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
+    BaseChromosomeMutationRateDeterminator,
 )
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
 from gadapt.operations.variable_update.base_variable_updater import BaseVariableUpdater
@@ -35,7 +35,7 @@ class Population:
         self,
         options: GAOptions,
         chromosome_mutator: BaseChromosomeMutator,
-        population_mutator: BasePopulationMutator,
+        population_mutator: BaseChromosomeMutationRateDeterminator,
         exit_checker: BaseExitChecker,
         cost_finder: BaseCostFinder,
         population_immigrator: BasePopulationImmigrator,
@@ -51,7 +51,7 @@ class Population:
 
             options (GAOptions): Genetic Algorithm Options
             chromosome_mutator (BaseChromosomeMutator): Chromosome Mutator Instance
-            population_mutator (BasePopulationMutator): Population Mutator Instance
+            population_mutator (BaseChromosomeMutationRateDeterminator): Population Mutator Instance
             exit_checker (BaseExitChecker): Exit Checker Instance
             cost_finder (BaseCostFinder): Cost Finder Instance
             population_immigrator (BasePopulationImmigrator):
@@ -213,14 +213,14 @@ class Population:
         self._chromosome_mutator = value
 
     @property
-    def population_mutator(self) -> BasePopulationMutator:
+    def population_mutator(self) -> BaseChromosomeMutationRateDeterminator:
         """
         Population mutator algorithm
         """
         return self._population_mutator
 
     @population_mutator.setter
-    def population_mutator(self, value: BasePopulationMutator):
+    def population_mutator(self, value: BaseChromosomeMutationRateDeterminator):
         self._population_mutator = value
 
     @property
