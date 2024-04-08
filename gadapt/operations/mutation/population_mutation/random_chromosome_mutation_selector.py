@@ -21,6 +21,8 @@ class RandomChromosomeMutationSelector(BaseChromosomeMutationSelector):
         )
         mutation_chromosome_number = self._chromosome_mutation_rate_determinator.get_number_of_mutation_chromosomes(
             population, max_number_of_mutation_chromosomes)
+        if mutation_chromosome_number == 0:
+            return 0
         chromosomes_for_mutation = unallocated_chromosomes[
                                    :mutation_chromosome_number
                                    ]
