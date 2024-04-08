@@ -77,8 +77,12 @@ from gadapt.operations.variable_update.common_variable_updater import (
 )
 import gadapt.ga_model.definitions as definitions
 from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
+from operations.mutation.population_mutation.composed_chromosome_mutation_rate_determinator import \
+    ComposedChromosomeMutationRateDeterminator
 from operations.mutation.population_mutation.random_chromosome_mutation_rate_determinator import \
     RandomChromosomeMutationRateDeterminator
+from operations.mutation.population_mutation.strict_chromosome_mutation_rate_determinator import \
+    StrictChromosomeMutationRateDeterminator
 
 
 class GAFactory(BaseGAFactory):
@@ -150,28 +154,7 @@ class GAFactory(BaseGAFactory):
         Population Mutator Instance
         """
         self._population_mutator_options_validation()
-        if population_mutator_string is None:
-            population_mutator_string = self._ga.population_mutation.strip()
-        if population_mutator_string.find(definitions.PARAM_SEPARATOR) > -1:
-            return self._get_population_mutator_combined()
-        elif population_mutator_string == definitions.COST_DIVERSITY or population_mutator_string == definitions.PARENT_DIVERSITY:
-            return ParentDiversityChromosomeMutationSelector(
-                CostDiversityChromosomeMutationRateDeterminator(),
-                self._get_sampling_method(
-                    self._ga.parent_diversity_mutation_chromosome_selection
-                ),
-            )
-        elif population_mutator_string == definitions.CROSS_DIVERSITY:
-            return ParentDiversityChromosomeMutationSelector(
-                CrossDiversityChromosomeMutationRateDeterminator(),
-                self._get_sampling_method(
-                    self._ga.parent_diversity_mutation_chromosome_selection
-                ),
-            )
-        elif population_mutator_string == definitions.RANDOM:
-            return RandomChromosomeMutationSelector(RandomChromosomeMutationRateDeterminator())
-        else:
-            raise Exception("unknown population mutation")
+        return self._get_population_mutator_combined()
 
     def _get_population_mutator(self) -> BaseChromosomeMutationSelector:
         """
@@ -187,179 +170,43 @@ class GAFactory(BaseGAFactory):
             ms.strip()
             for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        if self._is_cost_diversity_random(mutator_strings):
-            return RandomChromosomeMutationSelector(CostDiversityChromosomeMutationRateDeterminator())
-        if self._is_cost_diversity_parent_diversity(mutator_strings):
-            return ParentDiversityChromosomeMutationSelector(
-                    CostDiversityChromosomeMutationRateDeterminator(),
-                    self._get_sampling_method(
-                        self._ga.parent_diversity_mutation_chromosome_selection
-                    ),
-                )
-        if self._is_cost_diversity_parent_diversity_random(mutator_strings):
-            composed_population_mutator = ComposedChromosomeMutationSelector(RandomChromosomeMutationRateDeterminator())
-            composed_population_mutator.append(
-                ParentDiversityChromosomeMutationSelector(
-                    CostDiversityChromosomeMutationRateDeterminator(),
-                    self._get_sampling_method(
-                        self._ga.parent_diversity_mutation_chromosome_selection
-                    ),
-                )
-            )
-            composed_population_mutator.append(RandomChromosomeMutationSelector(RandomChromosomeMutationRateDeterminator()))
-            return composed_population_mutator
-        if self._is_cross_diversity_random(mutator_strings):
-            return RandomChromosomeMutationSelector(CrossDiversityChromosomeMutationRateDeterminator())
-        if self._is_cross_diversity_parent_diversity(mutator_strings):
-            return ParentDiversityChromosomeMutationSelector(
-                CrossDiversityChromosomeMutationRateDeterminator(),
-                self._get_sampling_method(
-                    self._ga.parent_diversity_mutation_chromosome_selection
-                ),
-            )
-        if self._is_cross_diversity_parent_diversity_random(mutator_strings):
-            composed_population_mutator = ComposedChromosomeMutationSelector(RandomChromosomeMutationRateDeterminator())
-            composed_population_mutator.append(
-                ParentDiversityChromosomeMutationSelector(
-                    CrossDiversityChromosomeMutationRateDeterminator(),
-                    self._get_sampling_method(
-                        self._ga.parent_diversity_mutation_chromosome_selection
-                    ),
-                )
-            )
-            composed_population_mutator.append(RandomChromosomeMutationSelector(RandomChromosomeMutationRateDeterminator()))
-            return composed_population_mutator
-        if self._is_cross_diversity_cost_diversity_parent_diversity(mutator_strings):
-            composed_population_mutator = ComposedChromosomeMutationSelector(CrossDiversityChromosomeMutationRateDeterminator())
-            parent_diversity_population_mutator = ParentDiversityChromosomeMutationSelector(
-                CostDiversityChromosomeMutationRateDeterminator(),
-                self._get_sampling_method(
-                    self._ga.parent_diversity_mutation_chromosome_selection
-                ),
-            )
-            composed_population_mutator.append(parent_diversity_population_mutator)
-            return composed_population_mutator
-        if self._is_cross_diversity_cost_diversity_parent_diversity_random(mutator_strings):
-            composedPopulationMutator1 = ComposedChromosomeMutationSelector()
-            composedPopulationMutator1.append(RandomChromosomeMutationSelector())
-            composedPopulationMutator1.append(
-                ParentDiversityChromosomeMutationSelector(
-                    self._get_sampling_method(
-                        self._ga.parent_diversity_mutation_chromosome_selection
-                    ),
-                )
-            )
-            composedPopulationMutator2 = ComposedChromosomeMutationSelector()
-            composedPopulationMutator2.append(
-                CrossDiversityChromosomeMutationRateDeterminator(composedPopulationMutator1))
-            composedPopulationMutator2.append(
-                CostDiversityChromosomeMutationRateDeterminator(composedPopulationMutator1))
-            return composedPopulationMutator2
-        composed_population_mutator = ComposedChromosomeMutationSelector()
-        for ms in mutator_strings:
-            composed_population_mutator.append(self._make_population_mutator(ms))
-        return composed_population_mutator
-
-    def _is_cost_diversity_random(self, mutator_strings: list):
-        """
-        Is population mutator cost diversity and random
-        """
-        if (
-                len(mutator_strings) == 2
-                and definitions.COST_DIVERSITY in mutator_strings
-                and definitions.RANDOM in mutator_strings
-        ):
-            return True
-        return False
-
-    def _is_cost_diversity_parent_diversity(self, mutator_strings: list):
-        """
-        Is population mutator cost diversity and parent diversity
-        """
-        if (
-                len(mutator_strings) == 2
-                and definitions.COST_DIVERSITY in mutator_strings
-                and definitions.PARENT_DIVERSITY in mutator_strings
-        ):
-            return True
-        return False
-
-    def _is_cost_diversity_parent_diversity_random(self, mutator_strings: list):
-        """
-        Is population mutator cost diversity, parent diversity and random
-        """
-        if (
-                len(mutator_strings) == 3
-                and definitions.COST_DIVERSITY in mutator_strings
-                and definitions.PARENT_DIVERSITY in mutator_strings
-                and definitions.RANDOM in mutator_strings
-        ):
-            return True
-        return False
-
-    def _is_cross_diversity_parent_diversity(self, mutator_strings: list):
-        """
-        Is population mutator cost diversity and parent diversity
-        """
-        if (
-                len(mutator_strings) == 2
-                and definitions.CROSS_DIVERSITY in mutator_strings
-                and definitions.PARENT_DIVERSITY in mutator_strings
-        ):
-            return True
-        return False
-
-    def _is_cross_diversity_random(self, mutator_strings: list):
-        """
-        Is population mutator cost diversity and parent diversity
-        """
-        if (
-                len(mutator_strings) == 2
-                and definitions.CROSS_DIVERSITY in mutator_strings
-                and definitions.RANDOM in mutator_strings
-        ):
-            return True
-        return False
-
-    def _is_cross_diversity_cost_diversity_parent_diversity(self, mutator_strings: list):
-        """
-        Is population mutator cost diversity and parent diversity
-        """
-        if (
-                len(mutator_strings) == 3
-                and definitions.CROSS_DIVERSITY in mutator_strings
-                and definitions.PARENT_DIVERSITY in mutator_strings
-                and definitions.COST_DIVERSITY in mutator_strings
-        ):
-            return True
-        return False
-
-    def _is_cross_diversity_parent_diversity_random(self, mutator_strings: list):
-        """
-        Is population mutator cost diversity, parent diversity and random
-        """
-        if (
-                len(mutator_strings) == 3
-                and definitions.CROSS_DIVERSITY in mutator_strings
-                and definitions.PARENT_DIVERSITY in mutator_strings
-                and definitions.RANDOM in mutator_strings
-        ):
-            return True
-        return False
-
-    def _is_cross_diversity_cost_diversity_parent_diversity_random(self, mutator_strings: list):
-        """
-        Is population mutator cost diversity and parent diversity
-        """
-        if (
-                len(mutator_strings) == 4
-                and definitions.CROSS_DIVERSITY in mutator_strings
-                and definitions.PARENT_DIVERSITY in mutator_strings
-                and definitions.COST_DIVERSITY in mutator_strings
-                and definitions.RANDOM in mutator_strings
-        ):
-            return True
-        return False
+        chromosome_mutation_rate_determinators = []
+        chromosome_mutation_selectors = []
+        if definitions.RANDOM in mutator_strings:
+            chromosome_mutation_rate_determinators.append(RandomChromosomeMutationRateDeterminator())
+        if definitions.CROSS_DIVERSITY in mutator_strings:
+            chromosome_mutation_rate_determinators.append(CrossDiversityChromosomeMutationRateDeterminator())
+        if definitions.COST_DIVERSITY in mutator_strings:
+            chromosome_mutation_rate_determinators.append(CostDiversityChromosomeMutationRateDeterminator())
+        if len(chromosome_mutation_rate_determinators) == 0:
+            chromosome_mutation_rate_determinators.append(CostDiversityChromosomeMutationRateDeterminator())
+        if len(chromosome_mutation_rate_determinators) == 1:
+            main_chromosome_mutation_rate_determinator = chromosome_mutation_rate_determinators[0]
+        else:
+            main_chromosome_mutation_rate_determinator = ComposedChromosomeMutationRateDeterminator()
+            for determinator in chromosome_mutation_rate_determinators:
+                main_chromosome_mutation_rate_determinator.append(determinator)
+        if definitions.RANDOM in mutator_strings and definitions.PARENT_DIVERSITY in mutator_strings:
+            helper_chromosome_mutation_rate_determinator = StrictChromosomeMutationRateDeterminator()
+        else:
+            helper_chromosome_mutation_rate_determinator = main_chromosome_mutation_rate_determinator
+        if definitions.RANDOM in mutator_strings:
+            chromosome_mutation_selectors.append(RandomChromosomeMutationSelector(helper_chromosome_mutation_rate_determinator))
+        if definitions.PARENT_DIVERSITY in mutator_strings:
+            chromosome_mutation_selectors.append(
+                ParentDiversityChromosomeMutationSelector(helper_chromosome_mutation_rate_determinator, self._get_sampling_method(self._ga.parent_diversity_mutation_chromosome_selection)))
+        if len(chromosome_mutation_selectors) == 0:
+            chromosome_mutation_selectors.append(
+                ParentDiversityChromosomeMutationSelector(helper_chromosome_mutation_rate_determinator,
+                                                          self._get_sampling_method(
+                                                              self._ga.parent_diversity_mutation_chromosome_selection)))
+        if len(chromosome_mutation_selectors) == 1:
+            chromosome_mutation_selector = chromosome_mutation_selectors[0]
+        else:
+            chromosome_mutation_selector = ComposedChromosomeMutationSelector(main_chromosome_mutation_rate_determinator)
+            for selector in chromosome_mutation_selectors:
+                chromosome_mutation_selector.append(selector)
+        return chromosome_mutation_selector
 
     def _get_parent_selector(self) -> BaseParentSelector:
         """
