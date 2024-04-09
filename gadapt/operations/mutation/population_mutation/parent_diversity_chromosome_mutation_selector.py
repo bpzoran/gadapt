@@ -10,7 +10,7 @@ from operations.mutation.population_mutation.base_chromosome_mutation_selector i
 
 class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
     """
-    Population mutator based on parent diversity
+    Selects and mutates chromosomes in a population based on their parent diversity.
     """
 
     def __init__(self, chromosome_mutation_rate_determinator: BaseChromosomeMutationRateDeterminator, sampling: BaseSampling) -> None:

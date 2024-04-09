@@ -6,12 +6,10 @@ from gadapt.ga_model.chromosome import Chromosome
 
 
 class BaseChromosomeMutationRateDeterminator(ABC):
+    """
+    Provides a framework for determining the number of chromosomes to be mutated in a population.
+    """
     def __init__(self) -> None:
-        """
-        Base class for mutating chromosomes in population
-        Args:
-            options: genetic algorithm options
-        """
         super().__init__()
 
     def get_number_of_mutation_chromosomes(self, population, max_number_of_mutation_chromosomes):

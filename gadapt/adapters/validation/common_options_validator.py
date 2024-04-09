@@ -266,25 +266,17 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 self.options.chromosome_mutation == definitions.CROSS_DIVERSITY
                 or definitions.CROSS_DIVERSITY in self.options.chromosome_mutation
         ):
-            if self.options.cross_diversity_mutation_chromosome_selection is None:
+            if self.options.cross_diversity_mutation_gene_selection is None:
                 self._add_message(
-                    "Cross Diversity Mutation Chromosome Selection must not be None!"
+                    "Cross Diversity Mutation Gene Selection must not be None!"
                 )
                 rslt &= False
             elif not isinstance(
-                    self.options.parent_diversity_mutation_chromosome_selection, str
+                    self.options.cross_diversity_mutation_gene_selection, str
             ):
                 self._add_message(
-                    "Cross Diversity Mutation Chromosome Selection must be type str!"
+                    "Cross Diversity Mutation Gene Selection must be type str!"
                 )
-                rslt &= False
-            elif not self._validate_selection(
-                    self.options.cross_diversity_mutation_chromosome_selection,
-                    "Parents Diversity Mutation Chromosome Selection",
-                    (chromosome_size // 2) - self.options.immigration_number,  # type: ignore
-                    "Group Size for Parents Diversity Mutation Chromosome\
-                    Selection cannot have the value below half chromosome!",
-            ):
                 rslt &= False
         if self.options.chromosome_mutation is None:
             self._add_message("Chromosome Mutation must not be None!")

@@ -6,7 +6,7 @@ from operations.mutation.population_mutation.base_chromosome_mutation_selector i
 
 class RandomChromosomeMutationSelector(BaseChromosomeMutationSelector):
     """
-    Random population mutator
+    Implements the mutation of chromosomes in a population based on a random selection of chromosomes
     """
 
     def __init__(self, chromosome_mutation_rate_determinator: BaseChromosomeMutationRateDeterminator) -> None:

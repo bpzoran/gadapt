@@ -8,12 +8,9 @@ from gadapt.ga_model.gene import Gene
 class BaseGeneMutationRateDeterminator(ABC):
     def __init__(self) -> None:
         """
-        Base class for mutating genes in population
-        Args:
-            options: genetic algorithm options
+        Provides a framework for determining the number of mutation genes in a chromosome.
         """
         super().__init__()
-        self.max_number_of_mutation_genes = None
 
     def get_number_of_mutation_genes(self, chromosome, max_number_of_mutation_genes):
         if max_number_of_mutation_genes is None:

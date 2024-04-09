@@ -9,9 +9,8 @@ import statistics as stat
 
 class CrossDiversityChromosomeMutationRateDeterminator(BaseChromosomeMutationRateDeterminator):
     """
-    Population mutator based on cross diversity
+    Determining the number of chromosomes to be mutated in a population based on the cross-diversity coefficient of the decision variables.
     """
-
     def __init__(
         self,
     ) -> None:

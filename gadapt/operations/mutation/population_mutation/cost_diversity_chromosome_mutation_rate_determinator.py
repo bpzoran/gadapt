@@ -8,7 +8,7 @@ import statistics as stat
 
 class CostDiversityChromosomeMutationRateDeterminator(BaseChromosomeMutationRateDeterminator):
     """
-    Population mutator based on cost diversity
+    Determines the number of chromosomes to be mutated in a population based on the cost diversity of the population.
     """
 
     def __init__(

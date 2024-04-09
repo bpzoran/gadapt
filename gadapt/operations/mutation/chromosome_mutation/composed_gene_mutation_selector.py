@@ -7,18 +7,18 @@ from operations.mutation.chromosome_mutation.base_gene_mutation_selector import 
 
 
 class ComposedGeneMutationSelector(BaseGeneMutationSelector):
+    """
+    Allows for the composition of multiple mutation selectors and applies them sequentially to the chromosome.
+    """
     def __init__(self, gene_mutation_rate_determinator: BaseGeneMutationRateDeterminator) -> None:
-        """
-        Chromosome mutator that consists of more different chromosome mutators
-        Args:
-            options: genetic algorithm options
-        """
         super().__init__(gene_mutation_rate_determinator)
         self.selectors: List[BaseGeneMutationSelector] = []
 
     def append(self, selector: BaseGeneMutationSelector):
         """
-        Appends mutator to the composition of mutators
+        Appends mutation selectors to a list of selectors.
+        Args:
+            selector: An instance of the BaseGeneMutationSelector class that will be added to the list of selectors.
         """
         self.selectors.append(selector)
 

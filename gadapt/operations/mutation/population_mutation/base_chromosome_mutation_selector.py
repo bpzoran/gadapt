@@ -8,6 +8,9 @@ from operations.mutation.population_mutation.base_chromosome_mutation_rate_deter
 
 
 class BaseChromosomeMutationSelector(ABC):
+    """
+    Selects and mutates the chromosomes in the population based on a specified number of mutated chromosomes.
+    """
     def mutate(self, population):
         """
         Mutates chromosomes in the population

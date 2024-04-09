@@ -9,9 +9,8 @@ import statistics as stat
 
 class StrictGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
     """
-    Chromosome mutator based on cross diversity
+    Determines the strict number of mutation genes in a chromosome.
     """
-
     def __init__(
         self
     ) -> None:

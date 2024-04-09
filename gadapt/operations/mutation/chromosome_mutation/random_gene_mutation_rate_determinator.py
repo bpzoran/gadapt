@@ -6,9 +6,8 @@ from operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinato
 
 class RandomGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
     """
-    Population mutator based on cross diversity
+    Determines the random number of mutation genes in a chromosome between 1 and the maximum number of mutation genes specified.
     """
-
     def __init__(
         self,
     ) -> None:

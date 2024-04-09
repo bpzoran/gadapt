@@ -8,19 +8,14 @@ from operations.mutation.population_mutation.base_chromosome_mutation_selector i
 
 class ComposedChromosomeMutationSelector(BaseChromosomeMutationSelector):
     def __init__(self, chromosome_mutation_rate_determinator: BaseChromosomeMutationRateDeterminator) -> None:
-        """
-        Population mutator that consists of more different population mutators
-        Args:
-            options: genetic algorithm options
-        """
         super().__init__(chromosome_mutation_rate_determinator)
         self.selectors: List[BaseChromosomeMutationSelector] = []
 
-    def append(self, mutator: BaseChromosomeMutationSelector):
+    def append(self, selector: BaseChromosomeMutationSelector):
         """
-        Appends mutator to the composition of mutators
+        Appends selector to the composition of selectors
         """
-        self.selectors.append(mutator)
+        self.selectors.append(selector)
 
     def _mutate_population(self, population, max_number_of_mutation_chromosomes):
         if population is None:

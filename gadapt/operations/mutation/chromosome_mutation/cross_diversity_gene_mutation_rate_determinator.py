@@ -7,9 +7,8 @@ from operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinato
 
 class CrossDiversityGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
     """
-    Population mutator based on cross diversity
+    Determines the number of mutation genes in a chromosome based on the cross diversity coefficient of the decision variables.
     """
-
     def __init__(
             self,
     ) -> None:
@@ -29,5 +28,8 @@ class CrossDiversityGeneMutationRateDeterminator(BaseGeneMutationRateDeterminato
             return 1 - avg_rsd
 
         mutation_rate = get_mutation_rate()
-        f_return_value = mutation_rate * float(self.max_number_of_mutation_genes)
-        return round(f_return_value)
+        f_return_value = mutation_rate * float(max_number_of_mutation_genes)
+        f_return_value_rounded = round(f_return_value)
+        if f_return_value_rounded == 0:
+            f_return_value_rounded = 1
+        return f_return_value_rounded

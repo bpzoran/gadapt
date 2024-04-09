@@ -6,18 +6,16 @@ from operations.mutation.population_mutation.base_chromosome_mutation_rate_deter
 
 
 class ComposedChromosomeMutationRateDeterminator(BaseChromosomeMutationRateDeterminator):
+    """
+    Allows for the composition of multiple determinators to be used in a random order.
+    """
     def __init__(self) -> None:
-        """
-        Population mutator that consists of more different population mutators
-        Args:
-            options: genetic algorithm options
-        """
         super().__init__()
         self.determinators: List[BaseChromosomeMutationRateDeterminator] = []
 
     def append(self, determinator: BaseChromosomeMutationRateDeterminator):
         """
-        Appends mutator to the composition of mutators
+        Appends determinator to the composition of determinators
         """
         self.determinators.append(determinator)
 

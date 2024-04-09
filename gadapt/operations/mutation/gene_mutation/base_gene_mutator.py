@@ -3,6 +3,9 @@ from gadapt.ga_model.gene import Gene
 
 
 class BaseGeneMutator(ABC):
+    """
+    Mutates the variable value of a gene.
+    """
     def __init__(self) -> None:
         pass
 

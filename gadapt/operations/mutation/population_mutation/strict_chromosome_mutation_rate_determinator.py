@@ -9,7 +9,7 @@ import statistics as stat
 
 class StrictChromosomeMutationRateDeterminator(BaseChromosomeMutationRateDeterminator):
     """
-    Population mutator based on cross diversity
+    Provides a strict determination of the number of chromosomes to be mutated in a population.
     """
 
     def __init__(

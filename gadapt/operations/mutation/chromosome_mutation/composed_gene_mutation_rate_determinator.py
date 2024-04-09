@@ -6,18 +6,18 @@ from operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinato
 
 
 class ComposedGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
+    """
+    Provides a way to combine multiple gene mutation rate determinators into a single determinator. It randomly selects one of the determinators to determine the number of mutation genes in a chromosome.
+    """
     def __init__(self) -> None:
-        """
-        Chromosome mutator that consists of more different chromosome mutators
-        Args:
-            options: genetic algorithm options
-        """
         super().__init__()
         self.determinators: List[BaseGeneMutationRateDeterminator] = []
 
     def append(self, determinator: BaseGeneMutationRateDeterminator):
         """
-        Appends mutator to the composition of mutators
+        Adds a gene mutation rate determinator to the list of determinators.
+        Args:
+            determinator: A BaseGeneMutationRateDeterminator object representing a gene mutation rate determinator.
         """
         self.determinators.append(determinator)
 

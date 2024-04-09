@@ -12,7 +12,9 @@ import numpy as np
 
 
 class NormalDistributionGeneMutator(RandomGeneMutator):
-
+    """
+    Generates random or normally distributed values.
+    """
     def _make_mutated_value(self, g: Gene):
         return self._make_random_or_normally_distributed_random_value(g)
 
