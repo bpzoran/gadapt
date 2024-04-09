@@ -262,15 +262,58 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif self.options.max_attempt_no < 1 or self.options.max_attempt_no > 65536:
             self._add_message("Max Attempt No must be type an int between 1 and 65536!")
             rslt &= False
+        if (
+                self.options.chromosome_mutation == definitions.CROSS_DIVERSITY
+                or definitions.CROSS_DIVERSITY in self.options.chromosome_mutation
+        ):
+            if self.options.cross_diversity_mutation_chromosome_selection is None:
+                self._add_message(
+                    "Cross Diversity Mutation Chromosome Selection must not be None!"
+                )
+                rslt &= False
+            elif not isinstance(
+                    self.options.parent_diversity_mutation_chromosome_selection, str
+            ):
+                self._add_message(
+                    "Cross Diversity Mutation Chromosome Selection must be type str!"
+                )
+                rslt &= False
+            elif not self._validate_selection(
+                    self.options.parent_diversity_mutation_chromosome_selection,
+                    "Parents Diversity Mutation Chromosome Selection",
+                    (chromosome_size // 2) - self.options.immigration_number,  # type: ignore
+                    "Group Size for Parents Diversity Mutation Chromosome\
+                    Selection cannot have the value below half chromosome!",
+            ):
+                rslt &= False
         if self.options.chromosome_mutation is None:
             self._add_message("Chromosome Mutation must not be None!")
             rslt &= False
         elif not isinstance(self.options.chromosome_mutation, str):
             self._add_message("Chromosome Mutation must be type str!")
             rslt &= False
+        elif definitions.PARAM_SEPARATOR in self.options.chromosome_mutation:
+            mutator_strings = [
+                ms.strip()
+                for ms in self.options.chromosome_mutation.split(
+                    definitions.PARAM_SEPARATOR
+                )
+            ]
+            for mutator_string in mutator_strings:
+                if mutator_string not in definitions.CHROMOSOME_MUTATOR_STRINGS:
+                    self._add_message(
+                        "Invalid value of Chromosome Mutation:\
+                            {0}. Allowed values: {1}".format(
+                            mutator_string,
+                            self._get_allowed_values(
+                                definitions.CHROMOSOME_MUTATOR_STRINGS
+                            ),
+                        )
+                    )
+                    rslt &= False
         elif (
-            self.options.chromosome_mutation
-            not in definitions.CHROMOSOME_MUTATOR_STRINGS
+                self.options.chromosome_mutation
+                not in definitions.CHROMOSOME_MUTATOR_STRINGS
         ):
             self._add_message(
                 "Invalid value of Chromosome Mutation: {0}. Allowed values: {1}".format(
