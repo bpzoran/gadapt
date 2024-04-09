@@ -1,8 +1,4 @@
 from abc import ABC, abstractmethod
-import math
-import random
-from typing import List
-from gadapt.ga_model.gene import Gene
 
 
 class BaseGeneMutationRateDeterminator(ABC):
@@ -19,11 +15,11 @@ class BaseGeneMutationRateDeterminator(ABC):
             raise Exception("chromosome must not be None")
 
         return self._get_number_of_mutation_genes(
-                chromosome, max_number_of_mutation_genes
-            )
+            chromosome, max_number_of_mutation_genes
+        )
 
     @abstractmethod
     def _get_number_of_mutation_genes(
-            self, chromosome, max_number_of_mutation_genes
+        self, chromosome, max_number_of_mutation_genes
     ) -> int:
         pass

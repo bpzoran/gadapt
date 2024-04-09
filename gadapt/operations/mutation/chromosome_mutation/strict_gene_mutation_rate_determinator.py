@@ -1,19 +1,15 @@
-import math
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import (
     BaseGeneMutationRateDeterminator,
 )
-import gadapt.utils.ga_utils as ga_utils
-import statistics as stat
 
 
 class StrictGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
     """
     Determines the strict number of mutation genes in a chromosome.
     """
-    def __init__(
-        self
-    ) -> None:
+
+    def __init__(self) -> None:
         super().__init__()
 
     def _get_number_of_mutation_genes(

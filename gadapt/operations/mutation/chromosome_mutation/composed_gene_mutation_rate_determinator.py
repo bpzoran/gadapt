@@ -1,14 +1,16 @@
 import random
 from typing import List
 
-from operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import \
-    BaseGeneMutationRateDeterminator
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import (
+    BaseGeneMutationRateDeterminator,
+)
 
 
 class ComposedGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
     """
     Provides a way to combine multiple gene mutation rate determinators into a single determinator. It randomly selects one of the determinators to determine the number of mutation genes in a chromosome.
     """
+
     def __init__(self) -> None:
         super().__init__()
         self.determinators: List[BaseGeneMutationRateDeterminator] = []
@@ -29,4 +31,6 @@ class ComposedGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
         if len(self.determinators) > 1:
             random.shuffle(self.determinators)
         current_determinator = self.determinators[0]
-        return current_determinator.get_number_of_mutation_genes(chromosome, max_number_of_mutation_genes)
+        return current_determinator.get_number_of_mutation_genes(
+            chromosome, max_number_of_mutation_genes
+        )

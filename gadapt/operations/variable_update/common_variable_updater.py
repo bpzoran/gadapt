@@ -1,6 +1,5 @@
 import statistics as stat
 from gadapt.ga_model.decision_variable import DecisionVariable
-import gadapt.utils.ga_utils as ga_utils
 
 
 class CommonVariableUpdater:
@@ -13,7 +12,9 @@ class CommonVariableUpdater:
         def scale_values(dv: DecisionVariable, values):
             scaled_values = []
             if dv.min_value == dv.max_value:
-                return [0.5] * len(values)  # If min_val and max_val are the same, return a list of 0.5s
+                return [0.5] * len(
+                    values
+                )  # If min_val and max_val are the same, return a list of 0.5s
 
             for value in values:
                 scaled_value = (value - dv.min_value) / (dv.max_value - dv.min_value)

@@ -1,11 +1,12 @@
-from ast import List
 import random
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
     BaseChromosomeMutationRateDeterminator,
 )
 from gadapt.operations.sampling.base_sampling import BaseSampling
-from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import (
+    BaseChromosomeMutationSelector,
+)
 
 
 class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
@@ -13,7 +14,11 @@ class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
     Selects and mutates chromosomes in a population based on their parent diversity.
     """
 
-    def __init__(self, chromosome_mutation_rate_determinator: BaseChromosomeMutationRateDeterminator, sampling: BaseSampling) -> None:
+    def __init__(
+        self,
+        chromosome_mutation_rate_determinator: BaseChromosomeMutationRateDeterminator,
+        sampling: BaseSampling,
+    ) -> None:
         super().__init__(chromosome_mutation_rate_determinator)
         self._sampling = sampling
 
@@ -23,7 +28,9 @@ class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
     def _mutate_population(self, population, max_number_of_mutation_chromosomes):
         if population is None:
             raise Exception("Population must not be null")
-        number_of_mutation_chromosomes = self._chromosome_mutation_rate_determinator.get_number_of_mutation_chromosomes(population, max_number_of_mutation_chromosomes)
+        number_of_mutation_chromosomes = self._chromosome_mutation_rate_determinator.get_number_of_mutation_chromosomes(
+            population, max_number_of_mutation_chromosomes
+        )
         unallocated_chromosomes: list[Chromosome] = self._get_unallocated_chromosomes(
             population, self._sort_key_parent_diversity_random
         )

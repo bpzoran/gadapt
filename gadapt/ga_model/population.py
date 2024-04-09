@@ -404,7 +404,11 @@ class Population:
         self.variable_updater.update_variables(self)
 
     def calculate_average_cost_step(self):
-        allocated_values = [c.cost_value for c in self.chromosomes if c.cost_value is not None and not math.isnan(c.cost_value)]        
+        allocated_values = [
+            c.cost_value
+            for c in self.chromosomes
+            if c.cost_value is not None and not math.isnan(c.cost_value)
+        ]
         if allocated_values:
             return ga_utils.average_difference(allocated_values)
         return float("NaN")

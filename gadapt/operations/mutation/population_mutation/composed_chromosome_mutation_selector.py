@@ -1,13 +1,19 @@
 import random
 from typing import List
 
-from operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import \
-    BaseChromosomeMutationRateDeterminator
-from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
+    BaseChromosomeMutationRateDeterminator,
+)
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import (
+    BaseChromosomeMutationSelector,
+)
 
 
 class ComposedChromosomeMutationSelector(BaseChromosomeMutationSelector):
-    def __init__(self, chromosome_mutation_rate_determinator: BaseChromosomeMutationRateDeterminator) -> None:
+    def __init__(
+        self,
+        chromosome_mutation_rate_determinator: BaseChromosomeMutationRateDeterminator,
+    ) -> None:
         super().__init__(chromosome_mutation_rate_determinator)
         self.selectors: List[BaseChromosomeMutationSelector] = []
 
@@ -25,7 +31,9 @@ class ComposedChromosomeMutationSelector(BaseChromosomeMutationSelector):
         if len(self.selectors) > 1:
             random.shuffle(self.selectors)
         nmc = 0
-        number_of_mutation_chromosomes = self._chromosome_mutation_rate_determinator.get_number_of_mutation_chromosomes(population, max_number_of_mutation_chromosomes)
+        number_of_mutation_chromosomes = self._chromosome_mutation_rate_determinator.get_number_of_mutation_chromosomes(
+            population, max_number_of_mutation_chromosomes
+        )
         if number_of_mutation_chromosomes == 0:
             return 0
         for m in self.selectors:

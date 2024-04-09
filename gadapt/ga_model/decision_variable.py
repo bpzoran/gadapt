@@ -76,11 +76,11 @@ class DecisionVariable:
 
     def _get_decimal_places(self, num):
         num_str = str(num)
-        if 'e-' in num_str:
-            num_str = num_str.split('e-')[-1]
+        if "e-" in num_str:
+            num_str = num_str.split("e-")[-1]
             return int(num_str)
-        if '.' in num_str:
-            _, fractional_part = num_str.split('.')
+        if "." in num_str:
+            _, fractional_part = num_str.split(".")
             return len(fractional_part)
         else:
             return 0

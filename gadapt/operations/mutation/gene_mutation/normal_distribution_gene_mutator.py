@@ -5,7 +5,6 @@ from gadapt.operations.mutation.gene_mutation.random_gene_mutator import (
 )
 from gadapt.utils.ga_utils import (
     get_rand_bool,
-    get_rand_bool_with_probability,
     normally_distributed_random,
 )
 import numpy as np
@@ -15,6 +14,7 @@ class NormalDistributionGeneMutator(RandomGeneMutator):
     """
     Generates random or normally distributed values.
     """
+
     def _make_mutated_value(self, g: Gene):
         return self._make_random_or_normally_distributed_random_value(g)
 
@@ -32,9 +32,13 @@ class NormalDistributionGeneMutator(RandomGeneMutator):
 
     def _make_random_or_normally_distributed_random_value(self, g: Gene):
         if get_rand_bool():
-            return self._execute_function_until_value_changed(super()._make_mutated_value, g)
+            return self._execute_function_until_value_changed(
+                super()._make_mutated_value, g
+            )
         else:
-            return self._execute_function_until_value_changed(self._make_normally_distributed_random_value, g)
+            return self._execute_function_until_value_changed(
+                self._make_normally_distributed_random_value, g
+            )
 
     def _calculate_nd_standard_deviation(self, g: Gene):
         min_std_dev = 0.05
@@ -49,9 +53,12 @@ class NormalDistributionGeneMutator(RandomGeneMutator):
             curr_value = g.decision_variable.make_random_value()
         range = g.decision_variable.max_value - g.decision_variable.min_value
         mean = (curr_value - g.decision_variable.min_value) / (range)
-        normal_distribution_random_value = normally_distributed_random(mean, self._calculate_nd_standard_deviation(g),
-                                                                       0, 1)
+        normal_distribution_random_value = normally_distributed_random(
+            mean, self._calculate_nd_standard_deviation(g), 0, 1
+        )
         number_of_steps = round(
             (normal_distribution_random_value * range) / g.decision_variable.step
         )
-        return g.decision_variable.min_value + number_of_steps * g.decision_variable.step
+        return (
+            g.decision_variable.min_value + number_of_steps * g.decision_variable.step
+        )

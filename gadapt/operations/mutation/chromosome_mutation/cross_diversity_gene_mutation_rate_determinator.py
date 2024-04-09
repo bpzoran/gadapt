@@ -1,26 +1,29 @@
 import gadapt.utils.ga_utils as ga_utils
-import statistics as stat
 
-from operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import \
-    BaseGeneMutationRateDeterminator
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import (
+    BaseGeneMutationRateDeterminator,
+)
 
 
 class CrossDiversityGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
     """
     Determines the number of mutation genes in a chromosome based on the cross diversity coefficient of the decision variables.
     """
+
     def __init__(
-            self,
+        self,
     ) -> None:
         super().__init__()
 
     def _get_number_of_mutation_genes(
-            self, chromosome, max_number_of_mutation_genes
+        self, chromosome, max_number_of_mutation_genes
     ) -> int:
         decision_variables = [g.decision_variable for g in chromosome]
 
         def get_mutation_rate() -> float:
-            avg_rsd = ga_utils.average([dv.cross_diversity_coefficient for dv in decision_variables])
+            avg_rsd = ga_utils.average(
+                [dv.cross_diversity_coefficient for dv in decision_variables]
+            )
             if avg_rsd > 1:
                 avg_rsd = 1
             if avg_rsd < 0:

@@ -35,7 +35,7 @@ class GAExecutor:
                 )
             )
             self.ga_options.logging = False
-        #try:
+        # try:
         chromosome_mutator = self.factory.get_chromosome_mutator()
         population_mutator = self.factory.get_population_mutator()
         exit_checker = self.factory.get_exit_checker()
@@ -73,7 +73,7 @@ class GAExecutor:
         results.number_of_iterations = population.population_generation
         for g in best_individual:
             results.result_values[g.decision_variable.variable_id] = g.variable_value
-        #except Exception as ex:
+        # except Exception as ex:
         #    results.success = False
         #    results.messages.append((message_levels.ERROR, str(ex)))
         return results

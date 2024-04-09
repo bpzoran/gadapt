@@ -111,10 +111,11 @@ def normally_distributed_random(mean, std_dev, lower_bound, upper_bound):
     num = np.clip(num, lower_bound, upper_bound)
     return num
 
+
 def average_difference(diff_list):
     if len(diff_list) < 2:
         return float("NaN")
     diff_list.sort()
-    differences = [diff_list[i+1] - diff_list[i] for i in range(len(diff_list)-1)]
+    differences = [diff_list[i + 1] - diff_list[i] for i in range(len(diff_list) - 1)]
     avg_difference = sum(differences) / len(differences)
     return avg_difference

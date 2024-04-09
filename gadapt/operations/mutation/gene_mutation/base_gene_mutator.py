@@ -6,6 +6,7 @@ class BaseGeneMutator(ABC):
     """
     Mutates the variable value of a gene.
     """
+
     def __init__(self) -> None:
         pass
 

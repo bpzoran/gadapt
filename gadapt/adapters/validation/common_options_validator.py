@@ -263,8 +263,8 @@ class CommonOptionsValidator(BaseOptionsValidator):
             self._add_message("Max Attempt No must be type an int between 1 and 65536!")
             rslt &= False
         if (
-                self.options.chromosome_mutation == definitions.CROSS_DIVERSITY
-                or definitions.CROSS_DIVERSITY in self.options.chromosome_mutation
+            self.options.chromosome_mutation == definitions.CROSS_DIVERSITY
+            or definitions.CROSS_DIVERSITY in self.options.chromosome_mutation
         ):
             if self.options.cross_diversity_mutation_gene_selection is None:
                 self._add_message(
@@ -272,7 +272,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 )
                 rslt &= False
             elif not isinstance(
-                    self.options.cross_diversity_mutation_gene_selection, str
+                self.options.cross_diversity_mutation_gene_selection, str
             ):
                 self._add_message(
                     "Cross Diversity Mutation Gene Selection must be type str!"
@@ -304,8 +304,8 @@ class CommonOptionsValidator(BaseOptionsValidator):
                     )
                     rslt &= False
         elif (
-                self.options.chromosome_mutation
-                not in definitions.CHROMOSOME_MUTATOR_STRINGS
+            self.options.chromosome_mutation
+            not in definitions.CHROMOSOME_MUTATOR_STRINGS
         ):
             self._add_message(
                 "Invalid value of Chromosome Mutation: {0}. Allowed values: {1}".format(

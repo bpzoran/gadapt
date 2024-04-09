@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
-from operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import \
-    BaseGeneMutationRateDeterminator
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import (
+    BaseGeneMutationRateDeterminator,
+)
 
 
 class BaseGeneMutationSelector(ABC):
@@ -9,7 +10,9 @@ class BaseGeneMutationSelector(ABC):
     Provides a framework for selecting and mutating genes in a chromosome.
     """
 
-    def __init__(self, gene_mutation_rate_determinator: BaseGeneMutationRateDeterminator):
+    def __init__(
+        self, gene_mutation_rate_determinator: BaseGeneMutationRateDeterminator
+    ):
         """
         Initializes an instance of the class by setting the gene_mutation_rate_determinator attribute.
         """

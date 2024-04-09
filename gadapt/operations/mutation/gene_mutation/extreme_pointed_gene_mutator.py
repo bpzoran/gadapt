@@ -14,7 +14,8 @@ class ExtremePointedGeneMutator(RandomGeneMutator):
 
     def _make_rounded_random_value_below_or_above(self, g: Gene):
         return round(
-            self._make_random_value_below_or_above(g), g.decision_variable.decimal_places
+            self._make_random_value_below_or_above(g),
+            g.decision_variable.decimal_places,
         )
 
     def _make_random_value_below_or_above(self, g: Gene):
@@ -32,7 +33,9 @@ class ExtremePointedGeneMutator(RandomGeneMutator):
                 / g.decision_variable.step
             ),
         )
-        return g.decision_variable.min_value + number_of_steps * g.decision_variable.step
+        return (
+            g.decision_variable.min_value + number_of_steps * g.decision_variable.step
+        )
 
     def _make_random_value_above(self, g: Gene):
         if g.variable_value == g.decision_variable.max_value:
