@@ -2,7 +2,7 @@
 [GAdapt](https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for the adaptive mutation of genes and chromosomes.
 
 # What innovations does GAdapt bring?
-**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost and cross-diversity of genetic variables in the population. Less diversity increases the probability of mutation. Consequently, it increases the accuracy and the performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
+**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost and cross-diversity of decision variables in the population. Less diversity increases the probability of mutation. Consequently, it increases the accuracy and the performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
 
 
 # Installation
@@ -155,7 +155,7 @@ Supported values:
 
 **chromosome_mutation**=*"cross_diversity"* - The type of gene selection in chromosomes for mutation  
 Supported values:
-- *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this genetic variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_selection* parameter.  
+- *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this decision variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_selection* parameter.  
 - *"random"* - Genes are randomly selected for the mutation
 
 **gene_mutation**=*"normal_distribution"* - The type of assigning mutated values to genes
@@ -272,9 +272,12 @@ Example of customisation of GAdapt by introducing a new class for mutation of po
 import math
 from gadapt.factory.ga_factory import GAFactory
 from gadapt.ga import GA
-from gadapt.operations.mutation.population_mutation.base_population_mutator import BasePopulationMutator
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import
 
-class BottomPopulationMutator(BasePopulationMutator):
+BaseChromosomeMutationRateDeterminator
+
+
+class BottomPopulationMutator(BaseChromosomeMutationRateDeterminator):
     """
     Population mutator which selects mutating chromosomes from the bottom of
     existing unallocated chromosoms 
@@ -287,19 +290,21 @@ class BottomPopulationMutator(BasePopulationMutator):
             population, None
         )
         chromosomes_for_mutation = unallocated_chromosomes[
-            len(unallocated_chromosomes) - number_of_mutation_chromosomes : 
-        ]
+                                   len(unallocated_chromosomes) - number_of_mutation_chromosomes:
+                                   ]
         for c in chromosomes_for_mutation:
             c.mutate(population.options.number_of_mutation_genes)
 
+
 def some_func(args):
-      return math.sqrt(abs(args[0])) + math.pow(args[1], 2)
+    return math.sqrt(abs(args[0])) + math.pow(args[1], 2)
+
 
 custom_factory = GAFactory()
 custom_factory.population_mutator = BottomPopulationMutator()
 ga = GA(cost_function=some_func, factory=custom_factory)
 ga.add(-25, 25, 1)
-ga.add(-5, 5, 0.1) 
+ga.add(-5, 5, 0.1)
 
 print(ga.execute())
 ```
