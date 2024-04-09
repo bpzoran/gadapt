@@ -198,7 +198,7 @@ class GA:
             parent_diversity_mutation_chromosome_selection
         )
         self.timeout = timeout
-        self._current_gv_id = 0
+        self._current_dv_id = 0
         self._factory = factory
 
     def execute(self) -> GAResults:
@@ -249,12 +249,12 @@ class GA:
             not isinstance(max_value, float) and not isinstance(max_value, int)
         ):
             raise Exception("min value, max value and step must be numerical values!")
-        decision_variable = DecisionVariable(self._current_gv_id)
+        decision_variable = DecisionVariable(self._current_dv_id)
         decision_variable.min_value = min_value
         decision_variable.max_value = max_value
         decision_variable.step = step
         self._decision_variables.append(decision_variable)
-        self._current_gv_id += 1
+        self._current_dv_id += 1
 
     @property
     def cost_function(self):

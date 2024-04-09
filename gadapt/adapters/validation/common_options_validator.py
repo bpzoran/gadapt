@@ -279,7 +279,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 )
                 rslt &= False
             elif not self._validate_selection(
-                    self.options.parent_diversity_mutation_chromosome_selection,
+                    self.options.cross_diversity_mutation_chromosome_selection,
                     "Parents Diversity Mutation Chromosome Selection",
                     (chromosome_size // 2) - self.options.immigration_number,  # type: ignore
                     "Group Size for Parents Diversity Mutation Chromosome\

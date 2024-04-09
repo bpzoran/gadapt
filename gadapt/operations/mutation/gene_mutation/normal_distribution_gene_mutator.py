@@ -38,8 +38,8 @@ class NormalDistributionGeneMutator(RandomGeneMutator):
         min_std_dev = 0.05
         max_std_dev = 0.5
         std_dev_range = max_std_dev - min_std_dev
-        gv_rsd = np.clip(g.decision_variable.cross_diversity_coefficient, 0, 1)
-        return min_std_dev + (std_dev_range * gv_rsd)
+        dv_rsd = np.clip(g.decision_variable.cross_diversity_coefficient, 0, 1)
+        return min_std_dev + (std_dev_range * dv_rsd)
 
     def _make_normally_distributed_random_value(self, g: Gene):
         curr_value = g.variable_value
