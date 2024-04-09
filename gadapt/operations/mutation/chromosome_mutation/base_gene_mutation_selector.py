@@ -1,11 +1,17 @@
 from abc import ABC, abstractmethod
 
+from operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import \
+    BaseGeneMutationRateDeterminator
 
-class BaseChromosomeMutator(ABC):
+
+class BaseGeneMutationSelector(ABC):
     """
     Base class for the mutation of chromosome.
     Mutates specific genes in the chromosome.
     """
+
+    def __init__(self, gene_mutation_rate_determinator: BaseGeneMutationRateDeterminator):
+        self._gene_mutation_rate_determinator = gene_mutation_rate_determinator
 
     def mutate(self, c, number_of_mutation_genes: int):
         """
@@ -20,12 +26,6 @@ class BaseChromosomeMutator(ABC):
     @abstractmethod
     def _mutate_chromosome(self, c, number_of_mutation_genes: int):
         pass
-
-    def _set_gene_value(self, g, c):
-        g.variable_value = round(
-            g.decision_variable.make_random_value(), g.decision_variable.decimal_places
-        )
-        self._gene_mutated(g, c)
 
     def _gene_mutated(self, g, c):
         c.mutated_variables_id_list.append(g.decision_variable.variable_id)

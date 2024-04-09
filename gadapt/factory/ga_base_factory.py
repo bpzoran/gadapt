@@ -9,8 +9,8 @@ from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigr
 from gadapt.operations.immigration.population_immigration.base_population_immigrator import (
     BasePopulationImmigrator,
 )
-from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import (
-    BaseChromosomeMutator,
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
+    BaseGeneMutationSelector,
 )
 from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
@@ -68,7 +68,7 @@ class BaseGAFactory(ABC):
             self.chromosome_immigrator = self._get_chromosome_immigrator()
         return self.chromosome_immigrator
 
-    def get_chromosome_mutator(self) -> BaseChromosomeMutator:
+    def get_chromosome_mutator(self) -> BaseGeneMutationSelector:
         """
         Chromosome Mutator Instance
         """
@@ -154,7 +154,7 @@ class BaseGAFactory(ABC):
         pass
 
     @abstractmethod
-    def _get_chromosome_mutator(self) -> BaseChromosomeMutator:
+    def _get_chromosome_mutator(self) -> BaseGeneMutationSelector:
         """
         Chromosome Mutator Instance
         """

@@ -9,8 +9,8 @@ from gadapt.ga_model.ranking_model import RankingModel
 from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
 )
-from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import (
-    BaseChromosomeMutator,
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
+    BaseGeneMutationSelector,
 )
 import gadapt.ga_model.definitions as definitions
 import gadapt.adapters.string_operation.ga_strings as ga_strings
@@ -19,7 +19,7 @@ import gadapt.adapters.string_operation.ga_strings as ga_strings
 class Chromosome(RankingModel):
     def __init__(
         self,
-        mutator: BaseChromosomeMutator,
+        mutator: BaseGeneMutationSelector,
         immigrator: BaseChromosomeImmigrator,
         population_generation: int,
     ):
@@ -98,14 +98,14 @@ class Chromosome(RankingModel):
         return self._chromosome_string
 
     @property
-    def mutator(self) -> BaseChromosomeMutator:
+    def mutator(self) -> BaseGeneMutationSelector:
         """
         Mutation algorithm
         """
         return self._mutator
 
     @mutator.setter
-    def mutator(self, value: BaseChromosomeMutator):
+    def mutator(self, value: BaseGeneMutationSelector):
         self._mutator = value
 
     @property

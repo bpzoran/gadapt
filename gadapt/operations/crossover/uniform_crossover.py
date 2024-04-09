@@ -5,8 +5,8 @@ from gadapt.ga_model.gene import Gene
 from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
 )
-from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import (
-    BaseChromosomeMutator,
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
+    BaseGeneMutationSelector,
 )
 from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCombination
 
@@ -20,7 +20,7 @@ class UniformCrossover(BaseCrossover):
     def __init__(
         self,
         var_combination: BaseGeneCombination,
-        mutator: BaseChromosomeMutator,
+        mutator: BaseGeneMutationSelector,
         immigrator: BaseChromosomeImmigrator,
     ):
         super(UniformCrossover, self).__init__(var_combination, mutator, immigrator)

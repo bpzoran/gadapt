@@ -16,8 +16,8 @@ from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigr
 from gadapt.operations.immigration.population_immigration.base_population_immigrator import (
     BasePopulationImmigrator,
 )
-from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import (
-    BaseChromosomeMutator,
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
+    BaseGeneMutationSelector,
 )
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
     BaseChromosomeMutationRateDeterminator,
@@ -34,7 +34,7 @@ class Population:
     def __init__(
         self,
         options: GAOptions,
-        chromosome_mutator: BaseChromosomeMutator,
+        chromosome_mutator: BaseGeneMutationSelector,
         population_mutator: BaseChromosomeMutationRateDeterminator,
         exit_checker: BaseExitChecker,
         cost_finder: BaseCostFinder,
@@ -50,7 +50,7 @@ class Population:
         Args:
 
             options (GAOptions): Genetic Algorithm Options
-            chromosome_mutator (BaseChromosomeMutator): Chromosome Mutator Instance
+            chromosome_mutator (BaseGeneMutationSelector): Chromosome Mutator Instance
             population_mutator (BaseChromosomeMutationRateDeterminator): Population Mutator Instance
             exit_checker (BaseExitChecker): Exit Checker Instance
             cost_finder (BaseCostFinder): Cost Finder Instance
@@ -202,14 +202,14 @@ class Population:
         self._population_generation = value
 
     @property
-    def chromosome_mutator(self) -> BaseChromosomeMutator:
+    def chromosome_mutator(self) -> BaseGeneMutationSelector:
         """
         Chromosome mutator algorithm
         """
         return self._chromosome_mutator
 
     @chromosome_mutator.setter
-    def chromosome_mutator(self, value: BaseChromosomeMutator):
+    def chromosome_mutator(self, value: BaseGeneMutationSelector):
         self._chromosome_mutator = value
 
     @property

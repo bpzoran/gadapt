@@ -4,8 +4,8 @@ from gadapt.ga_model.gene import Gene
 from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
 )
-from gadapt.operations.mutation.chromosome_mutation.base_chromosome_mutator import (
-    BaseChromosomeMutator,
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
+    BaseGeneMutationSelector,
 )
 from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCombination
 import gadapt.utils.ga_utils as ga_utils
@@ -17,7 +17,7 @@ class BaseCrossover(ABC):
     Args:
         gene_combination (BaseGeneCombination): the algorithm
         for how genes are to be combined
-        mutator (BaseChromosomeMutator): mutation algorithm to
+        mutator (BaseGeneMutationSelector): mutation algorithm to
         be passed to offspring chromosomes
         immigrator (BaseChromosomeImmigrator): immigration algorithm
         to be passed to offspring chromosomes
@@ -28,7 +28,7 @@ class BaseCrossover(ABC):
     def __init__(
         self,
         gene_combination: BaseGeneCombination,
-        mutator: BaseChromosomeMutator,
+        mutator: BaseGeneMutationSelector,
         immigrator: BaseChromosomeImmigrator,
         mutation_on_both_sides: bool = True,
     ):
