@@ -117,5 +117,5 @@ def average_difference(diff_list):
         return float("NaN")
     diff_list.sort()
     differences = [diff_list[i + 1] - diff_list[i] for i in range(len(diff_list) - 1)]
-    avg_difference = sum(differences) / len(differences)
+    avg_difference = float(sum(differences) / len(differences))
     return avg_difference

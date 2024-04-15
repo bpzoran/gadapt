@@ -20,17 +20,17 @@ class CostDiversityChromosomeMutationRateDeterminator(
         self, population, max_number_of_mutation_chromosomes
     ) -> int:
         def get_mutation_rate() -> float:
-            if not population.average_cost_step_in_first_population or math.isnan(
+            if population.average_cost_step_in_first_population is None or math.isnan(
                 population.average_cost_step_in_first_population
             ):
-                return 1
-            cost_step_ratio = (
+                return 1.0
+            cost_step_ratio = float(
                 population.calculate_average_cost_step()
                 / population.average_cost_step_in_first_population
             )
-            if cost_step_ratio > 1:
-                cost_step_ratio = 1
-            return 1 - cost_step_ratio
+            if cost_step_ratio > 1.0:
+                cost_step_ratio = 1.0
+            return 1.0 - cost_step_ratio
 
         mutation_rate = get_mutation_rate()
         f_return_value = mutation_rate * float(max_number_of_mutation_chromosomes)

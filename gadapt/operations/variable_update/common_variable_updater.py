@@ -1,8 +1,9 @@
 import statistics as stat
 from gadapt.ga_model.decision_variable import DecisionVariable
+from operations.variable_update.base_variable_updater import BaseVariableUpdater
 
 
-class CommonVariableUpdater:
+class CommonVariableUpdater(BaseVariableUpdater):
     """
     Common variable updater
     """

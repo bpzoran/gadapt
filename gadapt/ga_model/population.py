@@ -28,6 +28,7 @@ import gadapt.adapters.string_operation.ga_strings as ga_strings
 from datetime import datetime
 import gadapt.ga_model.definitions as definitions
 import gadapt.utils.ga_utils as ga_utils
+from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
 
 
 class Population:
@@ -213,14 +214,14 @@ class Population:
         self._chromosome_mutator = value
 
     @property
-    def population_mutator(self) -> BaseChromosomeMutationRateDeterminator:
+    def population_mutator(self) -> BaseChromosomeMutationSelector:
         """
         Population mutator algorithm
         """
         return self._population_mutator
 
     @population_mutator.setter
-    def population_mutator(self, value: BaseChromosomeMutationRateDeterminator):
+    def population_mutator(self, value: BaseChromosomeMutationSelector):
         self._population_mutator = value
 
     @property

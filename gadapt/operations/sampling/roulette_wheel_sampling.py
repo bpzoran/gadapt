@@ -10,6 +10,11 @@ class RouletteWheelSampling(BaseSampling):
     """
 
     def _prepare_sample(self, lst: List[T]) -> List[T]:
+        """
+        Prepares a sample from a list of objects.
+        It calculates the cumulative probabilities for each object based on their rank
+        and uses these probabilities to select objects for the sample.
+        """
         rank_sum = sum(range(1, len(lst) + 1))
         cummultative_probability_list: List[float] = []
         action_probability = 0.0
