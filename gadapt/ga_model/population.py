@@ -28,7 +28,7 @@ import gadapt.adapters.string_operation.ga_strings as ga_strings
 from datetime import datetime
 import gadapt.ga_model.definitions as definitions
 import gadapt.utils.ga_utils as ga_utils
-from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
 
 
 class Population:
