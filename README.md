@@ -158,7 +158,7 @@ Supported values:
 - *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this decision variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_selection* parameter.  
 - *"random"* - Genes are randomly selected for the mutation
 
-**gene_mutation**=*"normal_distribution"* - The type of assigning mutated values to genes
+**gene_mutation**=*"normal_distribution,random"* - The type of assigning mutated values to genes
 Supported values:
 - *"normal_distribution"* - assignes normally distributed random number to the variable selected for mutation
 - *"random"* - Random values are assigned to genes

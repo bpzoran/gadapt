@@ -1,16 +1,15 @@
 import math
 from gadapt.ga_model.gene import Gene
-from gadapt.operations.mutation.gene_mutation.random_gene_mutator import (
-    RandomGeneMutator,
-)
 from gadapt.utils.ga_utils import (
     get_rand_bool,
     normally_distributed_random,
 )
 import numpy as np
 
+from operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 
-class NormalDistributionGeneMutator(RandomGeneMutator):
+
+class NormalDistributionGeneMutator(BaseGeneMutator):
     """
     Generates random or normally distributed values.
     """
@@ -20,7 +19,6 @@ class NormalDistributionGeneMutator(RandomGeneMutator):
 
     def _execute_function_until_value_changed(self, f, g: Gene):
         current_gene_value = g.variable_value
-        new_gene_value = current_gene_value
         number_of_attempts = 5
         i = 0
         while True:
@@ -31,14 +29,9 @@ class NormalDistributionGeneMutator(RandomGeneMutator):
         return new_gene_value
 
     def _make_random_or_normally_distributed_random_value(self, g: Gene):
-        if get_rand_bool():
-            return self._execute_function_until_value_changed(
-                super()._make_mutated_value, g
-            )
-        else:
-            return self._execute_function_until_value_changed(
-                self._make_normally_distributed_random_value, g
-            )
+        return self._execute_function_until_value_changed(
+            self._make_normally_distributed_random_value, g
+        )
 
     def _calculate_nd_standard_deviation(self, g: Gene):
         min_std_dev = 0.05

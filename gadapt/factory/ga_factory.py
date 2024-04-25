@@ -101,6 +101,7 @@ from gadapt.operations.mutation.population_mutation.random_chromosome_mutation_r
 from gadapt.operations.mutation.population_mutation.strict_chromosome_mutation_rate_determinator import (
     StrictChromosomeMutationRateDeterminator,
 )
+from operations.mutation.gene_mutation.composed_gene_mutator import ComposedGeneMutator
 
 
 class GAFactory(BaseGAFactory):
@@ -132,18 +133,47 @@ class GAFactory(BaseGAFactory):
         """
         return self._get_chromosome_mutator_combined()
 
+    def _get_gene_mutator_combined(self) -> BaseGeneMutator:
+        mutator_strings = [
+            gm.strip()
+            for gm in self._ga.gene_mutation.split(definitions.PARAM_SEPARATOR)
+        ]
+        gene_mutators = []
+        if definitions.RANDOM in mutator_strings:
+            gene_mutators.append(
+                RandomGeneMutator()
+            )
+        if definitions.EXTREME_POINTED in mutator_strings:
+            gene_mutators.append(
+                ExtremePointedGeneMutator()
+            )
+        if definitions.NORMAL_DISTRIBUTION in mutator_strings:
+            gene_mutators.append(
+                NormalDistributionGeneMutator()
+            )
+        if len(gene_mutators) == 0:
+            gene_mutators.append(
+                NormalDistributionGeneMutator()
+            )
+            gene_mutators.append(RandomGeneMutator())
+        if len(gene_mutators) == 1:
+            main_gene_mutator = (
+                gene_mutators[0]
+            )
+        else:
+            main_gene_mutator = (
+                ComposedGeneMutator()
+            )
+            for mutator in gene_mutators:
+                main_gene_mutator.append(mutator)
+        return main_gene_mutator
+
+
     def _get_gene_mutator(self) -> BaseGeneMutator:
         """
         Chromosome Mutator Instance
         """
-        if self._ga.gene_mutation.strip() == definitions.EXTREME_POINTED:
-            return ExtremePointedGeneMutator()
-        elif self._ga.gene_mutation.strip() == definitions.RANDOM:
-            return RandomGeneMutator()
-        elif self._ga.gene_mutation.strip() == definitions.NORMAL_DISTRIBUTION:
-            return NormalDistributionGeneMutator()
-        else:
-            raise Exception("unknown gene mutation")
+        return self._get_gene_mutator_combined()
 
     def _population_mutator_options_validation(self):
         """

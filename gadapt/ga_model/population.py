@@ -364,7 +364,7 @@ class Population:
         """
         Adds chromosomes to population
         Args:
-            chromosomes (List[Chromosome]): chromosomes to add
+            chromosomes (Tuple[Chromosome]): chromosomes to add
         """
         for c in chromosomes:
             self.add_chromosome(c)
