@@ -1,8 +1,8 @@
 # GAdapt: Self-Adaptive Genetic Algorithm
-**GAdapt** (https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for the adaptive mutation of genes and chromosomes.
+[GAdapt](https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for the adaptive mutation of genes and chromosomes.
 
 # What innovations does GAdapt bring?
-**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost and cross-diversity of genetic variables in the population. Less diversity increases the probability of mutation. Consequently, it increases the accuracy and the performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
+**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost and cross-diversity of decision variables in the population. Less diversity increases the probability of mutation. Consequently, it increases the accuracy and the performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
 
 
 # Installation
@@ -12,8 +12,14 @@ To install **GAdapt**, use **pip** with the following command:
 pip install gadapt
 ```
 
+# Releases
+Latest releases of GAdapt can be found at the PyPI repository: [GAdapt on PyPI](https://pypi.org/project/gadapt/)
+
 # Source Code
-The source code is stored on GitHub at the following address: https://github.com/bpzoran/gadapt
+The source code is stored at the GitHub repository: [GAdapt on GitHub](https://github.com/bpzoran/gadapt/)
+
+# API Documentation
+The API documentation can be found at the following link: [GAdapt API Documentation](https://www.gadapt.com/api/)
 
 # Getting started
 The following example optimizes variable values for a complex trigonometric function.
@@ -147,10 +153,15 @@ Supported values:
     
 **must_mutate_for_same_parents**=*True* - Indicates if completely the same parents must influence mutation for their children. In other words, each child will be mutated if it has parents with a diversity value of 0. If *must_mutate_for_same_parents* has the value True, the number of mutated chromosomes can outreach value determined by *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes*
 
-**chromosome_mutation**=*"cross_diversity"* - The type of mutation of genes in chromosomes.  
+**chromosome_mutation**=*"cross_diversity"* - The type of gene selection in chromosomes for mutation  
 Supported values:
-- *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this genetic variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_selection* parameter.  
+- *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this decision variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_selection* parameter.  
 - *"random"* - Genes are randomly selected for the mutation
+
+**gene_mutation**=*"normal_distribution,random"* - The type of assigning mutated values to genes
+Supported values:
+- *"normal_distribution"* - assignes normally distributed random number to the variable selected for mutation
+- *"random"* - Random values are assigned to genes
 
 **cross_diversity_mutation_gene_selection**=*"roulette_wheel"* - the selection algorithm for mutating chromosomes when *chromosome_mutation* has value *"cross_diversity"*. It only applies when *chromosome_mutation* has value *"cross_diversity"* . It determines the way how genes are to be selected based on the cross-diversity.  
 Supported values:
@@ -164,7 +175,7 @@ Supported values:
 **logging**=*False* - If this parameter has a True value, the log file will be created in the current working directory. The log file contains the flow of genetic algorithm execution, along with values of chromosomes, genes and cost functions in each generation
 
 # Adding Variables
-Variables to be optimized can be added by callning the *add* method of the *GA* object. Parameters of this method are the minimum value, the maximum value, and the step. The minimum and maximum value determine a range of possible variable values. The *step* parameter specifies the step that will be used in changing the variables values during the optimization.
+Variables to be optimized can be added by calling the *add* method of the *GA* object. Parameters of this method are the minimum value, the maximum value, and the step. The minimum and maximum value determine a range of possible variable values. The *step* parameter specifies the step that will be used in changing the variables values during the optimization.
 
 For example:
 ```python
@@ -175,7 +186,7 @@ means that the corresponding parameter can have values between 1.0 and 4.0, and 
 The order in which the variables are added must match the indices of the variables in the cost function. For example, for the given function:
 ```python
 def some_func(args):
-      return math.sqrt(abs(args[0])) + math.pow((args[1]))
+      return math.sqrt(abs(args[0])) + math.pow(args[1], 2)
 ```
 and instantiation of the genetic algorithm object:
 ```python
@@ -250,4 +261,50 @@ Number of iterations: 21
 Parameter values:
 0: 0.0
 1: 0.0
+```
+
+# GA Customisation
+GAdapt has been developed in common with clean architecture and SOLID principles and therefore it can be customized easily. Customization can be applied by creating new implementation of abstract classes and passing them to the gnetic algorithm through factory object. Abstract classes are all classes in "operation" folder with names starting with "Base". Please consult  [GAdapt API Documentation](https://www.gadapt.com/api/) for more information about GAdapt classes.
+
+Example of customisation of GAdapt by introducing a new class for mutation of population:
+
+```python
+import math
+from gadapt.factory.ga_factory import GAFactory
+from gadapt.ga import GA
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import
+
+BaseChromosomeMutationRateDeterminator
+
+
+class BottomPopulationMutator(BaseChromosomeMutationRateDeterminator):
+    """
+    Population mutator which selects mutating chromosomes from the bottom of
+    existing unallocated chromosoms 
+    """
+
+    def _mutate_population(self, population, number_of_mutation_chromosomes):
+        if population is None:
+            raise Exception("population must not be None")
+        unallocated_chromosomes = self._get_unallocated_chromosomes(
+            population, None
+        )
+        chromosomes_for_mutation = unallocated_chromosomes[
+                                   len(unallocated_chromosomes) - number_of_mutation_chromosomes:
+                                   ]
+        for c in chromosomes_for_mutation:
+            c.mutate(population.options.number_of_mutation_genes)
+
+
+def some_func(args):
+    return math.sqrt(abs(args[0])) + math.pow(args[1], 2)
+
+
+custom_factory = GAFactory()
+custom_factory.population_mutator = BottomPopulationMutator()
+ga = GA(cost_function=some_func, factory=custom_factory)
+ga.add(-25, 25, 1)
+ga.add(-5, 5, 0.1)
+
+print(ga.execute())
 ```

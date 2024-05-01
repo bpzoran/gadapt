@@ -37,10 +37,14 @@ sdist/
 var/
 wheels/
 share/python-wheels/
+venv/
 *.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
+*.log*
+*.idea*
+pypy_auth.txt
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -180,3 +184,12 @@ cython_debug/
 /test_functions.py
 test_gadapt.py
 .idea/*
+create_documentation.bat
+
+test*.py
+
+documentation/
+pypi.bat
+/pyproject.toml
+/poetry.lock
+/gadapt/create_diagrams.bat

@@ -1,3 +1,7 @@
-ERROR = 'ERROR'
-WARNING = 'WARNING'
-INFO = 'INFO'
+"""
+Message levels
+"""
+
+ERROR = "ERROR"
+WARNING = "WARNING"
+INFO = "INFO"
