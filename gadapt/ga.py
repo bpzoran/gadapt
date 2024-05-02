@@ -28,8 +28,10 @@ class GA:
         requested_cost=sys.float_info.max,
         max_attempt_no=10,
         parent_selection=definitions.ROULETTE_WHEEL,
-        population_mutation="{0}{1}{2}".format(
+        population_mutation="{0}{1}{2}{3}{4}".format(
             definitions.COST_DIVERSITY,
+            definitions.PARAM_SEPARATOR,
+            definitions.CROSS_DIVERSITY,
             definitions.PARAM_SEPARATOR,
             definitions.PARENT_DIVERSITY,
         ),

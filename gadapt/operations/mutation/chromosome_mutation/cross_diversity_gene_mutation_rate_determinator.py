@@ -1,11 +1,10 @@
 import gadapt.utils.ga_utils as ga_utils
-
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import (
-    BaseGeneMutationRateDeterminator,
+from operations.mutation.chromosome_mutation.random_gene_mutation_rate_determinator import (
+    RandomGeneMutationRateDeterminator,
 )
 
 
-class CrossDiversityGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
+class CrossDiversityGeneMutationRateDeterminator(RandomGeneMutationRateDeterminator):
     """
     Determines the number of mutation genes in a chromosome based on the cross diversity coefficient of the decision variables.
     """
@@ -31,8 +30,12 @@ class CrossDiversityGeneMutationRateDeterminator(BaseGeneMutationRateDeterminato
             return 1 - avg_rsd
 
         mutation_rate = get_mutation_rate()
-        f_return_value = mutation_rate * float(max_number_of_mutation_genes)
-        f_return_value_rounded = round(f_return_value)
-        if f_return_value_rounded == 0:
-            f_return_value_rounded = 1
-        return f_return_value_rounded
+        limit_number_of_mutation_genes = mutation_rate * float(
+            max_number_of_mutation_genes
+        )
+        limit_number_of_mutation_genes_rounded = round(limit_number_of_mutation_genes)
+        if limit_number_of_mutation_genes_rounded == 0:
+            limit_number_of_mutation_genes_rounded = 1
+        return super()._get_number_of_mutation_genes(
+            chromosome, limit_number_of_mutation_genes_rounded
+        )
