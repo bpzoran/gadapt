@@ -16,14 +16,14 @@ class RouletteWheelSampling(BaseSampling):
         and uses these probabilities to select objects for the sample.
         """
         rank_sum = sum(range(1, len(lst) + 1))
-        cummultative_probability_list: List[float] = []
+        cumulative_probability_list: List[float] = []
         action_probability = 0.0
         n_keep = len(lst)
         for j in range(len(lst)):
             n = n_keep - j
             probability_for_action = float(n_keep - n + 1) / float(rank_sum)
             action_probability += probability_for_action
-            cummultative_probability_list.append(action_probability)
+            cumulative_probability_list.append(action_probability)
         rank = 0
         unallocated_members = [rm for rm in lst]
         unallocated_members.sort(key=self._sort_key, reverse=True)
@@ -32,7 +32,7 @@ class RouletteWheelSampling(BaseSampling):
             if len(unallocated_members) == 0:
                 continue
             for i_c_p_l, m in enumerate(unallocated_members):
-                m.action_probability = cummultative_probability_list[i_c_p_l]
+                m.action_probability = cumulative_probability_list[i_c_p_l]
             rnd_value = random.random()
             max_prob = (
                 max(unallocated_members, key=lambda m: m.action_probability)

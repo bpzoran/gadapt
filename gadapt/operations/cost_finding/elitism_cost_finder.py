@@ -40,7 +40,6 @@ class ElitismCostFinder(BaseCostFinder):
         ) / len(better_chromosomes_without_immigrants)
         self._log_population(population)
         population.clear_and_add_chromosomes(better_chromosomes)
-        population.update_variables()
 
     def _log_population(self, population: Population):
         if population.options.logging:

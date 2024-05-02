@@ -1,7 +1,6 @@
 import math
 from gadapt.ga_model.gene import Gene
 from gadapt.utils.ga_utils import (
-    get_rand_bool,
     normally_distributed_random,
 )
 import numpy as np

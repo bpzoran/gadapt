@@ -25,7 +25,7 @@ class CostDiversityChromosomeMutationRateDeterminator(
             ):
                 return 1.0
             cost_step_ratio = float(
-                population.calculate_average_cost_step()
+                population.average_cost_step
                 / population.average_cost_step_in_first_population
             )
             if cost_step_ratio > 1.0:

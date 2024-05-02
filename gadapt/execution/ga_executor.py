@@ -45,6 +45,7 @@ class GAExecutor:
         selector = self.factory.get_parent_selector()
         crossover = self.factory.get_crossover()
         variable_updater = self.factory.get_variable_updater()
+        population_updater = self.factory.get_population_updater()
         gene_mutator = self.factory.get_gene_mutator()
         for dv in self.ga_options.decision_variables:
             dv.gene_mutator = gene_mutator
@@ -59,6 +60,7 @@ class GAExecutor:
             parent_selector=selector,
             crossover=crossover,
             variable_updater=variable_updater,
+            population_updater=population_updater,
         )
         population.find_costs()
         while not population.exit():

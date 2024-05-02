@@ -28,7 +28,10 @@ import gadapt.adapters.string_operation.ga_strings as ga_strings
 from datetime import datetime
 import gadapt.ga_model.definitions as definitions
 import gadapt.utils.ga_utils as ga_utils
-from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import (
+    BaseChromosomeMutationSelector,
+)
+from operations.population_update.base_population_updater import BasePopulationUpdater
 
 
 class Population:
@@ -44,6 +47,7 @@ class Population:
         parent_selector: BaseParentSelector,
         crossover: BaseCrossover,
         variable_updater: BaseVariableUpdater,
+        population_updater: BasePopulationUpdater,
     ):
         """Population for the genetic algorithm. It contains a collection of\
             chromosomes, as well as additional parameters
@@ -83,7 +87,9 @@ class Population:
         self.generate_initial_population()
         self.start_time = datetime.now()
         self.timeout_expired = False
+        self.average_cost_step = float("NaN")
         self.average_cost_step_in_first_population = float("NaN")
+        self.population_updater = population_updater
 
     def __iter__(self):
         return PopulationIterator(self)
@@ -291,6 +297,17 @@ class Population:
         self._variable_updater = value
 
     @property
+    def population_updater(self) -> BasePopulationUpdater:
+        """
+        Population update algorithm
+        """
+        return self._population_updater
+
+    @population_updater.setter
+    def population_updater(self, value: BasePopulationUpdater):
+        self._population_updater = value
+
+    @property
     def exit_checker(self) -> BaseExitChecker:
         """
         Exit checking algorithm
@@ -344,6 +361,8 @@ class Population:
         self.previous_avg_cost = self.avg_cost
         self.previous_min_cost = self.min_cost
         self.cost_finder.find_costs(self)
+        self.update_variables()
+        self.update_population()
 
     def clear(self):
         """
@@ -364,7 +383,7 @@ class Population:
         """
         Adds chromosomes to population
         Args:
-            chromosomes (Tuple[Chromosome]): chromosomes to add
+            chromosomes (List[Chromosome]): chromosomes to add
         """
         for c in chromosomes:
             self.add_chromosome(c)
@@ -403,6 +422,12 @@ class Population:
         Updates decision variables
         """
         self.variable_updater.update_variables(self)
+
+    def update_population(self):
+        """
+        Updates population
+        """
+        self.population_updater.update_population(self)
 
     def calculate_average_cost_step(self):
         allocated_values = [

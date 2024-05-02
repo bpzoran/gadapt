@@ -8,7 +8,9 @@ from gadapt.operations.exit_check.requested_cost_exit_checker import (
 from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
 from gadapt.operations.cost_finding.elitism_cost_finder import ElitismCostFinder
 from gadapt.operations.crossover.base_crossover import BaseCrossover
-from gadapt.operations.crossover.uniform_crossover import UniformCrossover
+from gadapt.operations.crossover.uniform_parent_diversity_crossover import (
+    UniformParentDiversityCrossover,
+)
 from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
 )
@@ -102,6 +104,9 @@ from gadapt.operations.mutation.population_mutation.strict_chromosome_mutation_r
     StrictChromosomeMutationRateDeterminator,
 )
 from operations.mutation.gene_mutation.composed_gene_mutator import ComposedGeneMutator
+from operations.population_update.common_population_updater import (
+    CommonPopulationUpdater,
+)
 
 
 class GAFactory(BaseGAFactory):
@@ -140,34 +145,21 @@ class GAFactory(BaseGAFactory):
         ]
         gene_mutators = []
         if definitions.RANDOM in mutator_strings:
-            gene_mutators.append(
-                RandomGeneMutator()
-            )
+            gene_mutators.append(RandomGeneMutator())
         if definitions.EXTREME_POINTED in mutator_strings:
-            gene_mutators.append(
-                ExtremePointedGeneMutator()
-            )
+            gene_mutators.append(ExtremePointedGeneMutator())
         if definitions.NORMAL_DISTRIBUTION in mutator_strings:
-            gene_mutators.append(
-                NormalDistributionGeneMutator()
-            )
+            gene_mutators.append(NormalDistributionGeneMutator())
         if len(gene_mutators) == 0:
-            gene_mutators.append(
-                NormalDistributionGeneMutator()
-            )
+            gene_mutators.append(NormalDistributionGeneMutator())
             gene_mutators.append(RandomGeneMutator())
         if len(gene_mutators) == 1:
-            main_gene_mutator = (
-                gene_mutators[0]
-            )
+            main_gene_mutator = gene_mutators[0]
         else:
-            main_gene_mutator = (
-                ComposedGeneMutator()
-            )
+            main_gene_mutator = ComposedGeneMutator()
             for mutator in gene_mutators:
                 main_gene_mutator.append(mutator)
         return main_gene_mutator
-
 
     def _get_gene_mutator(self) -> BaseGeneMutator:
         """
@@ -432,7 +424,7 @@ class GAFactory(BaseGAFactory):
         """
         Crossover Instance
         """
-        return UniformCrossover(
+        return UniformParentDiversityCrossover(
             self.get_gene_combination(),
             self.get_chromosome_mutator(),
             self.get_chromosome_immigrator(),
@@ -443,3 +435,9 @@ class GAFactory(BaseGAFactory):
         Variable Updater Instance
         """
         return CommonVariableUpdater()
+
+    def _get_population_updater(self):
+        """
+        Population Updater Instance
+        """
+        return CommonPopulationUpdater()

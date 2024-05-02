@@ -2,17 +2,12 @@ import random
 from typing import List
 
 from ga_model.gene import Gene
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import (
-    BaseGeneMutationRateDeterminator,
-)
 from operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 
 
 class ComposedGeneMutator(BaseGeneMutator):
 
-    def __init__(
-        self
-    ) -> None:
+    def __init__(self) -> None:
         super().__init__()
         self.mutators: List[BaseGeneMutator] = []
 

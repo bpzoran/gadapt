@@ -38,6 +38,7 @@ class BaseGAFactory(ABC):
         self.gene_combination = None
         self.exit_checker = None
         self.variable_updater = None
+        self.population_updater = None
         self.crossover = None
 
     def initialize_factory(self, ga):
@@ -124,6 +125,14 @@ class BaseGAFactory(ABC):
             self.variable_updater = self._get_variable_updater()
         return self.variable_updater
 
+    def get_population_updater(self):
+        """
+        Population Updater Instance
+        """
+        if self.population_updater is None:
+            self.population_updater = self._get_population_updater()
+        return self.population_updater
+
     def get_crossover(self) -> BaseCrossover:
         """
         Crossover Instance
@@ -199,6 +208,13 @@ class BaseGAFactory(ABC):
     def _get_variable_updater(self):
         """
         Variable Updater Instance
+        """
+        pass
+
+    @abstractmethod
+    def _get_population_updater(self):
+        """
+        Population Updater Instance
         """
         pass
 
