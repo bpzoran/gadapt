@@ -14,7 +14,7 @@ class NormalDistributionGeneMutator(BaseGeneMutator):
     """
 
     def _make_mutated_value(self, g: Gene):
-        return self._make_random_or_normally_distributed_random_value(g)
+        return self._make_normally_distributed_random_value_until_changed(g)
 
     def _execute_function_until_value_changed(self, f, g: Gene):
         current_gene_value = g.variable_value
@@ -27,12 +27,12 @@ class NormalDistributionGeneMutator(BaseGeneMutator):
                 break
         return new_gene_value
 
-    def _make_random_or_normally_distributed_random_value(self, g: Gene):
+    def _make_normally_distributed_random_value_until_changed(self, g: Gene):
         return self._execute_function_until_value_changed(
             self._make_normally_distributed_random_value, g
         )
 
-    def _calculate_nd_standard_deviation(self, g: Gene):
+    def _calculate_normal_distribution_standard_deviation(self, g: Gene):
         min_std_dev = 0.05
         max_std_dev = 0.5
         std_dev_range = max_std_dev - min_std_dev
@@ -46,7 +46,7 @@ class NormalDistributionGeneMutator(BaseGeneMutator):
         range = g.decision_variable.max_value - g.decision_variable.min_value
         mean = (curr_value - g.decision_variable.min_value) / (range)
         normal_distribution_random_value = normally_distributed_random(
-            mean, self._calculate_nd_standard_deviation(g), 0, 1
+            mean, self._calculate_normal_distribution_standard_deviation(g), 0, 1
         )
         number_of_steps = round(
             (normal_distribution_random_value * range) / g.decision_variable.step
