@@ -284,21 +284,6 @@ class Chromosome(RankingModel):
         self._last_immigrant_generation = value
 
     @property
-    def mutation_on_both_sides(self) -> bool:
-        """
-        Indicates if mutation should be applied on both sides
-        """
-        return self._mutation_on_both_sides
-
-    @mutation_on_both_sides.setter
-    def mutation_on_both_sides(self, value: bool):
-        """
-        Indicates if mutation of the chromosome shouls be applied with the\
-            same probability of lower and higher value comparing with the current value
-        """
-        self._mutation_on_both_sides = value
-
-    @property
     def succ(self) -> bool:
         """
         Indicates if cost function execution succeded
