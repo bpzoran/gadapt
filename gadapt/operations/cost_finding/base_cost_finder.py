@@ -10,6 +10,10 @@ class BaseCostFinder(ABC):
     Base class for cost finding
     """
 
+    def __init__(self):
+        super().__init__()
+        self.population = None
+
     def _execute_function(self, cost_function, c: Chromosome):
         """
         Executes the cost function
@@ -32,7 +36,7 @@ class BaseCostFinder(ABC):
             c.cost_value = sys.float_info.max
 
     @abstractmethod
-    def _find_costs_for_population(self, population):
+    def _find_costs_for_population(self):
         pass
 
     def find_costs(self, population):
@@ -42,4 +46,5 @@ class BaseCostFinder(ABC):
         Args:
             population (Population): The population to find costs for each chromosome
         """
-        self._find_costs_for_population(population)
+        self.population = population
+        self._find_costs_for_population()

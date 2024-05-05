@@ -23,23 +23,25 @@ class ComposedChromosomeMutationSelector(BaseChromosomeMutationSelector):
         """
         self.selectors.append(selector)
 
-    def _mutate_population(self, population, max_number_of_mutation_chromosomes):
-        if population is None:
+    def _mutate_population(self):
+        if self.population is None:
             raise Exception("Population must not be null")
         if len(self.selectors) == 0:
             raise Exception("at least one mutator must be added")
         if len(self.selectors) > 1:
             random.shuffle(self.selectors)
         nmc = 0
-        number_of_mutation_chromosomes = self._chromosome_mutation_rate_determinator.get_number_of_mutation_chromosomes(
-            population, max_number_of_mutation_chromosomes
+        limit_number_of_mutation_chromosomes = self._chromosome_mutation_rate_determinator.get_number_of_mutation_chromosomes(
+            self.population, self.number_of_mutated_chromosomes
         )
-        if number_of_mutation_chromosomes == 0:
+        if limit_number_of_mutation_chromosomes == 0:
             return 0
         for m in self.selectors:
-            if nmc < number_of_mutation_chromosomes:
-                mc = m._mutate_population(
-                    population, number_of_mutation_chromosomes - nmc
+            if nmc < limit_number_of_mutation_chromosomes:
+                m.population = self.population
+                m.number_of_mutated_chromosomes = (
+                    limit_number_of_mutation_chromosomes - nmc
                 )
+                mc = m._mutate_population()
                 nmc += mc
         return nmc

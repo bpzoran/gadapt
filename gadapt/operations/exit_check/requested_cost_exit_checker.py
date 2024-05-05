@@ -11,7 +11,7 @@ class RequestedCostExitChecker(BaseExitChecker):
         super().__init__(1)
         self.requested_cost = requested_cost
 
-    def _is_exit(self, population):
-        if population.min_cost <= self.requested_cost:
+    def _is_exit(self):
+        if self.population.min_cost <= self.requested_cost:
             return True
         return False

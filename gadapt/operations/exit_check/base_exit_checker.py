@@ -16,6 +16,7 @@ class BaseExitChecker(ABC):
     def __init__(self, max_attempt_no: int) -> None:
         self.max_attempt_no = max_attempt_no
         self.attempt_no = 0
+        self.population = None
 
     @property
     def attempt_no(self) -> int:
@@ -26,11 +27,12 @@ class BaseExitChecker(ABC):
         self._attempt_no = value
 
     def check(self, population):
-        time_diff = (datetime.now() - population.start_time).total_seconds()
-        if time_diff >= population.options.timeout:
-            population.timeout_expired = True
+        self.population = population
+        time_diff = (datetime.now() - self.population.start_time).total_seconds()
+        if time_diff >= self.population.options.timeout:
+            self.population.timeout_expired = True
             return True
-        if self._is_exit(population):
+        if self._is_exit():
             self.attempt_no += 1
         else:
             self.attempt_no = 0
@@ -40,5 +42,5 @@ class BaseExitChecker(ABC):
         return False
 
     @abstractmethod
-    def _is_exit(self, population) -> bool:
+    def _is_exit(self) -> bool:
         pass

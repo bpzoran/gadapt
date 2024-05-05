@@ -23,14 +23,15 @@ class ComposedGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
         """
         self.determinators.append(determinator)
 
-    def _get_number_of_mutation_genes(self, chromosome, max_number_of_mutation_genes):
-        if chromosome is None:
+    def _get_number_of_mutation_genes(self):
+        if self.chromosome is None:
             raise Exception("Chromosome must not be null")
         if len(self.determinators) == 0:
             raise Exception("at least one mutator must be added")
+        for determinator in self.determinators:
+            determinator.chromosome = self.chromosome
+            determinator.max_number_of_mutation_genes = self.max_number_of_mutation_genes
         if len(self.determinators) > 1:
             random.shuffle(self.determinators)
         current_determinator = self.determinators[0]
-        return current_determinator.get_number_of_mutation_genes(
-            chromosome, max_number_of_mutation_genes
-        )
+        return current_determinator._get_number_of_mutation_genes()

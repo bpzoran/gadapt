@@ -15,7 +15,5 @@ class RandomGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
     ) -> None:
         super().__init__()
 
-    def _get_number_of_mutation_genes(
-        self, chromosome, max_number_of_mutation_genes
-    ) -> int:
-        return random.randint(1, max_number_of_mutation_genes)
+    def _get_number_of_mutation_genes(self) -> int:
+        return random.randint(1, self.max_number_of_mutation_genes)

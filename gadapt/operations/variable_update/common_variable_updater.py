@@ -9,7 +9,7 @@ class CommonVariableUpdater(BaseVariableUpdater):
     Common variable updater
     """
 
-    def update_variables(self, population):
+    def _update_variables(self):
 
         def scale_values(dv: DecisionVariable, values):
             scaled_values = []
@@ -23,15 +23,9 @@ class CommonVariableUpdater(BaseVariableUpdater):
                 scaled_values.append(scaled_value)
             return scaled_values
 
-        # def scale_values(data):
-        #     min_val = min(data)
-        #     max_val = max(data)
-        #     scaled_data = [(x - min_val) / (max_val - min_val) for x in data]
-        #     return scaled_data
-
         unique_values_per_variables = {}
         values_per_variables = {}
-        for c in population:
+        for c in self.population:
             if c.is_immigrant:
                 continue
             for g in c:

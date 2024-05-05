@@ -8,18 +8,18 @@ class BaseChromosomeMutationRateDeterminator(ABC):
 
     def __init__(self) -> None:
         super().__init__()
+        self.population = None
+        self.max_number_of_mutation_chromosomes = -1
 
     def get_number_of_mutation_chromosomes(
         self, population, max_number_of_mutation_chromosomes
     ):
         if population is None:
             raise Exception("Population must not be null")
-        return self._get_number_of_mutation_chromosomes(
-            population, max_number_of_mutation_chromosomes
-        )
+        self.population = population
+        self.max_number_of_mutation_chromosomes = max_number_of_mutation_chromosomes
+        return self._get_number_of_mutation_chromosomes()
 
     @abstractmethod
-    def _get_number_of_mutation_chromosomes(
-        self, population, max_number_of_mutation_chromosomes
-    ) -> int:
+    def _get_number_of_mutation_chromosomes(self) -> int:
         pass

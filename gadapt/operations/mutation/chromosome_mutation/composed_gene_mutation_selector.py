@@ -28,8 +28,8 @@ class ComposedGeneMutationSelector(BaseGeneMutationSelector):
         """
         self.selectors.append(selector)
 
-    def _mutate_chromosome(self, chromosome, max_number_of_mutation_genes):
-        if chromosome is None:
+    def _mutate_chromosome(self):
+        if self.chromosome is None:
             raise Exception("Chromosome must not be null")
         if len(self.selectors) == 0:
             raise Exception("at least one mutator must be added")
@@ -38,13 +38,15 @@ class ComposedGeneMutationSelector(BaseGeneMutationSelector):
         nmg = 0
         number_of_mutation_genes = (
             self._gene_mutation_rate_determinator.get_number_of_mutation_genes(
-                chromosome, max_number_of_mutation_genes
+                self.chromosome, self.number_of_mutation_genes
             )
         )
         if number_of_mutation_genes == 0:
             return 0
-        for m in self.selectors:
+        for s in self.selectors:
             if nmg < number_of_mutation_genes:
-                mg = m._mutate_chromosome(chromosome, number_of_mutation_genes - nmg)
+                s.number_of_mutation_genes = number_of_mutation_genes - nmg
+                s.chromosome = self.chromosome
+                mg = s._mutate_chromosome()
                 nmg += mg
         return nmg

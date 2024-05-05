@@ -8,7 +8,7 @@ class AvgCostExitChecker(BaseExitChecker):
     the average cost of the kept population in a defined number of iterations.
     """
 
-    def _is_exit(self, population):
-        if population is None:
+    def _is_exit(self):
+        if self.population is None:
             raise Exception("population must not be null")
-        return population.avg_cost >= population.previous_avg_cost
+        return self.population.avg_cost >= self.population.previous_avg_cost

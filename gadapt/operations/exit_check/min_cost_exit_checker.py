@@ -8,7 +8,7 @@ class MinCostExitChecker(BaseExitChecker):
     defined number of iterations.
     """
 
-    def _is_exit(self, population):
-        if population is None:
+    def _is_exit(self):
+        if self.population is None:
             raise Exception("population must not be null")
-        return population.min_cost >= population.previous_min_cost
+        return self.population.min_cost >= self.population.previous_min_cost

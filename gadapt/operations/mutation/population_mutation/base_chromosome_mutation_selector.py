@@ -14,47 +14,48 @@ class BaseChromosomeMutationSelector(ABC):
     Selects and mutates the chromosomes in the population based on a specified number of mutated chromosomes.
     """
 
+    def __init__(
+        self,
+        chromosome_mutation_rate_determinator: BaseChromosomeMutationRateDeterminator,
+    ) -> None:
+        """
+        Base class for selecting mating chromosomes in population
+        Args:
+            chromosome_mutation_rate_determinator: chromosome mutation rate determinator
+        """
+        super().__init__()
+        self._chromosome_mutation_rate_determinator = (
+            chromosome_mutation_rate_determinator
+        )
+        self.population = None
+        self.number_of_mutated_chromosomes = -1
+
     def mutate(self, population):
         """
         Mutates chromosomes in the population
         Args:
             population: Population to mutate
         """
-        number_of_mutated_chromosomes = (
+        self.population = population
+        self.number_of_mutated_chromosomes = (
             population.options.number_of_mutation_chromosomes
         )
-        self._mutate_population(population, number_of_mutated_chromosomes)
-
-    def __init__(
-        self,
-        chromosome_mutation_rate_determinator: BaseChromosomeMutationRateDeterminator,
-    ) -> None:
-        """
-        Base class for mutating chromosomes in population
-        Args:
-            options: genetic algorithm options
-        """
-        super().__init__()
-        self._chromosome_mutation_rate_determinator = (
-            chromosome_mutation_rate_determinator
-        )
+        self._mutate_population()
 
     @abstractmethod
-    def _mutate_population(self, population, number_of_mutated_chromosomes):
+    def _mutate_population(self):
         pass
 
-    def _get_unallocated_chromosomes(
-        self, population, sort_key_function=None
-    ) -> List[Chromosome]:
+    def _get_unallocated_chromosomes(self, sort_key_function=None) -> List[Chromosome]:
         def unallocated_chromosomes_condition(c: Chromosome) -> bool:
             return (
                 math.isnan(c.cost_value)
                 and (not c.is_immigrant)
-                and c.population_generation == population.population_generation
+                and c.population_generation == self.population.population_generation
                 and not c.is_mutated
             )
 
-        lst = [c for c in population if (unallocated_chromosomes_condition(c))]
+        lst = [c for c in self.population if (unallocated_chromosomes_condition(c))]
         if sort_key_function is not None:
             lst.sort(key=sort_key_function)
         return lst
