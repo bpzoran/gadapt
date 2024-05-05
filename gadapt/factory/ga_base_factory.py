@@ -18,6 +18,7 @@ from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rat
 )
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
 from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCombination
+from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
 
 """
     Factory definition for creating  class instances based on GA options
@@ -31,9 +32,11 @@ class BaseGAFactory(ABC):
         self.cost_finder = None
         self.population_immigrator = None
         self.chromosome_immigrator = None
-        self.chromosome_mutator = None
+        self.gene_mutation_selector = None
+        self.gene_mutation_rate_determinator = None
         self.gene_mutator = None
-        self.population_mutator = None
+        self.chromosome_mutation_selector = None
+        self.chromosome_mutation_rate_determinator = None
         self.parent_selector = None
         self.gene_combination = None
         self.exit_checker = None
@@ -69,13 +72,13 @@ class BaseGAFactory(ABC):
             self.chromosome_immigrator = self._get_chromosome_immigrator()
         return self.chromosome_immigrator
 
-    def get_chromosome_mutator(self) -> BaseGeneMutationSelector:
+    def get_gene_mutation_selector(self) -> BaseGeneMutationSelector:
         """
-        Chromosome Mutator Instance
+        Gene Mutation Selector Instance
         """
-        if self.chromosome_mutator is None:
-            self.chromosome_mutator = self._get_chromosome_mutator()
-        return self.chromosome_mutator
+        if self.gene_mutation_selector is None:
+            self.gene_mutation_selector = self._get_gene_mutation_selector()
+        return self.gene_mutation_selector
 
     def get_gene_mutator(self) -> BaseGeneMutator:
         """
@@ -85,13 +88,13 @@ class BaseGAFactory(ABC):
             self.gene_mutator = self._get_gene_mutator()
         return self.gene_mutator
 
-    def get_population_mutator(self) -> BaseChromosomeMutationRateDeterminator:
+    def get_chromosome_mutation_selector(self) -> BaseChromosomeMutationSelector:
         """
-        Population Mutator Instance
+        Chromosome Mutation Selector Instance
         """
-        if self.population_mutator is None:
-            self.population_mutator = self._get_population_mutator()
-        return self.population_mutator
+        if self.chromosome_mutation_selector is None:
+            self.chromosome_mutation_selector = self._get_chromosome_mutation_selector()
+        return self.chromosome_mutation_selector
 
     def get_parent_selector(self) -> BaseParentSelector:
         """
@@ -163,7 +166,7 @@ class BaseGAFactory(ABC):
         pass
 
     @abstractmethod
-    def _get_chromosome_mutator(self) -> BaseGeneMutationSelector:
+    def _get_gene_mutation_selector(self) -> BaseGeneMutationSelector:
         """
         Chromosome Mutator Instance
         """
@@ -177,7 +180,7 @@ class BaseGAFactory(ABC):
         pass
 
     @abstractmethod
-    def _get_population_mutator(self) -> BaseChromosomeMutationRateDeterminator:
+    def _get_chromosome_mutation_selector(self) -> BaseChromosomeMutationSelector:
         """
         Population Mutator Instance
         """

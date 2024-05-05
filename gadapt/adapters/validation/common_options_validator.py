@@ -266,16 +266,16 @@ class CommonOptionsValidator(BaseOptionsValidator):
             self.options.chromosome_mutation == definitions.CROSS_DIVERSITY
             or definitions.CROSS_DIVERSITY in self.options.chromosome_mutation
         ):
-            if self.options.cross_diversity_mutation_gene_selection is None:
+            if self.options.cross_diversity_mutation_gene_sampling is None:
                 self._add_message(
-                    "Cross Diversity Mutation Gene Selection must not be None!"
+                    "Cross Diversity Mutation Gene Sampling must not be None!"
                 )
                 rslt &= False
             elif not isinstance(
-                self.options.cross_diversity_mutation_gene_selection, str
+                self.options.cross_diversity_mutation_gene_sampling, str
             ):
                 self._add_message(
-                    "Cross Diversity Mutation Gene Selection must be type str!"
+                    "Cross Diversity Mutation Gene Sampling must be type str!"
                 )
                 rslt &= False
         if self.options.chromosome_mutation is None:
@@ -292,25 +292,25 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 )
             ]
             for mutator_string in mutator_strings:
-                if mutator_string not in definitions.CHROMOSOME_MUTATOR_STRINGS:
+                if mutator_string not in definitions.CHROMOSOME_MUTATION_STRINGS:
                     self._add_message(
                         "Invalid value of Chromosome Mutation:\
                             {0}. Allowed values: {1}".format(
                             mutator_string,
                             self._get_allowed_values(
-                                definitions.CHROMOSOME_MUTATOR_STRINGS
+                                definitions.CHROMOSOME_MUTATION_STRINGS
                             ),
                         )
                     )
                     rslt &= False
         elif (
             self.options.chromosome_mutation
-            not in definitions.CHROMOSOME_MUTATOR_STRINGS
+            not in definitions.CHROMOSOME_MUTATION_STRINGS
         ):
             self._add_message(
                 "Invalid value of Chromosome Mutation: {0}. Allowed values: {1}".format(
                     self.options.chromosome_mutation,
-                    self._get_allowed_values(definitions.CHROMOSOME_MUTATOR_STRINGS),
+                    self._get_allowed_values(definitions.CHROMOSOME_MUTATION_STRINGS),
                 )
             )
             rslt &= False
@@ -329,20 +329,20 @@ class CommonOptionsValidator(BaseOptionsValidator):
             )
             rslt &= False
         if self.options.chromosome_mutation == definitions.CROSS_DIVERSITY:
-            if self.options.cross_diversity_mutation_gene_selection is None:
+            if self.options.cross_diversity_mutation_gene_sampling is None:
                 self._add_message(
                     "Cross Diversity Mutation Gene Selection must not be None!"
                 )
                 rslt &= False
             elif not isinstance(
-                self.options.cross_diversity_mutation_gene_selection, str
+                self.options.cross_diversity_mutation_gene_sampling, str
             ):
                 self._add_message(
                     "Cross Diversity Mutation Gene Selection must be type str!"
                 )
                 rslt &= False
             elif not self._validate_selection(
-                self.options.cross_diversity_mutation_gene_selection,
+                self.options.cross_diversity_mutation_gene_sampling,
                 "Cross Diversity Mutation Gene Selection",
                 self.options.number_of_mutation_genes,
                 "Group Size for Cross Diversity Mutation Gene Selection must be below\
@@ -365,24 +365,24 @@ class CommonOptionsValidator(BaseOptionsValidator):
             self.options.population_mutation == definitions.COST_DIVERSITY
             or definitions.PARENT_DIVERSITY in self.options.population_mutation
         ):
-            if self.options.parent_diversity_mutation_chromosome_selection is None:
+            if self.options.parent_diversity_mutation_chromosome_sampling is None:
                 self._add_message(
-                    "Parent Diversity Mutation Chromosome Selection must not be None!"
+                    "Parent Diversity Mutation Chromosome Sampling must not be None!"
                 )
                 rslt &= False
             elif not isinstance(
-                self.options.parent_diversity_mutation_chromosome_selection, str
+                self.options.parent_diversity_mutation_chromosome_sampling, str
             ):
                 self._add_message(
-                    "Parent Diversity Mutation Chromosome Selection must be type str!"
+                    "Parent Diversity Mutation Chromosome Sampling must be type str!"
                 )
                 rslt &= False
             elif not self._validate_selection(
-                self.options.parent_diversity_mutation_chromosome_selection,
-                "Parents Diversity Mutation Chromosome Selection",
+                self.options.parent_diversity_mutation_chromosome_sampling,
+                "Parents Diversity Mutation Chromosome Sampling",
                 (population_size // 2) - self.options.immigration_number,  # type: ignore
                 "Group Size for Parents Diversity Mutation Chromosome\
-                Selection cannot have the value below half population!",
+                Sampling cannot have the value below half population!",
             ):
                 rslt &= False
         if self.options.population_mutation is None:
@@ -399,25 +399,61 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 )
             ]
             for mutator_string in mutator_strings:
-                if mutator_string not in definitions.POPULATION_MUTATOR_STRINGS:
+                if mutator_string not in definitions.POPULATION_MUTATION_STRINGS:
                     self._add_message(
                         "Invalid value of Population Mutation:\
                             {0}. Allowed values: {1}".format(
                             mutator_string,
                             self._get_allowed_values(
-                                definitions.POPULATION_MUTATOR_STRINGS
+                                definitions.POPULATION_MUTATION_STRINGS
                             ),
                         )
                     )
                     rslt &= False
         elif (
             self.options.population_mutation
-            not in definitions.POPULATION_MUTATOR_STRINGS
+            not in definitions.POPULATION_MUTATION_STRINGS
         ):
             self._add_message(
                 "Invalid value of Population Mutation: {0}. Allowed values: {1}".format(
                     self.options.population_mutation,
-                    self._get_allowed_values(definitions.POPULATION_MUTATOR_STRINGS),
+                    self._get_allowed_values(definitions.POPULATION_MUTATION_STRINGS),
+                )
+            )
+            rslt &= False
+        if self.options.gene_mutation is None:
+            self._add_message("Gene Mutation must not be None!")
+            rslt &= False
+        elif not isinstance(self.options.gene_mutation, str):
+            self._add_message("Gene Mutation must be type str!")
+            rslt &= False
+        elif definitions.PARAM_SEPARATOR in self.options.gene_mutation:
+            mutator_strings = [
+                ms.strip()
+                for ms in self.options.gene_mutation.split(
+                    definitions.PARAM_SEPARATOR
+                )
+            ]
+            for mutator_string in mutator_strings:
+                if mutator_string not in definitions.GENE_MUTATION_STRINGS:
+                    self._add_message(
+                        "Invalid value of Gene Mutation:\
+                            {0}. Allowed values: {1}".format(
+                            mutator_string,
+                            self._get_allowed_values(
+                                definitions.GENE_MUTATION_STRINGS
+                            ),
+                        )
+                    )
+                    rslt &= False
+        elif (
+                self.options.gene_mutation
+                not in definitions.GENE_MUTATION_STRINGS
+        ):
+            self._add_message(
+                "Invalid value of Gene Mutation: {0}. Allowed values: {1}".format(
+                    self.options.gene_mutation,
+                    self._get_allowed_values(definitions.GENE_MUTATION_STRINGS),
                 )
             )
             rslt &= False

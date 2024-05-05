@@ -1,28 +1,30 @@
 # GAdapt: Self-Adaptive Genetic Algorithm
-[GAdapt](https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for the adaptive mutation of genes and chromosomes.
 
-# What innovations does GAdapt bring?
-**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost and cross-diversity of decision variables in the population. Less diversity increases the probability of mutation. Consequently, it increases the accuracy and the performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
+[GAdapt](https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for adaptive mutation of genes and chromosomes.
 
+## What Innovations Does GAdapt Bring?
 
-# Installation
+**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost, and cross-diversity of decision variables in the population. Less diversity increases the probability of mutation, thereby enhancing accuracy and performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
+
+## Installation
+
 To install **GAdapt**, use **pip** with the following command:
 
-```
+```bash
 pip install gadapt
 ```
 
 # Releases
-Latest releases of GAdapt can be found at the PyPI repository: [GAdapt on PyPI](https://pypi.org/project/gadapt/)
+The latest releases of GAdapt can be found at the PyPI repository: [GAdapt on PyPI](https://pypi.org/project/gadapt/)
 
 # Source Code
-The source code is stored at the GitHub repository: [GAdapt on GitHub](https://github.com/bpzoran/gadapt/)
+The source code is available on GitHub: [GAdapt on GitHub](https://github.com/bpzoran/gadapt/)
 
 # API Documentation
-The API documentation can be found at the following link: [GAdapt API Documentation](https://www.gadapt.com/api/)
+For detailed API documentation, refer to: [GAdapt API Documentation](https://www.gadapt.com/api/)
 
 # Getting started
-The following example optimizes variable values for a complex trigonometric function.
+Below is an example optimizing variable values for a complex trigonometric function:
 ```python
 from gadapt.ga import GA
 import math
@@ -66,7 +68,7 @@ Parameter values:
 
 In this example, the genetic algorithm searches for the combination of seven parameters, bringing the lowest value for the passed function. The only mandatory attribute to the genetic algorithm is *cost_function*, and other attributes in this example took default values. Parameters to be optimized are added by the "add" method. There are seven parameters to be optimized in this example.
 # Parameter Settings
-GAdapt genetic algorithm can receive parameters using constructor, properties, or combined.
+GAdapt genetic algorithm can receive parameters through constructor, properties, or a combination of both. Below are the supported parameters:
 
 Passing parameters through the class constructor:
 ```python
@@ -139,12 +141,12 @@ Supported values:
 **population_mutation**=*"cost_diversity,parent_diversity"* - A type of mutation for the entire population. Based on the value of this parameter, the number of mutation chromosomes can be determined, along with how chromosomes for the mutation will be selected.
 Supported values:
 - *"cost_diversity"* - It applies to the number of mutation chromosomes. *"cost_diversity"* determines the number of mutated chromosomes adaptively, using the diversity of costs in the population. Lower cost diversity means a higher number of mutated chromosomes. The minimal value of mutated chromosomes is 0, and the maximal value is determined by the value of *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes* parameters. If *population_mutation* has a value other than *"cost_diversity"*, the number of mutation chromosomes is a random value from 1 to *number_of_mutation_chromosomes* value (or to value determined by *percentage_of_mutation_chromosomes* value). *"cost_diversity"* means that the *"parent_diversity"* method is selected to select chromosomes to be mutated. This method only determines the number of mutated chromosomes, but not how chromosomes are selected for the mutation.  
-- *"parent_diversity"* - It applies to the way how mutation chromosomes will be selected. *"parent_diversity"* selects chromosomes to be mutated using the diversity of their parents. The more similar parents (lower parent diversity) mean a higher probability of mutation for the child. Based on the calculated parent diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *parent_diversity_mutation_chromosome_selection* parameter.  
+- *"parent_diversity"* - It applies to the way how mutation chromosomes will be selected. *"parent_diversity"* selects chromosomes to be mutated using the diversity of their parents. The more similar parents (lower parent diversity) mean a higher probability of mutation for the child. Based on the calculated parent diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *parent_diversity_mutation_chromosome_sampling* parameter.  
 - *"random"* - It applies to the number of mutation chromosomes and to the way how mutation chromosomes will be selected. *"random"* selects chromosomes to be mutated randomly, and randomly determines the number of mutated chromosomes (with the upper bound of **number_of_mutation_chromosomes**)
 
 Population_mutation may have more values, separated by a comma. It means that more than one method can be chosen for the mutation of chromosomes in the population. For example, *"cost_diversity,parent_diversity"* means that number of mutation chromosomes will be determined by the cost diversity and the selection of chromosomes to be mutated will be defined by parent diversity. *"cost_diversity,random"* means that the cost diversity will determine the number of mutation chromosomes, and the selection of chromosomes to be mutated will be chosen randomly.
     
-**parent_diversity_mutation_chromosome_selection**=*"roulette_wheel"* - The selection algorithm for mutating chromosomes when *population_mutation* contains value *"parent_diversity"*. It only applies when *population_mutation* has value *"parent_diversity"*. It determines the way how chromosomes are to be selected based on the diversity of their parents.  
+**parent_diversity_mutation_chromosome_sampling**=*"roulette_wheel"* - The selection algorithm for mutating chromosomes when *population_mutation* contains value *"parent_diversity"*. It only applies when *population_mutation* has value *"parent_diversity"*. It determines the way how chromosomes are to be selected based on the diversity of their parents.  
 Supported values:
 - *"roulette_wheel"* - The Roulette Wheel selection algorithm (also known as "Weighted Random Pairing"). The probabilities assigned to the chromosomes to be mutated are proportional to the similarity of their parents (inversely proportional to the parent diversity). A chromosome with the lowest parent diversity has the greatest probability of mutation, while the chromosome with the highest parent diversity has the lowest probability of mutation.  
 - *"tournament"* - The Tournament selection algorithm. It randomly picks small subsets (groups) of chromosomes, and chromosomes with the lowest parent diversity (highest parent similarity) in subsets are chosen to be mutated. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,8"* means that the tournament mutation selection algorithm is chosen, and each group contains up to 8 members. The default group size is 4.  
@@ -155,15 +157,16 @@ Supported values:
 
 **chromosome_mutation**=*"cross_diversity"* - The type of gene selection in chromosomes for mutation  
 Supported values:
-- *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this decision variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_selection* parameter.  
+- *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this decision variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_sampling* parameter.  
 - *"random"* - Genes are randomly selected for the mutation
 
-**gene_mutation**=*"normal_distribution,random"* - The type of assigning mutated values to genes
+**gene_mutation**=*"cross_diversity,random"* - The type of assigning mutated values to genes
 Supported values:
-- *"normal_distribution"* - assignes normally distributed random number to the variable selected for mutation
+- *"normal_distribution"* - assigns normally distributed random number to the variable selected for mutation
+- *"cross_diversity"* - assigns normally distributed random number to the variable selected for mutation, with standard deviation based on the cross-diversity coefficient
 - *"random"* - Random values are assigned to genes
 
-**cross_diversity_mutation_gene_selection**=*"roulette_wheel"* - the selection algorithm for mutating chromosomes when *chromosome_mutation* has value *"cross_diversity"*. It only applies when *chromosome_mutation* has value *"cross_diversity"* . It determines the way how genes are to be selected based on the cross-diversity.  
+**cross_diversity_mutation_gene_sampling**=*"roulette_wheel"* - the selection algorithm for mutating chromosomes when *chromosome_mutation* has value *"cross_diversity"*. It only applies when *chromosome_mutation* has value *"cross_diversity"* . It determines the way how genes are to be selected based on the cross-diversity.  
 Supported values:
 - *"roulette_wheel"* - The Roulette Wheel selection algorithm (also known as "Weighted Random Pairing"). The probabilities assigned to the genes to be mutated are inversely proportional to their cross-diversity. A gene with the lowest cross-diversity has the greatest probability of mutation, while the gene with the highest cross-diversity has the lowest probability of mutation.  
 - *"tournament"* - The Tournament selection algorithm. It randomly picks small subsets (groups) of genes, and genes with the lowest cross-diversity in subsets are chosen to be mutated. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,3"* means that the tournament mutation selection algorithm is chosen, and each group contains up to 3 members. The default group size is 4.  
@@ -264,34 +267,33 @@ Parameter values:
 ```
 
 # GA Customisation
-GAdapt has been developed in common with clean architecture and SOLID principles and therefore it can be customized easily. Customization can be applied by creating new implementation of abstract classes and passing them to the gnetic algorithm through factory object. Abstract classes are all classes in "operation" folder with names starting with "Base". Please consult  [GAdapt API Documentation](https://www.gadapt.com/api/) for more information about GAdapt classes.
+GAdapt follows clean architecture and SOLID principles, allowing easy customization. Create new implementations of abstract classes and pass them to the genetic algorithm through the factory object.
 
-Example of customisation of GAdapt by introducing a new class for mutation of population:
+For example, customizing the chromosome mutation selector:
 
 ```python
 import math
 from gadapt.factory.ga_factory import GAFactory
 from gadapt.ga import GA
-from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import
+from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
+from operations.mutation.population_mutation.random_chromosome_mutation_rate_determinator import RandomChromosomeMutationRateDeterminator
 
-BaseChromosomeMutationRateDeterminator
 
-
-class BottomPopulationMutator(BaseChromosomeMutationRateDeterminator):
+class BottomMutationSelector(BaseChromosomeMutationSelector):
     """
-    Population mutator which selects mutating chromosomes from the bottom of
-    existing unallocated chromosoms 
+    Chromosome mutation selector which selects mutating chromosomes from the bottom of
+    existing unallocated chromosomes sorted by the cost function value
     """
 
     def _mutate_population(self, population, number_of_mutation_chromosomes):
         if population is None:
             raise Exception("population must not be None")
         unallocated_chromosomes = self._get_unallocated_chromosomes(
-            population, None
+            population, lambda chrom: (population.options.cost_function([g.variable_value for g in chrom]))
         )
         chromosomes_for_mutation = unallocated_chromosomes[
-                                   len(unallocated_chromosomes) - number_of_mutation_chromosomes:
-                                   ]
+            len(unallocated_chromosomes) - number_of_mutation_chromosomes:
+        ]
         for c in chromosomes_for_mutation:
             c.mutate(population.options.number_of_mutation_genes)
 
@@ -301,7 +303,7 @@ def some_func(args):
 
 
 custom_factory = GAFactory()
-custom_factory.population_mutator = BottomPopulationMutator()
+custom_factory.chromosome_mutation_selector = BottomMutationSelector(RandomChromosomeMutationRateDeterminator())
 ga = GA(cost_function=some_func, factory=custom_factory)
 ga.add(-25, 25, 1)
 ga.add(-5, 5, 0.1)

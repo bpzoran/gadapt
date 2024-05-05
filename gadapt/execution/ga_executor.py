@@ -36,8 +36,8 @@ class GAExecutor:
             )
             self.ga_options.logging = False
         # try:
-        chromosome_mutator = self.factory.get_chromosome_mutator()
-        population_mutator = self.factory.get_population_mutator()
+        chromosome_mutator = self.factory.get_gene_mutation_selector()
+        population_mutator = self.factory.get_chromosome_mutation_selector()
         exit_checker = self.factory.get_exit_checker()
         cost_finder = self.factory.get_cost_finder()
         population_immigrator = self.factory.get_population_immigrator()

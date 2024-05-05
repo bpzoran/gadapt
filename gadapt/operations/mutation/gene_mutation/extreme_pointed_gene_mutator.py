@@ -9,48 +9,48 @@ from gadapt.utils.ga_utils import get_rand_bool, get_rand_bool_with_probability
 # *** Obsolete ***
 class ExtremePointedGeneMutator(RandomGeneMutator):
 
-    def _make_mutated_value(self, g: Gene):
-        return self._make_mutation(g)
+    def _make_mutated_value(self):
+        return self._make_mutation()
 
-    def _make_rounded_random_value_below_or_above(self, g: Gene):
+    def _make_rounded_random_value_below_or_above(self):
         return round(
-            self._make_random_value_below_or_above(g),
-            g.decision_variable.decimal_places,
+            self._make_random_value_below_or_above(),
+            self.gene.decision_variable.decimal_places,
         )
 
-    def _make_random_value_below_or_above(self, g: Gene):
+    def _make_random_value_below_or_above(self):
         if get_rand_bool():
-            return self._make_random_value_above(g)
-        return self._make_random_value_below(g)
+            return self._make_random_value_above()
+        return self._make_random_value_below()
 
-    def _make_random_value_below(self, g: Gene):
-        if g.variable_value == g.decision_variable.min_value:
-            return g.decision_variable.make_random_value()
+    def _make_random_value_below(self):
+        if self.gene.variable_value == self.gene.decision_variable.min_value:
+            return self.gene.decision_variable.make_random_value()
         number_of_steps = random.randint(
             0,
             round(
-                (g.variable_value - g.decision_variable.min_value)
-                / g.decision_variable.step
+                (self.gene.variable_value - self.gene.decision_variable.min_value)
+                / self.gene.decision_variable.step
             ),
         )
         return (
-            g.decision_variable.min_value + number_of_steps * g.decision_variable.step
+            self.gene.decision_variable.min_value + number_of_steps * self.gene.decision_variable.step
         )
 
-    def _make_random_value_above(self, g: Gene):
-        if g.variable_value == g.decision_variable.max_value:
-            return g.decision_variable.make_random_value()
+    def _make_random_value_above(self):
+        if self.gene.variable_value == self.gene.decision_variable.max_value:
+            return self.gene.decision_variable.make_random_value()
         number_of_steps = random.randint(
             0,
             round(
-                (g.decision_variable.max_value - g.variable_value)
-                / g.decision_variable.step
+                (self.gene.decision_variable.max_value - self.gene.variable_value)
+                / self.gene.decision_variable.step
             ),
         )
-        return g.variable_value + number_of_steps * g.decision_variable.step
+        return self.gene.variable_value + number_of_steps * self.gene.decision_variable.step
 
-    def _get_mutate_func(self, g: Gene):
-        prob = g.decision_variable.cross_diversity_coefficient
+    def _get_mutate_func(self):
+        prob = self.gene.decision_variable.cross_diversity_coefficient
         if prob > 1.0:
             prob = 1.0
         should_mutate_random = get_rand_bool_with_probability(prob)
@@ -59,6 +59,6 @@ class ExtremePointedGeneMutator(RandomGeneMutator):
         else:
             return self._make_rounded_random_value_below_or_above
 
-    def _make_mutation(self, g: Gene):
-        f = self._get_mutate_func(g)
-        return f(g)
+    def _make_mutation(self):
+        f = self._get_mutate_func()
+        return f()

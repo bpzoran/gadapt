@@ -37,13 +37,13 @@ class GA:
         ),
         number_of_mutation_chromosomes=-1,
         percentage_of_mutation_chromosomes=10.0,
-        parent_diversity_mutation_chromosome_selection=definitions.ROULETTE_WHEEL,
+        parent_diversity_mutation_chromosome_sampling=definitions.ROULETTE_WHEEL,
         must_mutate_for_same_parents=True,
         chromosome_mutation=definitions.CROSS_DIVERSITY,
-        gene_mutation=definitions.NORMAL_DISTRIBUTION,
+        gene_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
         number_of_mutation_genes=-1,
         percentage_of_mutation_genes=10.0,
-        cross_diversity_mutation_gene_selection=definitions.ROULETTE_WHEEL,
+        cross_diversity_mutation_gene_sampling=definitions.ROULETTE_WHEEL,
         immigration_number=0,
         logging=False,
         timeout=120,
@@ -77,7 +77,7 @@ class GA:
             has value “avg_cost” or “min_cost”. It determines the number of
             generations in which there is no improvement in the average/minimal cost.
 
-            parent_selection: The algorithm for parent selection.
+            parent_selection: The sampling algorithm in parent selection.
 
             population_mutation: A type of mutation for the entire population.
 
@@ -111,8 +111,8 @@ class GA:
                 number_of_mutation_chromosomes does not have a valid
                 integer value equal to or higher than 0.
 
-            parent_diversity_mutation_chromosome_selection: The
-            selection algorithm for mutating chromosomes when population_mutation
+            parent_diversity_mutation_chromosome_sampling: The
+            sampling algorithm for mutating chromosomes when population_mutation
             contains value “parent_diversity”.
                 It only applies when population_mutation has value
                 “parent_diversity”. It determines the way how chromosomes are to
@@ -152,7 +152,7 @@ class GA:
                 number_of_mutations_genes does not have a valid
                 integer value equal to or higher than 0.
 
-            cross_diversity_mutation_gene_selection: The selection algorithm for
+            cross_diversity_mutation_gene_sampling: The sampling algorithm for
             mutating chromosomes when chromosome_mutation has value “cross_diversity”.
                 It only applies when chromosome_mutation has value
                 “cross_diversity” . It determines the way how genes
@@ -193,11 +193,11 @@ class GA:
         self.immigration_number = immigration_number
         self.logging = logging
         self._decision_variables: List[DecisionVariable] = []
-        self.cross_diversity_mutation_gene_selection = (
-            cross_diversity_mutation_gene_selection
+        self.cross_diversity_mutation_gene_sampling = (
+            cross_diversity_mutation_gene_sampling
         )
-        self.parent_diversity_mutation_chromosome_selection = (
-            parent_diversity_mutation_chromosome_selection
+        self.parent_diversity_mutation_chromosome_sampling = (
+            parent_diversity_mutation_chromosome_sampling
         )
         self.timeout = timeout
         self._current_dv_id = 0
@@ -391,8 +391,8 @@ class GA:
         The more similar parents (lower parent diversity) mean a higher
         probability of mutation for the child. Based on the calculated
         parent diversity, chromosomes may be selected by one of the
-        selection methods, which is determined by the value of the
-        parent_diversity_mutation_chromosome_selection parameter.
+        sampling methods, which is determined by the value of the
+        parent_diversity_mutation_chromosome_sampling parameter.
 
         **"random"** - It applies to the number of mutation chromosomes
         and to the way how mutation chromosomes will be selected. “random”
@@ -407,9 +407,9 @@ class GA:
         self._population_mutation = ga_utils.prepare_string(value)
 
     @property
-    def parent_diversity_mutation_chromosome_selection(self) -> str:
+    def parent_diversity_mutation_chromosome_sampling(self) -> str:
         """
-        The selection algorithm for mutating chromosomes when
+        The sampling algorithm for mutating chromosomes when
         population_mutation contains value “parent_diversity”.
         It only applies when population_mutation has value
         “parent_diversity”. It determines the way how chromosomes are
@@ -417,7 +417,7 @@ class GA:
 
         Supported values:
 
-        **"roulette_wheel"** - The Roulette Wheel selection algorithm
+        **"roulette_wheel"** - The Roulette Wheel sampling algorithm
         (also known as “Weighted Random Pairing”). The probabilities
         assigned to the chromosomes to be mutated are proportional
         to the similarity of their parents (inversely proportional
@@ -426,30 +426,30 @@ class GA:
         mutation, while the chromosome with the highest
         parent diversity has the lowest probability of mutation.
 
-        **"tournament"** - The Tournament selection algorithm.
+        **"tournament"** - The Tournament sampling algorithm.
         It randomly picks small subsets (groups) of chromosomes,
         and chromosomes with the lowest parent diversity (highest parent similarity)
         in subsets are chosen to be mutated. “tournament” can have an additional
         parameter separated from the “tournament” keyword by the comma.
         The other value represents a group size. For example, “tournament,8” means
-        that the tournament mutation selection algorithm is chosen, and
+        that the tournament mutation sampling algorithm is chosen, and
         each group contains up to 8 members. The default group size is 4.
 
-        **"from_top_to_bottom"** - From Top To Bottom selection
+        **"from_top_to_bottom"** - From Top To Bottom sampling
         algorithm starts at the top of the list and
         selects chromosomes for mutation.
 
         **"random"** - Random selection algorithm uses a
         uniform random number generator to select
         chromosomes for mutation. In this case,
-        selection for mutation will not depend
+        sampling for mutation will not depend
         on parent diversity.
         """
-        return self._parent_diversity_mutation_chromosome_selection
+        return self._parent_diversity_mutation_chromosome_sampling
 
-    @parent_diversity_mutation_chromosome_selection.setter
-    def parent_diversity_mutation_chromosome_selection(self, value: str):
-        self._parent_diversity_mutation_chromosome_selection = ga_utils.prepare_string(
+    @parent_diversity_mutation_chromosome_sampling.setter
+    def parent_diversity_mutation_chromosome_sampling(self, value: str):
+        self._parent_diversity_mutation_chromosome_sampling = ga_utils.prepare_string(
             value
         )
 
@@ -466,9 +466,9 @@ class GA:
         minimums, and therefore such genes increase the
         chance for mutation. Based on the calculated
         cross-diversity, chromosomes may be selected by
-        one of the selection methods, which is
+        one of the sampling methods, which is
         determined by the value of the
-        cross_diversity_mutation_gene_selection parameter.
+        cross_diversity_mutation_gene_sampling parameter.
 
         **"random"** - Genes are randomly selected for the mutation
         """
@@ -496,16 +496,16 @@ class GA:
         self._gene_mutation = ga_utils.prepare_string(value)
 
     @property
-    def cross_diversity_mutation_gene_selection(self) -> str:
+    def cross_diversity_mutation_gene_sampling(self) -> str:
         """
-        The selection algorithm for mutating chromosomes when chromosome_mutation
+        The sampling algorithm for mutating chromosomes when chromosome_mutation
         has value “cross_diversity”.
         It only applies when chromosome_mutation has value “cross_diversity” .
         It determines the way how genes are to be selected based on the cross-diversity.
 
         Supported values:
 
-        **"roulette_wheel"** - The Roulette Wheel selection algorithm
+        **"roulette_wheel"** - The Roulette Wheel sampling algorithm
         (also known as “Weighted Random Pairing”). The probabilities
         assigned to the genes to be mutated are inversely
         proportional to their cross-diversity. A gene
@@ -514,28 +514,28 @@ class GA:
         highest cross-diversity has the lowest
         probability of mutation.
 
-        **"tournament"** - The Tournament selection algorithm. It randomly picks
+        **"tournament"** - The Tournament sampling algorithm. It randomly picks
         small subsets (groups) of genes, and genes with the lowest cross-diversity
         in subsets are chosen to be mutated. “tournament” can have
         an additional parameter separated from the “tournament”
         keyword by the comma. The other value represents a group size.
         For example, “tournament,3” means that the tournament
-        mutation selection algorithm is chosen, and each group
+        mutation sampling algorithm is chosen, and each group
         contains up to 3 members. The default group size is 4.
 
-        **"from_top_to_bottom"** - From Top To Bottom selection
+        **"from_top_to_bottom"** - From Top To Bottom sampling
         algorithm starts at the top of the list and selects genes for mutation.
 
-        **"random"** - Random selection algorithm uses a
+        **"random"** - Random sampling algorithm uses a
         uniform random number generator to select genes for mutation.
-        In this case, selection for the mutation will not
+        In this case, sampling for the mutation will not
         depend on gene cross-diversity.
         """
-        return self._cross_diversity_mutation_gene_selection
+        return self._cross_diversity_mutation_gene_sampling
 
-    @cross_diversity_mutation_gene_selection.setter
-    def cross_diversity_mutation_gene_selection(self, value: str):
-        self._cross_diversity_mutation_gene_selection = ga_utils.prepare_string(value)
+    @cross_diversity_mutation_gene_sampling.setter
+    def cross_diversity_mutation_gene_sampling(self, value: str):
+        self._cross_diversity_mutation_gene_sampling = ga_utils.prepare_string(value)
 
     @property
     def max_attempt_no(self) -> int:
@@ -576,33 +576,33 @@ class GA:
     @property
     def parent_selection(self) -> str:
         """
-        The algorithm for parent selection.
+        The algorithm for sampling algorithm in parent selection.
 
         Supported values:
 
-        **"roulette_wheel"** - Roulette Wheel selection algorithm
+        **"roulette_wheel"** - Roulette Wheel sampling algorithm
         (also known as “Weighted Random Pairing”).
         The probabilities assigned to the chromosomes in the mating pool are
         inversely proportional to their cost. A chromosome with the lowest
         cost has the greatest probability of mating, while the chromosome
         with the highest cost has the lowest probability of mating.
 
-        **"tournament"** - Tournament selection algorithm. It randomly picks small
+        **"tournament"** - Tournament sampling algorithm. It randomly picks small
         subsets (groups) of chromosomes from the mating pool, and chromosomes
         with the lowest cost in subsets become a parent. “tournament”
         can have an additional parameter separated from the “tournament”
         keyword by the comma. The other value represents a group size.
         For example, “tournament,8” means that the tournament
-        parent selection algorithm is chosen, and
+        sampling algorithm for parent selection is chosen, and
         each group contains up to 8 members.
         The default group size is 4.
 
-        **"from_top_to_bottom"** - From Top To Bottom selection
+        **"from_top_to_bottom"** - From Top To Bottom sampling
         algorithm starts at the top of
         the list and pairs the chromosomes two at a time until the top kept chromosomes
         are selected for mating. Thus, the algorithm pairs odd rows with even rows.
 
-        **"random"** - Random selection algorithm uses a uniform random
+        **"random"** - Random sampling algorithm uses a uniform random
         number generator to select chromosomes.
         """
         return self._parent_selection
