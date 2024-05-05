@@ -1,4 +1,5 @@
 import math
+
 from gadapt.operations.population_update.base_population_updater import (
     BasePopulationUpdater,
 )

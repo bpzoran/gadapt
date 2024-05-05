@@ -1,8 +1,8 @@
-from functools import reduce
 import random
+from functools import reduce
 from typing import List
-import numpy as np
 
+import numpy as np
 
 """
 Genetic algorithm utility

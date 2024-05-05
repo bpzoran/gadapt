@@ -1,4 +1,5 @@
 import statistics as stat
+
 from gadapt.ga_model.decision_variable import DecisionVariable
 from gadapt.operations.variable_update.base_variable_updater import BaseVariableUpdater
 

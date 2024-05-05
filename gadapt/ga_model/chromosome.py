@@ -3,8 +3,11 @@ Chromosome
 """
 
 from typing import List
-from gadapt.ga_model.gene import Gene
+
+import gadapt.adapters.string_operation.ga_strings as ga_strings
+import gadapt.ga_model.definitions as definitions
 from gadapt.ga_model.decision_variable import DecisionVariable
+from gadapt.ga_model.gene import Gene
 from gadapt.ga_model.ranking_model import RankingModel
 from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
@@ -12,8 +15,6 @@ from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigr
 from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
     BaseGeneMutationSelector,
 )
-import gadapt.ga_model.definitions as definitions
-import gadapt.adapters.string_operation.ga_strings as ga_strings
 
 
 class Chromosome(RankingModel):

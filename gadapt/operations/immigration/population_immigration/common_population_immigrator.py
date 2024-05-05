@@ -1,4 +1,5 @@
 from typing import List
+
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.operations.immigration.population_immigration.base_population_immigrator import (
     BasePopulationImmigrator,

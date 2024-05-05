@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List
-from gadapt.ga_model.ranking_model import RankingModel
 from typing import TypeVar
+
+from gadapt.ga_model.ranking_model import RankingModel
 
 T = TypeVar("T", bound=RankingModel)
 

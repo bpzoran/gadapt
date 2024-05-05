@@ -3,6 +3,7 @@ Decision variable
 """
 
 import random
+
 import gadapt.ga_model.definitions as definitions
 
 

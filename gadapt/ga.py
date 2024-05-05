@@ -4,15 +4,16 @@ The main genetic algorithm module
 
 import sys
 from typing import List
+
+import gadapt.ga_model.definitions as definitions
+import gadapt.utils.ga_utils as ga_utils
+from gadapt.adapters.validation.common_options_validator import CommonOptionsValidator
 from gadapt.execution.ga_executor import GAExecutor
 from gadapt.factory.ga_base_factory import BaseGAFactory
 from gadapt.factory.ga_factory import GAFactory
 from gadapt.ga_model.decision_variable import DecisionVariable
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.ga_results import GAResults
-import gadapt.utils.ga_utils as ga_utils
-import gadapt.ga_model.definitions as definitions
-from gadapt.adapters.validation.common_options_validator import CommonOptionsValidator
 
 
 class GA:
@@ -21,33 +22,34 @@ class GA:
     """
 
     def __init__(
-        self,
-        cost_function=None,
-        population_size=64,
-        exit_check=definitions.AVG_COST,
-        requested_cost=sys.float_info.max,
-        max_attempt_no=10,
-        parent_selection=definitions.ROULETTE_WHEEL,
-        population_mutation="{0}{1}{2}{3}{4}".format(
-            definitions.COST_DIVERSITY,
-            definitions.PARAM_SEPARATOR,
-            definitions.CROSS_DIVERSITY,
-            definitions.PARAM_SEPARATOR,
-            definitions.PARENT_DIVERSITY,
-        ),
-        number_of_mutation_chromosomes=-1,
-        percentage_of_mutation_chromosomes=10.0,
-        parent_diversity_mutation_chromosome_sampling=definitions.ROULETTE_WHEEL,
-        must_mutate_for_same_parents=True,
-        chromosome_mutation=definitions.CROSS_DIVERSITY,
-        gene_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
-        number_of_mutation_genes=-1,
-        percentage_of_mutation_genes=10.0,
-        cross_diversity_mutation_gene_sampling=definitions.ROULETTE_WHEEL,
-        immigration_number=0,
-        logging=False,
-        timeout=120,
-        factory: BaseGAFactory = None,
+            self,
+            cost_function=None,
+            population_size=64,
+            exit_check=definitions.AVG_COST,
+            requested_cost=sys.float_info.max,
+            max_attempt_no=10,
+            parent_selection=definitions.ROULETTE_WHEEL,
+            crossover=definitions.BLENDING,
+            population_mutation="{0}{1}{2}{3}{4}".format(
+                definitions.COST_DIVERSITY,
+                definitions.PARAM_SEPARATOR,
+                definitions.CROSS_DIVERSITY,
+                definitions.PARAM_SEPARATOR,
+                definitions.PARENT_DIVERSITY,
+            ),
+            number_of_mutation_chromosomes=-1,
+            percentage_of_mutation_chromosomes=10.0,
+            parent_diversity_mutation_chromosome_sampling=definitions.ROULETTE_WHEEL,
+            must_mutate_for_same_parents=True,
+            chromosome_mutation=definitions.CROSS_DIVERSITY,
+            gene_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
+            number_of_mutation_genes=-1,
+            percentage_of_mutation_genes=10.0,
+            cross_diversity_mutation_gene_sampling=definitions.ROULETTE_WHEEL,
+            immigration_number=0,
+            logging=False,
+            timeout=120,
+            factory: BaseGAFactory = None,
     ) -> None:
         """
         The constructor of the GA class accepts all parameters required to
@@ -182,6 +184,7 @@ class GA:
         self.requested_cost = requested_cost
         self.max_attempt_no = max_attempt_no
         self.parent_selection = parent_selection
+        self.crossover = crossover
         self.population_mutation = population_mutation
         self.must_mutate_for_same_parents = must_mutate_for_same_parents
         self.number_of_mutation_chromosomes = number_of_mutation_chromosomes
@@ -248,7 +251,7 @@ class GA:
         if step < 0.000000000000001:
             step = 0.000000000000001
         if (not isinstance(min_value, float) and not isinstance(min_value, int)) or (
-            not isinstance(max_value, float) and not isinstance(max_value, int)
+                not isinstance(max_value, float) and not isinstance(max_value, int)
         ):
             raise Exception("min value, max value and step must be numerical values!")
         decision_variable = DecisionVariable(self._current_dv_id)
@@ -610,6 +613,25 @@ class GA:
     @parent_selection.setter
     def parent_selection(self, value: str):
         self._parent_selection = ga_utils.prepare_string(value)
+
+    @property
+    def crossover(self) -> str:
+        """
+        The crossover algorithm
+
+        Supported values:
+
+        **"blending"** - combines gene values from the two parents into new variable values in offsprings.
+        One value of the offspring variable comes from a combination of the two
+        corresponding values of the parental genes
+
+        **"uniform"** - Genes from parents' chromosomes are combined in a uniform way.
+        """
+        return self._crossover
+
+    @crossover.setter
+    def crossover(self, value: str):
+        self._crossover = ga_utils.prepare_string(value)
 
     @property
     def requested_cost(self) -> float:

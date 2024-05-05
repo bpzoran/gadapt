@@ -9,15 +9,12 @@ from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigr
 from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
     BaseGeneMutationSelector,
 )
-from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCombination
 
 
 class BaseCrossover(ABC):
     """Base Crossover Class
 
     Args:
-        gene_combination (BaseGeneCombination): the algorithm
-        for how genes are to be combined
         mutator (BaseGeneMutationSelector): mutation algorithm to
         be passed to offspring chromosomes
         immigrator (BaseChromosomeImmigrator): immigration algorithm
@@ -27,13 +24,12 @@ class BaseCrossover(ABC):
 
     def __init__(
         self,
-        gene_combination: BaseGeneCombination,
         mutator: BaseGeneMutationSelector,
         immigrator: BaseChromosomeImmigrator,
     ):
-        self._gene_combination = gene_combination
         self._mutator = mutator
         self._immigrator = immigrator
+        self._current_gene_number = -1
         self._mother = None
         self._father = None
         self._offspring1 = None
@@ -94,14 +90,16 @@ class BaseCrossover(ABC):
         self._offspring1.father_id = self._father.chromosome_id
         self._offspring2.father_id = self._father.chromosome_id
 
-    @abstractmethod
     def _get_mother_father_genes(self) -> Tuple[Gene, Gene]:
-        pass
+        if self._current_gene_number == -1:
+            raise Exception("_current_gene_number not set")
+        father_gene = self._father[self._current_gene_number]
+        mother_gene = self._mother[self._current_gene_number]
+        return mother_gene, father_gene
 
+    @abstractmethod
     def _combine(self):
-        if self._gene_combination is None:
-            raise Exception("gene_combination must not be null!")
-        return self._gene_combination.combine(self._mother_gene, self._father_gene)
+        pass
 
     def _increase_generation(
         self

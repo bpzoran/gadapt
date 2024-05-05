@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
+
 import gadapt.ga_model.message_levels as message_levels
 
 

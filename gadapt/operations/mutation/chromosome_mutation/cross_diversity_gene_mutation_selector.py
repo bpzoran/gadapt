@@ -1,12 +1,13 @@
-from gadapt.ga_model.chromosome import Chromosome
 import random
+
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import (
+    BaseGeneMutationRateDeterminator,
+)
 from gadapt.operations.mutation.chromosome_mutation.random_gene_mutation_selector import (
     RandomGeneMutationSelector,
 )
 from gadapt.operations.sampling.base_sampling import BaseSampling
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import (
-    BaseGeneMutationRateDeterminator,
-)
 
 
 class CrossDiversityGeneMutationSelector(RandomGeneMutationSelector):

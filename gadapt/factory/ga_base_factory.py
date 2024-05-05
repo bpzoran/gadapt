@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
 from gadapt.operations.crossover.base_crossover import BaseCrossover
@@ -13,11 +14,7 @@ from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector 
     BaseGeneMutationSelector,
 )
 from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
-from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
-    BaseChromosomeMutationRateDeterminator,
-)
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
-from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCombination
 from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
 
 """
@@ -104,14 +101,6 @@ class BaseGAFactory(ABC):
             self.parent_selector = self._get_parent_selector()
         return self.parent_selector
 
-    def get_gene_combination(self) -> BaseGeneCombination:
-        """
-        Gene Combination Instance
-        """
-        if self.gene_combination is None:
-            self.gene_combination = self._get_gene_combination()
-        return self.gene_combination
-
     def get_exit_checker(self) -> BaseExitChecker:
         """
         Exit Checker Instance
@@ -190,13 +179,6 @@ class BaseGAFactory(ABC):
     def _get_parent_selector(self) -> BaseParentSelector:
         """
         Parent Selector Instance
-        """
-        pass
-
-    @abstractmethod
-    def _get_gene_combination(self) -> BaseGeneCombination:
-        """
-        Gene Combination Instance
         """
         pass
 

@@ -3,10 +3,11 @@ Gene
 """
 
 import math
-from gadapt.ga_model.decision_variable import DecisionVariable
-from gadapt.ga_model.ranking_model import RankingModel
+
 import gadapt.adapters.string_operation.ga_strings as ga_strings
 import gadapt.ga_model.definitions as definitions
+from gadapt.ga_model.decision_variable import DecisionVariable
+from gadapt.ga_model.ranking_model import RankingModel
 
 
 class Gene(RankingModel):

@@ -1,12 +1,13 @@
 import random
+
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
     BaseChromosomeMutationRateDeterminator,
 )
-from gadapt.operations.sampling.base_sampling import BaseSampling
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import (
     BaseChromosomeMutationSelector,
 )
+from gadapt.operations.sampling.base_sampling import BaseSampling
 
 
 class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):

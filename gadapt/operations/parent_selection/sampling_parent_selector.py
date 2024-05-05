@@ -1,4 +1,5 @@
 from typing import List, Tuple
+
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
 from gadapt.operations.sampling.base_sampling import BaseSampling

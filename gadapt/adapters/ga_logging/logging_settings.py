@@ -25,7 +25,7 @@ def init_logging(is_logging: bool):
     if not is_logging:
         logging.disable(logging.INFO)
         return
-    path = os.getcwd() + "\log"
+    path = os.getcwd() + "\\log"
     if not os.path.exists(path):
         os.mkdir(path)
     else:
@@ -50,7 +50,7 @@ def init_logging(is_logging: bool):
                     # print("Unable to rename log file: " + path + "\\" + f)
                     # traceback.print_exc()
                     break
-    logpath = path + "\log.log"
+    logpath = path + "\\log.log"
     logging.basicConfig(filename=logpath, level=logging.INFO)
     logger = logging.getLogger("")
     handler = logging.FileHandler(logpath)

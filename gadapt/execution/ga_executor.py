@@ -1,9 +1,9 @@
-from gadapt.factory.ga_factory import BaseGAFactory
+import gadapt.ga_model.message_levels as message_levels
 from gadapt.adapters.ga_logging.logging_settings import init_logging
+from gadapt.factory.ga_factory import BaseGAFactory
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.ga_results import GAResults
 from gadapt.ga_model.population import Population
-import gadapt.ga_model.message_levels as message_levels
 
 
 class GAExecutor:

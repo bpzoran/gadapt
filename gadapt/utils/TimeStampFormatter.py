@@ -1,5 +1,5 @@
-import logging
 import datetime
+import logging
 
 
 class TimestampFormatter(logging.Formatter):

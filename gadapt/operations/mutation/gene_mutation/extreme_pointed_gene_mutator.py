@@ -1,5 +1,5 @@
 import random
-from gadapt.ga_model.gene import Gene
+
 from gadapt.operations.mutation.gene_mutation.random_gene_mutator import (
     RandomGeneMutator,
 )

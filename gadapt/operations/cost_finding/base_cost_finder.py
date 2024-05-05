@@ -1,6 +1,7 @@
-from abc import ABC, abstractmethod
 import sys
 import traceback
+from abc import ABC, abstractmethod
+
 from gadapt.ga_model.chromosome import Chromosome
 
 

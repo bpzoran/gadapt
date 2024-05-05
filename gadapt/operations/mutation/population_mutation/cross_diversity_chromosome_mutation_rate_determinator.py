@@ -1,8 +1,8 @@
+import gadapt.utils.ga_utils as ga_utils
 from gadapt.ga_model.population import Population
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
     BaseChromosomeMutationRateDeterminator,
 )
-import gadapt.utils.ga_utils as ga_utils
 
 
 class CrossDiversityChromosomeMutationRateDeterminator(

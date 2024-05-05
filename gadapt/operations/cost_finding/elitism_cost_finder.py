@@ -1,9 +1,10 @@
 import logging
 import math
 from typing import List
-from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
+
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.population import Population
+from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
 
 
 class ElitismCostFinder(BaseCostFinder):

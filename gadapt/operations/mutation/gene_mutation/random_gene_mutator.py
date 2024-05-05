@@ -1,4 +1,3 @@
-from gadapt.ga_model.gene import Gene
 from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 
 

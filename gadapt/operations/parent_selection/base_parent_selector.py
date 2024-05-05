@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
+
 from gadapt.ga_model.chromosome import Chromosome
 
 

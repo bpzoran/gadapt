@@ -1,10 +1,8 @@
 import math
-from gadapt.ga_model.gene import Gene
+
 from gadapt.utils.ga_utils import (
     normally_distributed_random,
 )
-import numpy as np
-
 from operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 
 

@@ -129,6 +129,11 @@ Supported values:
 - *"tournament"* - Tournament selection algorithm. It randomly picks small subsets (groups) of chromosomes from the mating pool, and chromosomes with the lowest cost in subsets become a parent. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,8"* means that the tournament parent selection algorithm is chosen, and each group contains up to 8 members. The default group size is 4.  
 - *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and pairs the chromosomes two at a time until the top kept chromosomes are selected for mating. Thus, the algorithm pairs odd rows with even rows.  
 - *"random"* - Random selection algorithm uses a uniform random number generator to select chromosomes.  
+
+**crossover**=*"blending"* - The algorithm for parent selection. If the Parent Diversity mutation is used, blending crossover will be used, of the choice of this parameter.
+Supported values:
+- *"blending"* - Blending crossover combines gene values from the two parents into new variable values in offsprings. One value of the offspring variable comes from a combination of the two corresponding values of the parental genes  
+- *"uniform"* - Uniform crossover combines chromosomes in a uniform way.
     
 **percentage_of_mutation_chromosomes**=*10.0* - The percentage of mutated chromosomes in the population. This value is applied to the *population_size* value and rounded to an integer value, giving the number of mutation chromosomes. For example, if *population_size* has a value of 32, and *percentage_of_mutation_chromosomes* has a value of 10, the number of mutation chromosomes will be 3. The calculated value is an upper bound - the actual number of mutated chromosomes can vary from 1 to the calculated value. *percentage_of_mutation_chromosomes* only applies if *number_of_mutation_chromosomes* does not have a valid integer value equal to or higher than 0.
 

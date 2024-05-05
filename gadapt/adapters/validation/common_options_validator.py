@@ -1,5 +1,5 @@
-from gadapt.adapters.validation.base_options_validator import BaseOptionsValidator
 import gadapt.ga_model.definitions as definitions
+from gadapt.adapters.validation.base_options_validator import BaseOptionsValidator
 
 
 class CommonOptionsValidator(BaseOptionsValidator):

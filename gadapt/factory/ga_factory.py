@@ -1,17 +1,18 @@
 from typing import Tuple
 
+import gadapt.ga_model.definitions as definitions
 from gadapt.factory.ga_base_factory import BaseGAFactory
+from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
+from gadapt.operations.cost_finding.elitism_cost_finder import ElitismCostFinder
+from gadapt.operations.crossover.base_crossover import BaseCrossover
+from gadapt.operations.crossover.blending_parent_diversity_crossover import (
+    BlendingParentDiversityCrossover,
+)
 from gadapt.operations.exit_check.avg_cost_exit_checker import AvgCostExitChecker
 from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
 from gadapt.operations.exit_check.min_cost_exit_checker import MinCostExitChecker
 from gadapt.operations.exit_check.requested_cost_exit_checker import (
     RequestedCostExitChecker,
-)
-from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
-from gadapt.operations.cost_finding.elitism_cost_finder import ElitismCostFinder
-from gadapt.operations.crossover.base_crossover import BaseCrossover
-from gadapt.operations.crossover.uniform_parent_diversity_crossover import (
-    UniformParentDiversityCrossover,
 )
 from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
@@ -28,11 +29,26 @@ from gadapt.operations.immigration.population_immigration.common_population_immi
 from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
     BaseGeneMutationSelector,
 )
+from gadapt.operations.mutation.chromosome_mutation.composed_gene_mutation_rate_determinator import (
+    ComposedGeneMutationRateDeterminator,
+)
+from gadapt.operations.mutation.chromosome_mutation.composed_gene_mutation_selector import (
+    ComposedGeneMutationSelector,
+)
+from gadapt.operations.mutation.chromosome_mutation.cross_diversity_gene_mutation_rate_determinator import (
+    CrossDiversityGeneMutationRateDeterminator,
+)
 from gadapt.operations.mutation.chromosome_mutation.cross_diversity_gene_mutation_selector import (
     CrossDiversityGeneMutationSelector,
 )
+from gadapt.operations.mutation.chromosome_mutation.random_gene_mutation_rate_determinator import (
+    RandomGeneMutationRateDeterminator,
+)
 from gadapt.operations.mutation.chromosome_mutation.random_gene_mutation_selector import (
     RandomGeneMutationSelector,
+)
+from gadapt.operations.mutation.chromosome_mutation.strict_gene_mutation_rate_determinator import (
+    StrictGeneMutationRateDeterminator,
 )
 from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 from gadapt.operations.mutation.gene_mutation.extreme_pointed_gene_mutator import (
@@ -43,6 +59,12 @@ from gadapt.operations.mutation.gene_mutation.normal_distribution_gene_mutator i
 )
 from gadapt.operations.mutation.gene_mutation.random_gene_mutator import (
     RandomGeneMutator,
+)
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import (
+    BaseChromosomeMutationSelector,
+)
+from gadapt.operations.mutation.population_mutation.composed_chromosome_mutation_rate_determinator import (
+    ComposedChromosomeMutationRateDeterminator,
 )
 from gadapt.operations.mutation.population_mutation.composed_chromosome_mutation_selector import (
     ComposedChromosomeMutationSelector,
@@ -56,8 +78,14 @@ from gadapt.operations.mutation.population_mutation.cross_diversity_chromosome_m
 from gadapt.operations.mutation.population_mutation.parent_diversity_chromosome_mutation_selector import (
     ParentDiversityChromosomeMutationSelector,
 )
+from gadapt.operations.mutation.population_mutation.random_chromosome_mutation_rate_determinator import (
+    RandomChromosomeMutationRateDeterminator,
+)
 from gadapt.operations.mutation.population_mutation.random_chromosome_mutation_selector import (
     RandomChromosomeMutationSelector,
+)
+from gadapt.operations.mutation.population_mutation.strict_chromosome_mutation_rate_determinator import (
+    StrictChromosomeMutationRateDeterminator,
 )
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
 from gadapt.operations.parent_selection.sampling_parent_selector import (
@@ -70,41 +98,11 @@ from gadapt.operations.sampling.from_top_to_bottom_sampling import (
 from gadapt.operations.sampling.random_sampling import RandomSampling
 from gadapt.operations.sampling.roulette_wheel_sampling import RouletteWheelSampling
 from gadapt.operations.sampling.tournament_sampling import TournamentSampling
-from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCombination
-from gadapt.operations.gene_combination.blending_gene_combination import (
-    BlendingGeneCombination,
-)
 from gadapt.operations.variable_update.common_variable_updater import (
     CommonVariableUpdater,
 )
-import gadapt.ga_model.definitions as definitions
-from gadapt.operations.mutation.chromosome_mutation.composed_gene_mutation_rate_determinator import (
-    ComposedGeneMutationRateDeterminator,
-)
-from gadapt.operations.mutation.chromosome_mutation.composed_gene_mutation_selector import (
-    ComposedGeneMutationSelector,
-)
-from gadapt.operations.mutation.chromosome_mutation.cross_diversity_gene_mutation_rate_determinator import (
-    CrossDiversityGeneMutationRateDeterminator,
-)
-from gadapt.operations.mutation.chromosome_mutation.random_gene_mutation_rate_determinator import (
-    RandomGeneMutationRateDeterminator,
-)
-from gadapt.operations.mutation.chromosome_mutation.strict_gene_mutation_rate_determinator import (
-    StrictGeneMutationRateDeterminator,
-)
-from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import (
-    BaseChromosomeMutationSelector,
-)
-from gadapt.operations.mutation.population_mutation.composed_chromosome_mutation_rate_determinator import (
-    ComposedChromosomeMutationRateDeterminator,
-)
-from gadapt.operations.mutation.population_mutation.random_chromosome_mutation_rate_determinator import (
-    RandomChromosomeMutationRateDeterminator,
-)
-from gadapt.operations.mutation.population_mutation.strict_chromosome_mutation_rate_determinator import (
-    StrictChromosomeMutationRateDeterminator,
-)
+from operations.crossover.blending_crossover import BlendingCrossover
+from operations.crossover.uniform_crossover import UniformCrossover
 from operations.mutation.gene_mutation.composed_gene_mutator import ComposedGeneMutator
 from operations.mutation.gene_mutation.normal_distribution_cross_diversity_gene_mutator import \
     NormalDistributionCrossDiversityGeneMutator
@@ -434,12 +432,6 @@ class GAFactory(BaseGAFactory):
             return RandomSampling()
         return RouletteWheelSampling()
 
-    def _get_gene_combination(self) -> BaseGeneCombination:
-        """
-        Gene Combination Instance
-        """
-        return BlendingGeneCombination()
-
     def _get_exit_checker(self) -> BaseExitChecker:
         """
         Exit Checker Instance
@@ -454,11 +446,30 @@ class GAFactory(BaseGAFactory):
         """
         Crossover Instance
         """
-        return UniformParentDiversityCrossover(
-            self.get_gene_combination(),
+        mutator_strings = [
+            ms.strip()
+            for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
+        ]
+        if definitions.PARENT_DIVERSITY in mutator_strings:
+            return BlendingParentDiversityCrossover(
+                self.get_gene_mutation_selector(),
+                self.get_chromosome_immigrator(),
+            )
+        if self._ga.crossover == definitions.BLENDING:
+            return BlendingCrossover(
+                self.get_gene_mutation_selector(),
+                self.get_chromosome_immigrator(),
+            )
+        if self._ga.crossover == definitions.UNIFORM:
+            return UniformCrossover(
+                self.get_gene_mutation_selector(),
+                self.get_chromosome_immigrator(),
+            )
+        return BlendingParentDiversityCrossover(
             self.get_gene_mutation_selector(),
             self.get_chromosome_immigrator(),
         )
+
 
     def _get_variable_updater(self):
         """

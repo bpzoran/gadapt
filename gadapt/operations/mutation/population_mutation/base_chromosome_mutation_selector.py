@@ -1,7 +1,8 @@
-from abc import ABC, abstractmethod
 import math
 import random
+from abc import ABC, abstractmethod
 from typing import List
+
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
     BaseChromosomeMutationRateDeterminator,

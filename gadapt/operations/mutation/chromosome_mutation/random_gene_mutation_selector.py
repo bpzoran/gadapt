@@ -1,11 +1,11 @@
-from gadapt.ga_model.chromosome import Chromosome
 import random
 
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
-    BaseGeneMutationSelector,
-)
+from gadapt.ga_model.chromosome import Chromosome
 from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import (
     BaseGeneMutationRateDeterminator,
+)
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
+    BaseGeneMutationSelector,
 )
 
 

@@ -1,7 +1,6 @@
 import random
 from typing import List
 
-from ga_model.gene import Gene
 from operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 
 

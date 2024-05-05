@@ -1,32 +1,26 @@
-from typing import Tuple
-from gadapt.ga_model.chromosome import Chromosome
-from gadapt.operations.crossover.base_crossover import BaseCrossover
-from gadapt.ga_model.gene import Gene
 from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
     BaseChromosomeImmigrator,
 )
 from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
     BaseGeneMutationSelector,
 )
-from gadapt.operations.gene_combination.base_gene_combination import BaseGeneCombination
 from operations.crossover.uniform_crossover import UniformCrossover
 from utils import ga_utils
 
 
-class UniformParentDiversityCrossover(UniformCrossover):
+class BlendingParentDiversityCrossover(UniformCrossover):
     """
-    Uniform Crossover. Genes from parents' chromosomes are combined in a uniform way.
+    Blending Crossover. Genes from parents' chromosomes are combined in a blending way.
     Calculates diversity of parents and save it to chromosomes.
     """
 
     def __init__(
             self,
-            var_combination: BaseGeneCombination,
             mutator: BaseGeneMutationSelector,
             immigrator: BaseChromosomeImmigrator,
     ):
-        super(UniformParentDiversityCrossover, self).__init__(
-            var_combination, mutator, immigrator
+        super(BlendingParentDiversityCrossover, self).__init__(
+            mutator, immigrator
         )
         self._genetic_diversity = None
 

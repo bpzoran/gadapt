@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from gadapt.ga_model.gene import Gene
 
 
