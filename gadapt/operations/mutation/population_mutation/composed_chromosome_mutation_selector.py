@@ -31,15 +31,13 @@ class ComposedChromosomeMutationSelector(BaseChromosomeMutationSelector):
         if len(self.selectors) > 1:
             random.shuffle(self.selectors)
         nmc = 0
-        limit_number_of_mutation_chromosomes = self._chromosome_mutation_rate_determinator.get_number_of_mutation_chromosomes(
-            self.population, self.number_of_mutated_chromosomes
-        )
+        limit_number_of_mutation_chromosomes = self.number_of_mutation_chromosomes
         if limit_number_of_mutation_chromosomes == 0:
             return 0
         for m in self.selectors:
             if nmc < limit_number_of_mutation_chromosomes:
                 m.population = self.population
-                m.number_of_mutated_chromosomes = (
+                m.number_of_mutation_chromosomes = (
                     limit_number_of_mutation_chromosomes - nmc
                 )
                 mc = m._mutate_population()

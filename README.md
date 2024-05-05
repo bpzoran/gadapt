@@ -290,17 +290,17 @@ class BottomMutationSelector(BaseChromosomeMutationSelector):
     existing unallocated chromosomes sorted by the cost function value
     """
 
-    def _mutate_population(self, population, number_of_mutation_chromosomes):
-        if population is None:
+    def _mutate_population(self):
+        if self.population is None:
             raise Exception("population must not be None")
         unallocated_chromosomes = self._get_unallocated_chromosomes(
-            population, lambda chrom: (population.options.cost_function([g.variable_value for g in chrom]))
+            lambda chrom: (self.population.options.cost_function([g.variable_value for g in chrom]))
         )
         chromosomes_for_mutation = unallocated_chromosomes[
-            len(unallocated_chromosomes) - number_of_mutation_chromosomes:
+            len(unallocated_chromosomes) - self.number_of_mutation_chromosomes:
         ]
         for c in chromosomes_for_mutation:
-            c.mutate(population.options.number_of_mutation_genes)
+            c.mutate(self.population.options.number_of_mutation_genes)
 
 
 def some_func(args):

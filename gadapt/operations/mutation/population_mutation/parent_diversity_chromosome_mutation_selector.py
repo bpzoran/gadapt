@@ -29,9 +29,6 @@ class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
     def _mutate_population(self):
         if self.population is None:
             raise Exception("Population must not be null")
-        number_of_mutation_chromosomes = self._chromosome_mutation_rate_determinator.get_number_of_mutation_chromosomes(
-            self.population, self.number_of_mutated_chromosomes
-        )
         unallocated_chromosomes: list[Chromosome] = self._get_unallocated_chromosomes(
             self._sort_key_parent_diversity_random
         )
@@ -41,7 +38,9 @@ class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
                 c for c in unallocated_chromosomes if c.parent_diversity == 0
             ]
         chromosomes_for_mutation_count = len(chromosomes_for_mutation)
-        rest_number = number_of_mutation_chromosomes - chromosomes_for_mutation_count
+        rest_number = (
+            self.number_of_mutation_chromosomes - chromosomes_for_mutation_count
+        )
         if rest_number > 0:
             if self.population.options.must_mutate_for_same_parents:
                 chromosomes_for_mutation = [

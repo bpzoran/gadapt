@@ -28,7 +28,7 @@ class BaseChromosomeMutationSelector(ABC):
             chromosome_mutation_rate_determinator
         )
         self.population = None
-        self.number_of_mutated_chromosomes = -1
+        self.number_of_mutation_chromosomes = -1
 
     def mutate(self, population):
         """
@@ -37,8 +37,11 @@ class BaseChromosomeMutationSelector(ABC):
             population: Population to mutate
         """
         self.population = population
-        self.number_of_mutated_chromosomes = (
+        max_number_of_mutated_chromosomes = (
             population.options.number_of_mutation_chromosomes
+        )
+        self.number_of_mutation_chromosomes = self._chromosome_mutation_rate_determinator.get_number_of_mutation_chromosomes(
+            self.population, max_number_of_mutated_chromosomes
         )
         self._mutate_population()
 
