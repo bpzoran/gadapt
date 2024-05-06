@@ -109,7 +109,7 @@ ga.timeout=3600
 # Parameters description
 **cost_function**=*None* - Custom function for the cost calculation (fitness). The optimisation goal is minimising the output of the cost function. *cost_function* must be the function with one argument - a dictionary of values, where the key is an index (the ordinal of adding parameters) and the key is the parameter's value to be optimised. When adding parameters, there should be as many parameters as the function uses. The *cost_function* is the only mandatory parameter.
 
-**population_size**=*64* - Number of chromosomes in the population.
+**population_size**=*32* - Number of chromosomes in the population.
 
 **exit_check**=*"avg_cost"* - A criteria for the exit for the genetic algorithm.  
 Supported values:
@@ -117,7 +117,7 @@ Supported values:
 - *"min_cost"* - The optimisation exit is triggered when the minimal cost in the population is not improved in the specified number of generations  
 - *"requested"* - The optimisation exit is triggered when the requested value reached
     
-**max_attempt_no**=*10* - This parameter only takes place when *exit_check* has value *"avg_cost"* or *"min_cost"*. It determines the number of generations in which there is no improvement in the average/minimal cost.
+**max_attempt_no**=*2* - This parameter only takes place when *exit_check* has value *"avg_cost"* or *"min_cost"*. It determines the number of generations in which there is no improvement in the average/minimal cost.
 
 **requested_cost**=*sys.float_info.max* - This parameter only takes place when *exit_check* has value *"requested"*. It determines the requested value which causes the exit from the genetic algorithm
 
@@ -135,11 +135,11 @@ Supported values:
 - *"blending"* - Blending crossover combines gene values from the two parents into new variable values in offsprings. One value of the offspring variable comes from a combination of the two corresponding values of the parental genes  
 - *"uniform"* - Uniform crossover combines chromosomes in a uniform way.
     
-**percentage_of_mutation_chromosomes**=*10.0* - The percentage of mutated chromosomes in the population. This value is applied to the *population_size* value and rounded to an integer value, giving the number of mutation chromosomes. For example, if *population_size* has a value of 32, and *percentage_of_mutation_chromosomes* has a value of 10, the number of mutation chromosomes will be 3. The calculated value is an upper bound - the actual number of mutated chromosomes can vary from 1 to the calculated value. *percentage_of_mutation_chromosomes* only applies if *number_of_mutation_chromosomes* does not have a valid integer value equal to or higher than 0.
+**percentage_of_mutation_chromosomes**=*50.0* - The percentage of mutated chromosomes in the population. This value is applied to the *population_size* value and rounded to an integer value, giving the number of mutation chromosomes. For example, if *population_size* has a value of 32, and *percentage_of_mutation_chromosomes* has a value of 10, the number of mutation chromosomes will be 3. The calculated value is an upper bound - the actual number of mutated chromosomes can vary from 1 to the calculated value. *percentage_of_mutation_chromosomes* only applies if *number_of_mutation_chromosomes* does not have a valid integer value equal to or higher than 0.
 
 **number_of_mutation_chromosomes**=*-1* - The number of mutation chromosomes in the population. In case it's value is equal to or higher than 0, it overrides *percentage_of_mutation_chromosomes*. This value is the upper bound - the actual number of mutated chromosomes can vary from 1 to *number_of_mutation_chromosomes*.
 
-**percentage_of_mutations_genes**=*10* - The percentage of mutated genes in each chromosome. It applies to the chromosome size (number of genes in each chromosome), and the calculated value rounds to an integer value. The calculated value is the upper bound - the actual number of mutated genes can vary from 1 to the calculated value. *percentage_of_mutations_genes* only applies if *number_of_mutations_genes* does not have a valid integer value equal to or higher than 0.
+**percentage_of_mutation_genes**=*20* - The percentage of mutated genes in each chromosome. It applies to the chromosome size (number of genes in each chromosome), and the calculated value rounds to an integer value. The calculated value is the upper bound - the actual number of mutated genes can vary from 1 to the calculated value. *percentage_of_mutations_genes* only applies if *number_of_mutations_genes* does not have a valid integer value equal to or higher than 0.
 
 **number_of_mutation_genes**=*-1* - The number of mutated genes in each chromosome. In case it's value is equal to or higher than 0, it overrides *percentage_of_mutations_genes*. This value is the upper bound - the number of mutated genes can vary from 1 to *number_of_mutation_genes*.
 
@@ -160,7 +160,7 @@ Supported values:
     
 **must_mutate_for_same_parents**=*True* - Indicates if completely the same parents must influence mutation for their children. In other words, each child will be mutated if it has parents with a diversity value of 0. If *must_mutate_for_same_parents* has the value True, the number of mutated chromosomes can outreach value determined by *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes*
 
-**chromosome_mutation**=*"cross_diversity"* - The type of gene selection in chromosomes for mutation  
+**chromosome_mutation**=*"cross_diversity,random"* - The type of gene selection in chromosomes for mutation  
 Supported values:
 - *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this decision variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_sampling* parameter.  
 - *"random"* - Genes are randomly selected for the mutation
