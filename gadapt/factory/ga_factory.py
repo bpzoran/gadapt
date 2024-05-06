@@ -450,7 +450,8 @@ class GAFactory(BaseGAFactory):
             ms.strip()
             for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        if definitions.PARENT_DIVERSITY in mutator_strings:
+        population_mutation_selection_strings = [value for value in mutator_strings if value in definitions.POPULATION_MUTATION_SELECTION_STRINGS]
+        if not population_mutation_selection_strings or definitions.PARENT_DIVERSITY in mutator_strings:
             return BlendingParentDiversityCrossover(
                 self.get_gene_mutation_selector(),
                 self.get_chromosome_immigrator(),
