@@ -1,3 +1,6 @@
+import random
+
+from ga_model.chromosome import Chromosome
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
     BaseChromosomeMutationRateDeterminator,
 )
@@ -31,3 +34,6 @@ class RandomChromosomeMutationSelector(BaseChromosomeMutationSelector):
         for c in chromosomes_for_mutation:
             c.mutate(number_of_mutation_genes)
         return mutation_chromosome_number
+
+    def _sort_key_random(self, _: Chromosome):
+        return random.random()

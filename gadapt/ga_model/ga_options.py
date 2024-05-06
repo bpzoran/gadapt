@@ -35,13 +35,12 @@ class GAOptions:
         ):
             self._number_of_mutation_chromosomes = ga.number_of_mutation_chromosomes
         elif (
-            (ga.percentage_of_mutation_chromosomes is not None)
-            and isinstance(ga.percentage_of_mutation_chromosomes, float)
-            and ga.percentage_of_mutation_chromosomes >= 0.0
-            and ga.percentage_of_mutation_chromosomes <= 100
+                (ga.percentage_of_mutation_chromosomes is not None)
+                and isinstance(ga.percentage_of_mutation_chromosomes, float)
+                and 0.0 <= ga.percentage_of_mutation_chromosomes <= 100
         ):
             nomc = round(
-                self.population_size * (ga.percentage_of_mutation_chromosomes / 100)
+                (self.population_size / 2) * (ga.percentage_of_mutation_chromosomes / 100)
             )
             while nomc >= self.population_size // 2 - self.immigration_number:
                 nomc -= 1
@@ -61,10 +60,9 @@ class GAOptions:
         ):
             self._number_of_mutation_genes = ga.number_of_mutation_genes
         elif (
-            (ga.percentage_of_mutation_genes is not None)
-            and isinstance(ga.percentage_of_mutation_genes, float)
-            and ga.percentage_of_mutation_genes >= 0.0
-            and ga.percentage_of_mutation_genes <= 100
+                (ga.percentage_of_mutation_genes is not None)
+                and isinstance(ga.percentage_of_mutation_genes, float)
+                and 0.0 <= ga.percentage_of_mutation_genes <= 100
         ):
             self._number_of_mutation_genes = round(
                 float(len(self._decision_variables))

@@ -1,5 +1,4 @@
 import math
-import random
 from abc import ABC, abstractmethod
 from typing import List
 
@@ -62,6 +61,3 @@ class BaseChromosomeMutationSelector(ABC):
         if sort_key_function is not None:
             lst.sort(key=sort_key_function)
         return lst
-
-    def _sort_key_random(self, c: Chromosome):
-        return random.random()

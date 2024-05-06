@@ -42,7 +42,7 @@ class ComposedGeneMutationSelector(BaseGeneMutationSelector):
             )
         )
         if number_of_mutation_genes == 0:
-            return 0
+            number_of_mutation_genes = 1
         for s in self.selectors:
             if nmg < number_of_mutation_genes:
                 s.number_of_mutation_genes = number_of_mutation_genes - nmg

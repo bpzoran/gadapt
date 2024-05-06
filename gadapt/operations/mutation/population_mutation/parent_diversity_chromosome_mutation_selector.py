@@ -43,14 +43,17 @@ class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
         )
         if rest_number > 0:
             if self.population.options.must_mutate_for_same_parents:
-                chromosomes_for_mutation = [
+                other_chromosomes_for_mutation = [
                     c for c in unallocated_chromosomes if (not c.parent_diversity == 0)
                 ]
             else:
-                chromosomes_for_mutation = [c for c in unallocated_chromosomes]
-            chromosomes_for_mutation = self._sampling.get_sample(
-                chromosomes_for_mutation, rest_number, lambda c: c.parent_diversity
+                other_chromosomes_for_mutation = [c for c in unallocated_chromosomes]
+            other_chromosomes_for_mutation = self._sampling.get_sample(
+                other_chromosomes_for_mutation,
+                rest_number,
+                lambda c: c.parent_diversity,
             )
+            chromosomes_for_mutation.extend(other_chromosomes_for_mutation)
         for c in chromosomes_for_mutation:
             c.mutate(self.population.options.number_of_mutation_genes)
         return len(chromosomes_for_mutation)

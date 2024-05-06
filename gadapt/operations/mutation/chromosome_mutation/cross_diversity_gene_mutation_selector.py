@@ -24,7 +24,7 @@ class CrossDiversityGeneMutationSelector(RandomGeneMutationSelector):
 
     def _mutate_chromosome(self):
         if self.number_of_mutation_genes == 0:
-            return
+            self.number_of_mutation_genes = 1
         x_genes = [g for g in self.chromosome]
         x_genes.sort(key=lambda g: -g.decision_variable.cross_diversity_coefficient)
         number_of_mutation_genes = (
@@ -35,7 +35,7 @@ class CrossDiversityGeneMutationSelector(RandomGeneMutationSelector):
         if number_of_mutation_genes > len(x_genes):
             number_of_mutation_genes = len(x_genes)
         if number_of_mutation_genes == 0:
-            max_number_of_mutation_genes = 0
+            max_number_of_mutation_genes = 1
         else:
             max_number_of_mutation_genes = random.randint(1, number_of_mutation_genes)
         genes_for_mutation = self._sampling.get_sample(
