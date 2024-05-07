@@ -103,6 +103,7 @@ from gadapt.operations.variable_update.common_variable_updater import (
 )
 from operations.crossover.blending_crossover import BlendingCrossover
 from operations.crossover.uniform_crossover import UniformCrossover
+from operations.exit_check.number_of_generations_exit_checker import NumberOfGenerationsExitChecker
 from operations.mutation.gene_mutation.composed_gene_mutator import ComposedGeneMutator
 from operations.mutation.gene_mutation.normal_distribution_cross_diversity_gene_mutator import \
     NormalDistributionCrossDiversityGeneMutator
@@ -440,6 +441,8 @@ class GAFactory(BaseGAFactory):
             return AvgCostExitChecker(self._ga.max_attempt_no)
         if self._ga.exit_check == definitions.MIN_COST:
             return MinCostExitChecker(self._ga.max_attempt_no)
+        if self._ga.exit_check == definitions.GENERATIONS:
+            return NumberOfGenerationsExitChecker(self._ga.number_of_generations)
         return RequestedCostExitChecker(self._ga.requested_cost)
 
     def _get_crossover(self) -> BaseCrossover:

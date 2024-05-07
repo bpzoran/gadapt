@@ -27,6 +27,7 @@ class GA:
             population_size=32,
             exit_check=definitions.AVG_COST,
             requested_cost=sys.float_info.max,
+            number_of_generations=200,
             max_attempt_no=2,
             parent_selection=definitions.ROULETTE_WHEEL,
             crossover=definitions.BLENDING,
@@ -74,6 +75,10 @@ class GA:
             requested_cost: This parameter only takes place when exit_check
             has value “requested”. It determines the requested value
             which causes the exit from the genetic algorithm
+
+            number_of_generations: This parameter only takes place when exit_check
+            has value “generations”. It determines the number of generations
+            after which the genetic algorithm exits
 
             max_attempt_no: This parameter only takes place when exit_check
             has value “avg_cost” or “min_cost”. It determines the number of
@@ -182,6 +187,7 @@ class GA:
         self.population_size = population_size
         self.exit_check = exit_check
         self.requested_cost = requested_cost
+        self.number_of_generations = number_of_generations
         self.max_attempt_no = max_attempt_no
         self.parent_selection = parent_selection
         self.crossover = crossover
@@ -575,6 +581,19 @@ class GA:
     @exit_check.setter
     def exit_check(self, value: str):
         self._exit_check = ga_utils.prepare_string(value)
+
+    @property
+    def number_of_generations(self) -> float:
+        """
+        This parameter only takes place when exit_check
+        has value “generations”. It determines the number of generations
+        after which the genetic algorithm exits
+        """
+        return self._number_of_generations
+
+    @number_of_generations.setter
+    def number_of_generations(self, value: float):
+        self._number_of_generations = ga_utils.try_get_float(value)
 
     @property
     def parent_selection(self) -> str:

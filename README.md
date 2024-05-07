@@ -116,10 +116,13 @@ Supported values:
 - *"avg_cost"* - The optimisation exit is triggered when the average cost of the upper half of the population is not improved in the specified number of generations  
 - *"min_cost"* - The optimisation exit is triggered when the minimal cost in the population is not improved in the specified number of generations  
 - *"requested"* - The optimisation exit is triggered when the requested value reached
+- *"generations"* - The optimisation exit requested number of generations defined by "number_of_generations" parameter is reached
     
 **max_attempt_no**=*2* - This parameter only takes place when *exit_check* has value *"avg_cost"* or *"min_cost"*. It determines the number of generations in which there is no improvement in the average/minimal cost.
 
 **requested_cost**=*sys.float_info.max* - This parameter only takes place when *exit_check* has value *"requested"*. It determines the requested value which causes the exit from the genetic algorithm
+
+**number_of_generations**=*200* - This parameter only takes place when exit_check has value “generations”. It determines the number of generations after which the genetic algorithm exits
 
 **timeout**=*120* - A number of seconds after which the genetic algorithm optimisation will exit, regardless of whether *exit_check* criteria is reached.
 
