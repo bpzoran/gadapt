@@ -341,11 +341,12 @@ class Population:
         Mates chromosomes
         """
         chromosome_pairs = self.select_mates()
-        for chromosome1, chromosome2 in chromosome_pairs:
-            offspring1, offspring2 = self.crossover.mate(
-                chromosome1, chromosome2, self.population_generation
-            )
-            self.add_chromosomes((offspring1, offspring2))
+        while len(self) < self.options.population_size:
+            for chromosome1, chromosome2 in chromosome_pairs:
+                offspring1, offspring2 = self.crossover.mate(
+                    chromosome1, chromosome2, self.population_generation
+                )
+                self.add_chromosomes((offspring1, offspring2))
         current_len = len(self)
         chromosome_surplus = current_len - self.options.population_size
         if chromosome_surplus > 0:
@@ -396,7 +397,8 @@ class Population:
             chromosomes (Tuple[Chromosome]): chromosomes to add
         """
         for c in chromosomes:
-            self.add_chromosome(c)
+            if len(chromosomes) < self.options.population_size:
+                self.add_chromosome(c)
 
     def add_new_chromosome(self):
         """
