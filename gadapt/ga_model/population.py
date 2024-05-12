@@ -385,7 +385,8 @@ class Population:
             chromosomes (Tuple[Chromosome]): chromosomes to add
         """
         for c in chromosomes:
-            self.add_chromosome(c)
+            if len(chromosomes) < self.options.population_size:
+                self.add_chromosome(c)
 
     def add_new_chromosome(self):
         """
