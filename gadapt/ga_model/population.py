@@ -1,7 +1,7 @@
 """
 Population
 """
-
+import math
 from datetime import datetime
 from typing import List, Tuple
 
@@ -346,6 +346,17 @@ class Population:
                 chromosome1, chromosome2, self.population_generation
             )
             self.add_chromosomes((offspring1, offspring2))
+        current_len = len(self)
+        chromosome_surplus = current_len - self.options.population_size
+        if chromosome_surplus > 0:
+            sorted_by_cost_value = sorted(self, key=lambda chrom: chrom.cost_value, reverse=True)
+            i = 0
+            for c in sorted_by_cost_value:
+                if i >= chromosome_surplus:
+                    break
+                if not math.isnan(c.cost_value):
+                    self.chromosomes.remove(c)
+
 
     def mutate(self):
         """
@@ -385,8 +396,7 @@ class Population:
             chromosomes (Tuple[Chromosome]): chromosomes to add
         """
         for c in chromosomes:
-            if len(chromosomes) < self.options.population_size:
-                self.add_chromosome(c)
+            self.add_chromosome(c)
 
     def add_new_chromosome(self):
         """

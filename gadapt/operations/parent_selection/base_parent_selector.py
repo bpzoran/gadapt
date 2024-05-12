@@ -32,12 +32,13 @@ class BaseParentSelector(ABC):
         if num_of_crossover_parents > working_chromosomes_len:
             num_of_crossover_parents = working_chromosomes_len
         working_chromosomes = working_chromosomes[:num_of_crossover_parents]
+        working_chromosomes_len = len(working_chromosomes)
         random_number_for_reserve = random.randint(0, working_chromosomes_len - 1)
         reserve_chromosome = working_chromosomes[random_number_for_reserve]
         list_of_mates: List[Tuple[Chromosome, Chromosome]] = []
-        while len(working_chromosomes) > 1:
+        while len(working_chromosomes) > 0:
             c1 = working_chromosomes.pop(0)
-            if len(working_chromosomes) > 1:
+            if len(working_chromosomes) > 0:
                 c2 = working_chromosomes.pop(0)
             else:
                 c2 = reserve_chromosome
