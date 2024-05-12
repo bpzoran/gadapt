@@ -10,7 +10,6 @@ class CommonVariableUpdater(BaseVariableUpdater):
     """
 
     def _update_variables(self):
-
         def scale_values(dv: DecisionVariable, values):
             scaled_values = []
             if dv.min_value == dv.max_value:

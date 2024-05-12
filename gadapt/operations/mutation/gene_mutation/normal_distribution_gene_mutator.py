@@ -26,14 +26,21 @@ class NormalDistributionGeneMutator(BaseGeneMutator):
         curr_value = self.gene.variable_value
         if math.isnan(curr_value):
             curr_value = self.gene.decision_variable.make_random_value()
-        decision_variable_range = self.gene.decision_variable.max_value - self.gene.decision_variable.min_value
-        mean = (curr_value - self.gene.decision_variable.min_value) / decision_variable_range
+        decision_variable_range = (
+            self.gene.decision_variable.max_value
+            - self.gene.decision_variable.min_value
+        )
+        mean = (
+            curr_value - self.gene.decision_variable.min_value
+        ) / decision_variable_range
         normal_distribution_random_value = normally_distributed_random(
             mean, self._calculate_normal_distribution_standard_deviation(), 0, 1
         )
         number_of_steps = round(
-            (normal_distribution_random_value * decision_variable_range) / self.gene.decision_variable.step
+            (normal_distribution_random_value * decision_variable_range)
+            / self.gene.decision_variable.step
         )
         return (
-                self.gene.decision_variable.min_value + number_of_steps * self.gene.decision_variable.step
+            self.gene.decision_variable.min_value
+            + number_of_steps * self.gene.decision_variable.step
         )

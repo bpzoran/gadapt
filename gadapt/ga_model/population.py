@@ -350,14 +350,15 @@ class Population:
         current_len = len(self)
         chromosome_surplus = current_len - self.options.population_size
         if chromosome_surplus > 0:
-            sorted_by_cost_value = sorted(self, key=lambda chrom: chrom.cost_value, reverse=True)
+            sorted_by_cost_value = sorted(
+                self, key=lambda chrom: chrom.cost_value, reverse=True
+            )
             i = 0
             for c in sorted_by_cost_value:
                 if i >= chromosome_surplus:
                     break
                 if not math.isnan(c.cost_value):
                     self.chromosomes.remove(c)
-
 
     def mutate(self):
         """

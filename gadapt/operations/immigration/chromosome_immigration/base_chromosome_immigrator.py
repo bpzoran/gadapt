@@ -5,7 +5,7 @@ class BaseChromosomeImmigrator(ABC):
     """
     Base class for chromosome immigration
     """
-    
+
     def __init__(self):
         super().__init__()
         self.chromosome = None

@@ -8,7 +8,6 @@ from gadapt.utils.ga_utils import get_rand_bool, get_rand_bool_with_probability
 
 # *** Obsolete ***
 class ExtremePointedGeneMutator(RandomGeneMutator):
-
     def _make_mutated_value(self):
         return self._make_mutation()
 
@@ -34,7 +33,8 @@ class ExtremePointedGeneMutator(RandomGeneMutator):
             ),
         )
         return (
-            self.gene.decision_variable.min_value + number_of_steps * self.gene.decision_variable.step
+            self.gene.decision_variable.min_value
+            + number_of_steps * self.gene.decision_variable.step
         )
 
     def _make_random_value_above(self):
@@ -47,7 +47,10 @@ class ExtremePointedGeneMutator(RandomGeneMutator):
                 / self.gene.decision_variable.step
             ),
         )
-        return self.gene.variable_value + number_of_steps * self.gene.decision_variable.step
+        return (
+            self.gene.variable_value
+            + number_of_steps * self.gene.decision_variable.step
+        )
 
     def _get_mutate_func(self):
         prob = self.gene.decision_variable.cross_diversity_coefficient

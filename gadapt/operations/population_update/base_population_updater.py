@@ -5,7 +5,7 @@ class BasePopulationUpdater(ABC):
     """
     Base class for population update
     """
-    
+
     def __init__(self):
         super().__init__()
         self.population = None

@@ -15,7 +15,9 @@ from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector 
 )
 from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
-from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
+from operations.mutation.population_mutation.base_chromosome_mutation_selector import (
+    BaseChromosomeMutationSelector,
+)
 
 """
     Factory definition for creating  class instances based on GA options
@@ -23,7 +25,6 @@ from operations.mutation.population_mutation.base_chromosome_mutation_selector i
 
 
 class BaseGAFactory(ABC):
-
     def __init__(self) -> None:
         super().__init__()
         self.cost_finder = None

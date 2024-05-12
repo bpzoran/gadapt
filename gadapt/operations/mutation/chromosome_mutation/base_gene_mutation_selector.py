@@ -38,7 +38,9 @@ class BaseGeneMutationSelector(ABC):
         pass
 
     def _gene_mutated(self, g):
-        self.chromosome.mutated_variables_id_list.append(g.decision_variable.variable_id)
+        self.chromosome.mutated_variables_id_list.append(
+            g.decision_variable.variable_id
+        )
 
     def _chromosome_mutated(self):
         self.chromosome.is_mutated = True

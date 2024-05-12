@@ -53,15 +53,17 @@ class BaseCrossover(ABC):
             raise Exception("Mother and father must have the same number of genes!")
         self._mother = mother
         self._father = father
-        self._offspring1 = Chromosome(self._mutator, self._immigrator, population_generation)
-        self._offspring2 = Chromosome(self._mutator, self._immigrator, population_generation)
+        self._offspring1 = Chromosome(
+            self._mutator, self._immigrator, population_generation
+        )
+        self._offspring2 = Chromosome(
+            self._mutator, self._immigrator, population_generation
+        )
         self._cross_genetic_material()
         self._increase_generation()
         return self._offspring1, self._offspring2
 
-    def _cross_genetic_material(
-            self
-    ):
+    def _cross_genetic_material(self):
         number_of_genes = len(self._father)
         for self._current_gene_number in range(number_of_genes):
             self._mother_gene, self._father_gene = self._get_mother_father_genes()
@@ -101,18 +103,22 @@ class BaseCrossover(ABC):
     def _combine(self):
         pass
 
-    def _increase_generation(
-        self
-    ):
+    def _increase_generation(self):
         current_generation = self._mother.chromosome_generation
-        if current_generation == 0 or current_generation < self._father.chromosome_generation:
+        if (
+            current_generation == 0
+            or current_generation < self._father.chromosome_generation
+        ):
             current_generation = self._father.chromosome_generation
         current_generation += 1
         self._offspring1.chromosome_generation = current_generation
         self._offspring2.chromosome_generation = current_generation
 
         current_generation = 0
-        if self._mother.first_mutant_generation > 0 or self._father.first_mutant_generation > 0:
+        if (
+            self._mother.first_mutant_generation > 0
+            or self._father.first_mutant_generation > 0
+        ):
             current_generation = self._mother.first_mutant_generation
             if (
                 current_generation == 0
@@ -124,10 +130,13 @@ class BaseCrossover(ABC):
         self._offspring2.first_mutant_generation = current_generation
 
         current_generation = 0
-        if self._mother.last_mutant_generation > 0 or self._father.last_mutant_generation > 0:
+        if (
+            self._mother.last_mutant_generation > 0
+            or self._father.last_mutant_generation > 0
+        ):
             current_generation = self._mother.last_mutant_generation
             if current_generation == 0 or (
-                    0 < self._father.last_mutant_generation < current_generation
+                0 < self._father.last_mutant_generation < current_generation
             ):
                 current_generation = self._father.last_mutant_generation
             current_generation += 1
@@ -150,10 +159,13 @@ class BaseCrossover(ABC):
         self._offspring2.first_immigrant_generation = current_generation
 
         current_generation = 0
-        if self._mother.last_immigrant_generation > 0 or self._father.last_immigrant_generation > 0:
+        if (
+            self._mother.last_immigrant_generation > 0
+            or self._father.last_immigrant_generation > 0
+        ):
             current_generation = self._mother.last_immigrant_generation
             if current_generation == 0 or (
-                    0 < self._father.last_immigrant_generation < current_generation
+                0 < self._father.last_immigrant_generation < current_generation
             ):
                 current_generation = self._father.last_immigrant_generation
             current_generation += 1

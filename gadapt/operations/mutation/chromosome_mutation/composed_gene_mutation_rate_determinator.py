@@ -30,7 +30,9 @@ class ComposedGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
             raise Exception("at least one mutator must be added")
         for determinator in self.determinators:
             determinator.chromosome = self.chromosome
-            determinator.max_number_of_mutation_genes = self.max_number_of_mutation_genes
+            determinator.max_number_of_mutation_genes = (
+                self.max_number_of_mutation_genes
+            )
         if len(self.determinators) > 1:
             random.shuffle(self.determinators)
         current_determinator = self.determinators[0]

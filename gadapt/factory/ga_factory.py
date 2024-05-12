@@ -103,12 +103,16 @@ from gadapt.operations.variable_update.common_variable_updater import (
 )
 from operations.crossover.blending_crossover import BlendingCrossover
 from operations.crossover.uniform_crossover import UniformCrossover
-from operations.exit_check.number_of_generations_exit_checker import NumberOfGenerationsExitChecker
+from operations.exit_check.number_of_generations_exit_checker import (
+    NumberOfGenerationsExitChecker,
+)
 from operations.mutation.gene_mutation.composed_gene_mutator import ComposedGeneMutator
-from operations.mutation.gene_mutation.normal_distribution_cross_diversity_gene_mutator import \
-    NormalDistributionCrossDiversityGeneMutator
-from operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import \
-    BaseChromosomeMutationRateDeterminator
+from operations.mutation.gene_mutation.normal_distribution_cross_diversity_gene_mutator import (
+    NormalDistributionCrossDiversityGeneMutator,
+)
+from operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
+    BaseChromosomeMutationRateDeterminator,
+)
 from operations.population_update.common_population_updater import (
     CommonPopulationUpdater,
 )
@@ -186,7 +190,7 @@ class GAFactory(BaseGAFactory):
                 raise Exception(s + " is not defined as option for population mutation")
 
     def _make_chromosome_mutation_selector(
-            self, population_mutator_string=None
+        self, population_mutator_string=None
     ) -> BaseChromosomeMutationSelector:
         """
         Population Mutator Instance
@@ -200,7 +204,9 @@ class GAFactory(BaseGAFactory):
         """
         return self._make_chromosome_mutation_selector()
 
-    def _get_chromosome_mutation_rate_determinators(self) -> Tuple[BaseChromosomeMutationRateDeterminator]:
+    def _get_chromosome_mutation_rate_determinators(
+        self,
+    ) -> Tuple[BaseChromosomeMutationRateDeterminator]:
         if self.chromosome_mutation_rate_determinator is not None:
             return self.chromosome_mutation_rate_determinator
         mutator_strings = [
@@ -236,8 +242,8 @@ class GAFactory(BaseGAFactory):
             for determinator in chromosome_mutation_rate_determinators:
                 main_chromosome_mutation_rate_determinator.append(determinator)
         if (
-                definitions.RANDOM in mutator_strings
-                and definitions.PARENT_DIVERSITY in mutator_strings
+            definitions.RANDOM in mutator_strings
+            and definitions.PARENT_DIVERSITY in mutator_strings
         ):
             helper_chromosome_mutation_rate_determinator = (
                 StrictChromosomeMutationRateDeterminator()
@@ -246,9 +252,14 @@ class GAFactory(BaseGAFactory):
             helper_chromosome_mutation_rate_determinator = (
                 main_chromosome_mutation_rate_determinator
             )
-        return main_chromosome_mutation_rate_determinator, helper_chromosome_mutation_rate_determinator
+        return (
+            main_chromosome_mutation_rate_determinator,
+            helper_chromosome_mutation_rate_determinator,
+        )
 
-    def _get_chromosome_mutation_selector_combined(self) -> BaseChromosomeMutationSelector:
+    def _get_chromosome_mutation_selector_combined(
+        self,
+    ) -> BaseChromosomeMutationSelector:
         """
         Population Mutator Instance - combined
         """
@@ -256,7 +267,10 @@ class GAFactory(BaseGAFactory):
             ms.strip()
             for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        main_chromosome_mutation_rate_determinator, helper_chromosome_mutation_rate_determinator = self._get_chromosome_mutation_rate_determinators()
+        (
+            main_chromosome_mutation_rate_determinator,
+            helper_chromosome_mutation_rate_determinator,
+        ) = self._get_chromosome_mutation_rate_determinators()
         chromosome_mutation_selectors = []
         if definitions.RANDOM in mutator_strings:
             chromosome_mutation_selectors.append(
@@ -294,7 +308,10 @@ class GAFactory(BaseGAFactory):
 
     def _get_gene_mutation_rate_determinators(self):
         if self.gene_mutation_rate_determinator is not None:
-            return self.gene_mutation_rate_determinator, self.gene_mutation_rate_determinator
+            return (
+                self.gene_mutation_rate_determinator,
+                self.gene_mutation_rate_determinator,
+            )
         mutator_strings = [
             ms.strip()
             for ms in self._ga.chromosome_mutation.split(definitions.PARAM_SEPARATOR)
@@ -325,8 +342,8 @@ class GAFactory(BaseGAFactory):
             for determinator in gene_mutation_rate_determinators:
                 main_gene_mutation_rate_determinator.append(determinator)
         if (
-                definitions.RANDOM in mutator_strings
-                and definitions.COST_DIVERSITY in mutator_strings
+            definitions.RANDOM in mutator_strings
+            and definitions.COST_DIVERSITY in mutator_strings
         ):
             helper_gene_mutation_rate_determinator = (
                 StrictGeneMutationRateDeterminator()
@@ -335,7 +352,10 @@ class GAFactory(BaseGAFactory):
             helper_gene_mutation_rate_determinator = (
                 main_gene_mutation_rate_determinator
             )
-        return main_gene_mutation_rate_determinator, helper_gene_mutation_rate_determinator
+        return (
+            main_gene_mutation_rate_determinator,
+            helper_gene_mutation_rate_determinator,
+        )
 
     def _get_gene_mutation_selector_combined(self) -> BaseGeneMutationSelector:
         """
@@ -345,7 +365,10 @@ class GAFactory(BaseGAFactory):
             ms.strip()
             for ms in self._ga.chromosome_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        main_gene_mutation_rate_determinator, helper_gene_mutation_rate_determinator = self._get_gene_mutation_rate_determinators()
+        (
+            main_gene_mutation_rate_determinator,
+            helper_gene_mutation_rate_determinator,
+        ) = self._get_gene_mutation_rate_determinators()
         gene_mutation_selectors = []
         if definitions.RANDOM in mutator_strings:
             gene_mutation_selectors.append(
@@ -380,10 +403,10 @@ class GAFactory(BaseGAFactory):
         return gene_mutation_selector
 
     def get_composed_gene_mutation_selector(
-            self,
-            main_gene_mutation_rate_determinator,
-            gene_mutation_selectors,
-            helper_gene_mutation_rate_determinator,
+        self,
+        main_gene_mutation_rate_determinator,
+        gene_mutation_selectors,
+        helper_gene_mutation_rate_determinator,
     ):
         if not gene_mutation_selectors:
             gene_mutation_selectors.append(
@@ -453,8 +476,15 @@ class GAFactory(BaseGAFactory):
             ms.strip()
             for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        population_mutation_selection_strings = [value for value in mutator_strings if value in definitions.POPULATION_MUTATION_SELECTION_STRINGS]
-        if not population_mutation_selection_strings or definitions.PARENT_DIVERSITY in mutator_strings:
+        population_mutation_selection_strings = [
+            value
+            for value in mutator_strings
+            if value in definitions.POPULATION_MUTATION_SELECTION_STRINGS
+        ]
+        if (
+            not population_mutation_selection_strings
+            or definitions.PARENT_DIVERSITY in mutator_strings
+        ):
             return BlendingParentDiversityCrossover(
                 self.get_gene_mutation_selector(),
                 self.get_chromosome_immigrator(),
@@ -473,7 +503,6 @@ class GAFactory(BaseGAFactory):
             self.get_gene_mutation_selector(),
             self.get_chromosome_immigrator(),
         )
-
 
     def _get_variable_updater(self):
         """

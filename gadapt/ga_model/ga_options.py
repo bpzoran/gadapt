@@ -37,14 +37,19 @@ class GAOptions:
         ):
             self._number_of_mutation_chromosomes = ga.number_of_mutation_chromosomes
         elif (
-                (ga.percentage_of_mutation_chromosomes is not None)
-                and isinstance(ga.percentage_of_mutation_chromosomes, float)
-                and 0.0 <= ga.percentage_of_mutation_chromosomes <= 100
+            (ga.percentage_of_mutation_chromosomes is not None)
+            and isinstance(ga.percentage_of_mutation_chromosomes, float)
+            and 0.0 <= ga.percentage_of_mutation_chromosomes <= 100
         ):
             nomc = round(
-                (self.population_size / 2) * (ga.percentage_of_mutation_chromosomes / 100)
+                (self.population_size / 2)
+                * (ga.percentage_of_mutation_chromosomes / 100)
             )
-            while nomc >= round(self.population_size * (self.keep_elitism_percentage / 100)) - self.immigration_number:
+            while (
+                nomc
+                >= round(self.population_size * (self.keep_elitism_percentage / 100))
+                - self.immigration_number
+            ):
                 nomc -= 1
             if nomc < 0:
                 raise Exception(
@@ -62,9 +67,9 @@ class GAOptions:
         ):
             self._number_of_mutation_genes = ga.number_of_mutation_genes
         elif (
-                (ga.percentage_of_mutation_genes is not None)
-                and isinstance(ga.percentage_of_mutation_genes, float)
-                and 0.0 <= ga.percentage_of_mutation_genes <= 100
+            (ga.percentage_of_mutation_genes is not None)
+            and isinstance(ga.percentage_of_mutation_genes, float)
+            and 0.0 <= ga.percentage_of_mutation_genes <= 100
         ):
             self._number_of_mutation_genes = round(
                 float(len(self._decision_variables))
@@ -165,7 +170,7 @@ class GAOptions:
     @property
     def number_of_crossover_parents(self) -> int:
         """
-       Number of parents to be included in the mating pool
+        Number of parents to be included in the mating pool
         """
         if self._number_of_crossover_parents > 1:
             return self._number_of_crossover_parents

@@ -1,4 +1,5 @@
 import gadapt.ga_model.definitions as definitions
+from ga_model import message_levels
 from gadapt.adapters.validation.base_options_validator import BaseOptionsValidator
 
 
@@ -119,9 +120,48 @@ class CommonOptionsValidator(BaseOptionsValidator):
         else:
             population_size = self.options.population_size
         keep_elitism_percentage = self.options.keep_elitism_percentage
-        if not (0 <= self.options.keep_elitism_percentage <=100):
+        if not (0 <= self.options.keep_elitism_percentage <= 100):
             self._add_message("Elitism percentage value must be between 0 and 100!")
             rslt &= False
+        keep_elitism_number = round(
+            (self.options.keep_elitism_percentage / 100) * self.options.population_size
+        )
+        if keep_elitism_number <= 1:
+            self._add_message(
+                message_level=message_levels.WARNING,
+                message=f"According to keep_elitism_percentage ({self.options.keep_elitism_percentage }) "
+                f"and population_size ({self.options.population_size}) "
+                f"elitism number is {keep_elitism_number}. "
+                f"The minimal elitism number is 2."
+                f"Elitism percentage value is set to 50.",
+            )
+            self.options.keep_elitism_percentage = 50
+            keep_elitism_number = round(
+                (self.options.keep_elitism_percentage / 100)
+                * self.options.population_size
+            )
+        if (not isinstance(self.options.number_of_crossover_parents, int)) or (
+            -1 < self.options.number_of_crossover_parents < 2
+        ):
+            self._add_message(
+                f"Invalid number_of_crossover_parents value ({self.options.number_of_crossover_parents}). "
+                f"Number of crossover parents can be negative value, in "
+                f"which case all kept chromosomes will be crossover parents, "
+                f"or integer > 1"
+            )
+            rslt &= False
+        if (
+            self.options.number_of_crossover_parents
+            > self.options.keep_elitism_percentage
+        ):
+            self._add_message(
+                f"Invalid value of number_of_crossover_parents ({self.options.number_of_crossover_parents}). "
+                f"Number of crossover parents must not have the value lower than "
+                f"keep elitism number ({keep_elitism_number})."
+            )
+            rslt &= False
+        if self.options.number_of_crossover_parents < 0:
+            self.options.number_of_crossover_parents = keep_elitism_number
         immigration_number = 0
         if self.options.immigration_number is None:
             self._add_message("Immigration Number must not be None!")
@@ -139,7 +179,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
             )
             rslt &= False
         elif self.options.immigration_number < 0:
-            self._add_message("Immigration Number must ne eqals or greather than 0!")
+            self._add_message("Immigration Number must be equals or greater than 0!")
             rslt &= False
         else:
             immigration_number = self.options.immigration_number
@@ -169,7 +209,8 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 if (
                     population_size > 0
                     and self.options.number_of_mutation_chromosomes
-                    > round(population_size * (keep_elitism_percentage / 100)) - immigration_number
+                    > round(population_size * (keep_elitism_percentage / 100))
+                    - immigration_number
                 ):
                     self._add_message(
                         "Invalid number of mutation chromosomes: {0}".format(
@@ -434,9 +475,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif definitions.PARAM_SEPARATOR in self.options.gene_mutation:
             mutator_strings = [
                 ms.strip()
-                for ms in self.options.gene_mutation.split(
-                    definitions.PARAM_SEPARATOR
-                )
+                for ms in self.options.gene_mutation.split(definitions.PARAM_SEPARATOR)
             ]
             for mutator_string in mutator_strings:
                 if mutator_string not in definitions.GENE_MUTATION_STRINGS:
@@ -444,16 +483,11 @@ class CommonOptionsValidator(BaseOptionsValidator):
                         "Invalid value of Gene Mutation:\
                             {0}. Allowed values: {1}".format(
                             mutator_string,
-                            self._get_allowed_values(
-                                definitions.GENE_MUTATION_STRINGS
-                            ),
+                            self._get_allowed_values(definitions.GENE_MUTATION_STRINGS),
                         )
                     )
                     rslt &= False
-        elif (
-                self.options.gene_mutation
-                not in definitions.GENE_MUTATION_STRINGS
-        ):
+        elif self.options.gene_mutation not in definitions.GENE_MUTATION_STRINGS:
             self._add_message(
                 "Invalid value of Gene Mutation: {0}. Allowed values: {1}".format(
                     self.options.gene_mutation,
