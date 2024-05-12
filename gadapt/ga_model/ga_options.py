@@ -16,6 +16,8 @@ class GAOptions:
         """
         super().__init__()
         self._population_size = ga.population_size
+        self._keep_elitism_percentage = ga.keep_elitism_percentage
+        self._number_of_crossover_parents = ga.number_of_crossover_parents
         self._cost_function = ga.cost_function
         self._immigration_number = ga.immigration_number
         self._set_number_of_mutation_chromosomes(ga)
@@ -42,7 +44,7 @@ class GAOptions:
             nomc = round(
                 (self.population_size / 2) * (ga.percentage_of_mutation_chromosomes / 100)
             )
-            while nomc >= self.population_size // 2 - self.immigration_number:
+            while nomc >= round(self.population_size * (self.keep_elitism_percentage / 100)) - self.immigration_number:
                 nomc -= 1
             if nomc < 0:
                 raise Exception(
@@ -150,6 +152,30 @@ class GAOptions:
         self._population_size = value
 
     @property
+    def keep_elitism_percentage(self) -> int:
+        """
+        Percentage number of chromosomes to be kept in the population by the cost value
+        """
+        return self._keep_elitism_percentage
+
+    @keep_elitism_percentage.setter
+    def keep_elitism_percentage(self, value: int):
+        self._keep_elitism_percentage = value
+
+    @property
+    def number_of_crossover_parents(self) -> int:
+        """
+       Number of parents to be included in the mating pool
+        """
+        if self._number_of_crossover_parents > 1:
+            return self._number_of_crossover_parents
+        return self.keep_number
+
+    @number_of_crossover_parents.setter
+    def number_of_crossover_parents(self, value: int):
+        self._number_of_crossover_parents = value
+
+    @property
     def decision_variables(self) -> List[DecisionVariable]:
         """
         Collection of decision variables
@@ -161,9 +187,7 @@ class GAOptions:
         return self._get_abandon_number()
 
     def _get_abandon_number(self) -> int:
-        if self.population_size % 2 == 0:
-            return self.population_size // 2
-        return self.population_size // 2 - 1
+        return round(self.population_size * (1 - self.keep_elitism_percentage / 100))
 
     @property
     def keep_number(self) -> int:

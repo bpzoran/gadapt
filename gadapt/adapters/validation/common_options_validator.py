@@ -118,6 +118,10 @@ class CommonOptionsValidator(BaseOptionsValidator):
             rslt &= False
         else:
             population_size = self.options.population_size
+        keep_elitism_percentage = self.options.keep_elitism_percentage
+        if not (0 <= self.options.keep_elitism_percentage <=100):
+            self._add_message("Elitism percentage value must be between 0 and 100!")
+            rslt &= False
         immigration_number = 0
         if self.options.immigration_number is None:
             self._add_message("Immigration Number must not be None!")
@@ -165,7 +169,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 if (
                     population_size > 0
                     and self.options.number_of_mutation_chromosomes
-                    > (population_size // 2) - immigration_number
+                    > round(population_size * (keep_elitism_percentage / 100)) - immigration_number
                 ):
                     self._add_message(
                         "Invalid number of mutation chromosomes: {0}".format(
@@ -380,7 +384,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
             elif not self._validate_selection(
                 self.options.parent_diversity_mutation_chromosome_sampling,
                 "Parents Diversity Mutation Chromosome Sampling",
-                (population_size // 2) - self.options.immigration_number,  # type: ignore
+                round(population_size * (keep_elitism_percentage / 100)) - self.options.immigration_number,  # type: ignore
                 "Group Size for Parents Diversity Mutation Chromosome\
                 Sampling cannot have the value below half population!",
             ):
@@ -466,7 +470,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif not self._validate_selection(
             self.options.parent_selection,
             "Parent Selection",
-            (population_size // 2) - self.options.immigration_number,  # type: ignore
+            round(population_size * (keep_elitism_percentage / 100)) - self.options.immigration_number,  # type: ignore
             "Group Size for parent selection cannot have\
             the value below half population!",
         ):

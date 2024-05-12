@@ -19,13 +19,7 @@ class SamplingParentSelector(BaseParentSelector):
         super().__init__()
         self._sampling = sampling
 
-    def _select_mates_from_population(self) -> List[Tuple[Chromosome, Chromosome]]:
-        working_chromosomes = self._sampling.get_sample(
+    def _select_potential_parents(self):
+        return self._sampling.get_sample(
             self.population.chromosomes, len(self.population), lambda c: c.cost_value
         )
-        list_of_mates: List[Tuple[Chromosome, Chromosome]] = []
-        while len(working_chromosomes) > 1:
-            c1 = working_chromosomes.pop(0)
-            c2 = working_chromosomes.pop(0)
-            list_of_mates.append((c1, c2))
-        return list_of_mates

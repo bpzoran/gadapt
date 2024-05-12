@@ -25,6 +25,8 @@ class GA:
             self,
             cost_function=None,
             population_size=32,
+            keep_elitism_percentage=50,
+            number_of_crossover_parents=-1,
             exit_check=definitions.AVG_COST,
             requested_cost=sys.float_info.max,
             number_of_generations=200,
@@ -185,6 +187,8 @@ class GA:
         """
         self.cost_function = cost_function
         self.population_size = population_size
+        self.keep_elitism_percentage = keep_elitism_percentage
+        self.number_of_crossover_parents = number_of_crossover_parents
         self.exit_check = exit_check
         self.requested_cost = requested_cost
         self.number_of_generations = number_of_generations
@@ -245,7 +249,29 @@ class GA:
     def population_size(self, value: int):
         self._population_size = ga_utils.try_get_int(value)
 
-    def add(self, min_value: float, max_value: float, step: float = 0.01):
+    @property
+    def keep_elitism_percentage(self) -> int:
+        """
+        Percentage number of chromosomes to be kept in the population by the cost value
+        """
+        return self._keep_elitism_percentage
+
+    @keep_elitism_percentage.setter
+    def keep_elitism_percentage(self, value: int):
+        self._keep_elitism_percentage = ga_utils.try_get_int(value)
+
+    @property
+    def number_of_crossover_parents(self) -> int:
+        """
+        Number of parents to be included in the mating pool
+        """
+        return self._number_of_crossover_parents
+
+    @number_of_crossover_parents.setter
+    def number_of_crossover_parents(self, value: int):
+        self._number_of_crossover_parents = ga_utils.try_get_int(value)
+
+    def add(self, min_value: float = -sys.float_info.max, max_value: float = sys.float_info.max, step: float = sys.float_info.min):
         """
         Adds variables to be optimized.
         Args:
