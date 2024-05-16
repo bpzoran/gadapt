@@ -25,7 +25,7 @@ class CrossDiversityGeneMutationRateDeterminator(RandomGeneMutationRateDetermina
                 avg_rsd = 1
             if avg_rsd < 0:
                 avg_rsd = 0
-            return 1 - avg_rsd
+            return avg_rsd
 
         mutation_rate = get_mutation_rate()
         limit_number_of_mutation_genes = mutation_rate * float(
