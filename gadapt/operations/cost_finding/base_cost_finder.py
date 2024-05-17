@@ -1,7 +1,9 @@
 import sys
 import traceback
 from abc import ABC, abstractmethod
+from typing import Optional
 
+from gadapt.ga_model.population import Population
 from gadapt.ga_model.chromosome import Chromosome
 
 
@@ -12,7 +14,7 @@ class BaseCostFinder(ABC):
 
     def __init__(self):
         super().__init__()
-        self.population = None
+        self.population: Optional[Population] = None
 
     def _execute_function(self, cost_function, c: Chromosome):
         """

@@ -1,6 +1,9 @@
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
+from typing import Optional
+
+from gadapt.ga_model.population import Population
 
 
 class BaseExitChecker(ABC):
@@ -16,7 +19,7 @@ class BaseExitChecker(ABC):
     def __init__(self, max_attempt_no: int) -> None:
         self.max_attempt_no = max_attempt_no
         self.attempt_no = 0
-        self.population = None
+        self.population: Optional[Population] = None
 
     @property
     def attempt_no(self) -> int:
@@ -26,8 +29,12 @@ class BaseExitChecker(ABC):
     def attempt_no(self, value: int):
         self._attempt_no = value
 
-    def check(self, population):
+    def check(self, population: Population):
         self.population = population
+        if self.population is None:
+            raise Exception("Population is None!")
+        if self.population is None:
+            raise Exception("Population is None!")
         time_diff = (datetime.now() - self.population.start_time).total_seconds()
         if time_diff >= self.population.options.timeout:
             self.population.timeout_expired = True

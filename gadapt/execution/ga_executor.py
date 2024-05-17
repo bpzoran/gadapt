@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 import gadapt.ga_model.message_levels as message_levels
 from gadapt.ga_model.chromosome import Chromosome
@@ -19,7 +19,7 @@ class GAExecutor:
     """
 
     def __init__(self, ga_options: GAOptions, factory: BaseGAFactory) -> None:
-        self.population = None
+        self.population: Optional[Population] = None
         if ga_options is not None:
             self.ga_options = ga_options
         self.factory = factory
@@ -34,14 +34,14 @@ class GAExecutor:
         self.variable_updater = self.factory.get_variable_updater()
         self.population_updater = self.factory.get_population_updater()
         self.gene_mutator = self.factory.get_gene_mutator()
-        self.timeout_expired = False
 
     def execute(self) -> GAResults:
         """
         Executes the genetic algorithm
         """
+        self.population = Population(self.ga_options)
         if self.population is None:
-            raise Exception("population object must not be None!")
+            raise Exception("population object is None!")
         results = GAResults()
         try:
             init_logging(self.ga_options.logging)
@@ -55,14 +55,13 @@ class GAExecutor:
             self.ga_options.logging = False
         # try:
 
-        self.population = Population(self.ga_options)
         self.find_costs()
         while not self.exit():
             self.immigrate()
             self.mate()
             self.mutate()
             self.find_costs()
-        if self.timeout_expired:
+        if self.population.timeout_expired:
             results.messages.append((message_levels.WARNING, "Timeout expired!"))
         best_individual = self.population.best_individual
         results.min_cost = self.population.min_cost

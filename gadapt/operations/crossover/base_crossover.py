@@ -33,6 +33,13 @@ class BaseCrossover(ABC):
         self._current_gene_number = -1
 
     def mate(self, chromosome_pairs: List[Tuple[Chromosome, Chromosome]], population):
+        """
+        Returns list of chromosome pairs using parents' genetic material
+
+        Args:
+            chromosome_pairs (List[Tuple[Chromosome, Chromosome]]) : List of chromosome pairs for mating
+            population: Population
+        """
         for chromosome1, chromosome2 in chromosome_pairs:
             offspring1, offspring2 = self._mate_pair(
                 chromosome1, chromosome2, population.population_generation

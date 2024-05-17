@@ -39,6 +39,7 @@ class Population:
         self.start_time = datetime.now()
         self.average_cost_step = float("NaN")
         self.average_cost_step_in_first_population = float("NaN")
+        self.timeout_expired = False
 
     def __iter__(self):
         return PopulationIterator(self)
