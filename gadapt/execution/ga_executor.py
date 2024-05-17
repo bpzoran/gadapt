@@ -1,4 +1,7 @@
+from typing import List, Tuple
+
 import gadapt.ga_model.message_levels as message_levels
+from gadapt.ga_model.chromosome import Chromosome
 from gadapt.adapters.ga_logging.logging_settings import init_logging
 from gadapt.factory.ga_factory import BaseGAFactory
 from gadapt.ga_model.ga_options import GAOptions
@@ -16,14 +19,29 @@ class GAExecutor:
     """
 
     def __init__(self, ga_options: GAOptions, factory: BaseGAFactory) -> None:
+        self.population = None
         if ga_options is not None:
             self.ga_options = ga_options
         self.factory = factory
+        self.chromosome_mutator = self.factory.get_gene_mutation_selector()
+        self.population_mutator = self.factory.get_chromosome_mutation_selector()
+        self.exit_checker = self.factory.get_exit_checker()
+        self.cost_finder = self.factory.get_cost_finder()
+        self.population_immigrator = self.factory.get_population_immigrator()
+        self.chromosome_immigrator = self.factory.get_chromosome_immigrator()
+        self.selector = self.factory.get_parent_selector()
+        self.crossover = self.factory.get_crossover()
+        self.variable_updater = self.factory.get_variable_updater()
+        self.population_updater = self.factory.get_population_updater()
+        self.gene_mutator = self.factory.get_gene_mutator()
+        self.timeout_expired = False
 
     def execute(self) -> GAResults:
         """
         Executes the genetic algorithm
         """
+        if self.population is None:
+            raise Exception("population object must not be None!")
         results = GAResults()
         try:
             init_logging(self.ga_options.logging)
@@ -36,46 +54,66 @@ class GAExecutor:
             )
             self.ga_options.logging = False
         # try:
-        chromosome_mutator = self.factory.get_gene_mutation_selector()
-        population_mutator = self.factory.get_chromosome_mutation_selector()
-        exit_checker = self.factory.get_exit_checker()
-        cost_finder = self.factory.get_cost_finder()
-        population_immigrator = self.factory.get_population_immigrator()
-        chromosome_immigrator = self.factory.get_chromosome_immigrator()
-        selector = self.factory.get_parent_selector()
-        crossover = self.factory.get_crossover()
-        variable_updater = self.factory.get_variable_updater()
-        population_updater = self.factory.get_population_updater()
-        gene_mutator = self.factory.get_gene_mutator()
-        for dv in self.ga_options.decision_variables:
-            dv.gene_mutator = gene_mutator
-        population = Population(
-            self.ga_options,
-            chromosome_mutator=chromosome_mutator,
-            population_mutator=population_mutator,
-            exit_checker=exit_checker,
-            cost_finder=cost_finder,
-            population_immigrator=population_immigrator,
-            chromosome_immigrator=chromosome_immigrator,
-            parent_selector=selector,
-            crossover=crossover,
-            variable_updater=variable_updater,
-            population_updater=population_updater,
-        )
-        population.find_costs()
-        while not population.exit():
-            population.immigrate()
-            population.mate()
-            population.mutate()
-            population.find_costs()
-        if population.timeout_expired:
+
+        self.population = Population(self.ga_options)
+        self.find_costs()
+        while not self.exit():
+            self.immigrate()
+            self.mate()
+            self.mutate()
+            self.find_costs()
+        if self.timeout_expired:
             results.messages.append((message_levels.WARNING, "Timeout expired!"))
-        best_individual = population.best_individual
-        results.min_cost = population.min_cost
-        results.number_of_iterations = population.population_generation
+        best_individual = self.population.best_individual
+        results.min_cost = self.population.min_cost
+        results.number_of_iterations = self.population.population_generation
         for g in best_individual:
             results.result_values[g.decision_variable.variable_id] = g.variable_value
         # except Exception as ex:
         #    results.success = False
         #    results.messages.append((message_levels.ERROR, str(ex)))
         return results
+
+    def exit(self) -> bool:
+        """
+        Check exit from the GA
+        """
+        if self.population is None:
+            raise Exception("population object must not be None!")
+        self.population.population_generation += 1
+        return self.exit_checker.check(self.population)
+
+    def find_costs(self):
+        """
+        Finds costs for chromosomes
+        """
+        self.population.previous_avg_cost = self.population.avg_cost
+        self.population.previous_min_cost = self.population.min_cost
+        self.cost_finder.find_costs(self.population)
+        self.variable_updater.update_variables(self.population)
+        self.population_updater.update_population(self.population)
+
+    def immigrate(self):
+        """
+        Immigrates new chromosomes
+        """
+        self.population_immigrator.immigrate(self.population)
+
+    def mate(self):
+        """
+        Mates chromosomes
+        """
+        chromosome_pairs = self.select_mates()
+        self.crossover.mate(chromosome_pairs, self.population)
+
+    def mutate(self):
+        """
+        Mutates chromosomes in the population
+        """
+        self.population_mutator.mutate(self.population)
+
+    def select_mates(self) -> List[Tuple[Chromosome, Chromosome]]:
+        """
+        Selects mates for pairing
+        """
+        return self.selector.select_mates(self.population)

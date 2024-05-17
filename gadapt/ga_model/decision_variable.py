@@ -3,6 +3,7 @@ Decision variable
 """
 
 import random
+import sys
 
 import gadapt.ga_model.definitions as definitions
 
@@ -17,9 +18,11 @@ class DecisionVariable:
         Args:
             id (int): identifier of the decision variable
         """
+        self._max_value = sys.float_info.min
+        self._decimal_places = -1
+        self._stacked = False
         self.variable_id = id
         self._standard_deviation = definitions.FLOAT_NAN
-        self._gene_mutator = None
         self._initial_st_dev = -1.0
 
     def __eq__(self, other):
@@ -114,14 +117,6 @@ class DecisionVariable:
     @cross_diversity_coefficient.setter
     def cross_diversity_coefficient(self, value: float):
         self._standard_deviation = value
-
-    @property
-    def gene_mutator(self):
-        return self._gene_mutator
-
-    @gene_mutator.setter
-    def gene_mutator(self, value):
-        self._gene_mutator = value
 
     def make_random_value(self):
         """

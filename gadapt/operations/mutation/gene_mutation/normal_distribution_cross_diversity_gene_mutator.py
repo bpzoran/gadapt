@@ -1,6 +1,8 @@
 import numpy as np
 
-from operations.mutation.gene_mutation.normal_distribution_gene_mutator import NormalDistributionGeneMutator
+from gadapt.operations.mutation.gene_mutation.normal_distribution_gene_mutator import (
+    NormalDistributionGeneMutator,
+)
 
 
 class NormalDistributionCrossDiversityGeneMutator(NormalDistributionGeneMutator):

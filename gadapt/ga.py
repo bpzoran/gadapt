@@ -3,7 +3,7 @@ The main genetic algorithm module
 """
 
 import sys
-from typing import List
+from typing import List, Optional
 
 import gadapt.ga_model.definitions as definitions
 import gadapt.utils.ga_utils as ga_utils
@@ -22,37 +22,37 @@ class GA:
     """
 
     def __init__(
-            self,
-            cost_function=None,
-            population_size=32,
-            keep_elitism_percentage=50,
-            number_of_crossover_parents=-1,
-            exit_check=definitions.AVG_COST,
-            requested_cost=sys.float_info.max,
-            number_of_generations=200,
-            max_attempt_no=2,
-            parent_selection=definitions.ROULETTE_WHEEL,
-            crossover=definitions.BLENDING,
-            population_mutation="{0}{1}{2}{3}{4}".format(
-                definitions.COST_DIVERSITY,
-                definitions.PARAM_SEPARATOR,
-                definitions.CROSS_DIVERSITY,
-                definitions.PARAM_SEPARATOR,
-                definitions.PARENT_DIVERSITY,
-            ),
-            number_of_mutation_chromosomes=-1,
-            percentage_of_mutation_chromosomes=50.0,
-            parent_diversity_mutation_chromosome_sampling=definitions.ROULETTE_WHEEL,
-            must_mutate_for_same_parents=True,
-            chromosome_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
-            gene_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
-            number_of_mutation_genes=-1,
-            percentage_of_mutation_genes=20.0,
-            cross_diversity_mutation_gene_sampling=definitions.ROULETTE_WHEEL,
-            immigration_number=0,
-            logging=False,
-            timeout=120,
-            factory: BaseGAFactory = None,
+        self,
+        cost_function=None,
+        population_size=32,
+        keep_elitism_percentage=50,
+        number_of_crossover_parents=-1,
+        exit_check=definitions.AVG_COST,
+        requested_cost=sys.float_info.max,
+        number_of_generations=200,
+        max_attempt_no=2,
+        parent_selection=definitions.ROULETTE_WHEEL,
+        crossover=definitions.BLENDING,
+        population_mutation="{0}{1}{2}{3}{4}".format(
+            definitions.COST_DIVERSITY,
+            definitions.PARAM_SEPARATOR,
+            definitions.CROSS_DIVERSITY,
+            definitions.PARAM_SEPARATOR,
+            definitions.PARENT_DIVERSITY,
+        ),
+        number_of_mutation_chromosomes=-1,
+        percentage_of_mutation_chromosomes=50.0,
+        parent_diversity_mutation_chromosome_sampling=definitions.ROULETTE_WHEEL,
+        must_mutate_for_same_parents=True,
+        chromosome_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
+        gene_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
+        number_of_mutation_genes=-1,
+        percentage_of_mutation_genes=20.0,
+        cross_diversity_mutation_gene_sampling=definitions.ROULETTE_WHEEL,
+        immigration_number=0,
+        logging=False,
+        timeout=120,
+        factory: Optional[BaseGAFactory] = None,
     ) -> None:
         """
         The constructor of the GA class accepts all parameters required to
@@ -271,7 +271,12 @@ class GA:
     def number_of_crossover_parents(self, value: int):
         self._number_of_crossover_parents = ga_utils.try_get_int(value)
 
-    def add(self, min_value: float = -sys.float_info.max, max_value: float = sys.float_info.max, step: float = sys.float_info.min):
+    def add(
+        self,
+        min_value: float = -sys.float_info.max,
+        max_value: float = sys.float_info.max,
+        step: float = sys.float_info.min,
+    ):
         """
         Adds variables to be optimized.
         Args:
@@ -283,7 +288,7 @@ class GA:
         if step < 0.000000000000001:
             step = 0.000000000000001
         if (not isinstance(min_value, float) and not isinstance(min_value, int)) or (
-                not isinstance(max_value, float) and not isinstance(max_value, int)
+            not isinstance(max_value, float) and not isinstance(max_value, int)
         ):
             raise Exception("min value, max value and step must be numerical values!")
         decision_variable = DecisionVariable(self._current_dv_id)
@@ -725,7 +730,7 @@ class GA:
         self._must_mutate_for_same_parents = ga_utils.try_get_bool(value)
 
     @property
-    def timeout(self) -> int:
+    def timeout(self) -> int | str:
         """
         A number of seconds after which the genetic algorithm optimisation will\
             exit, regardless of whether exit_check criteria is reached.
@@ -733,5 +738,5 @@ class GA:
         return self._timeout
 
     @timeout.setter
-    def timeout(self, value: int):
+    def timeout(self, value: int | str) -> None:
         self._timeout = ga_utils.try_get_int(value)

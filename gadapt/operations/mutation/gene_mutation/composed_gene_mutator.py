@@ -1,7 +1,7 @@
 import random
 from typing import List
 
-from operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
+from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 
 
 class ComposedGeneMutator(BaseGeneMutator):

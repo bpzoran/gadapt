@@ -7,6 +7,7 @@ from gadapt.operations.mutation.chromosome_mutation.random_gene_mutation_selecto
     RandomGeneMutationSelector,
 )
 from gadapt.operations.sampling.base_sampling import BaseSampling
+from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 
 
 class CrossDiversityGeneMutationSelector(RandomGeneMutationSelector):
@@ -17,9 +18,10 @@ class CrossDiversityGeneMutationSelector(RandomGeneMutationSelector):
     def __init__(
         self,
         gene_mutation_rate_determinator: BaseGeneMutationRateDeterminator,
+        gene_mutator: BaseGeneMutator,
         sampling: BaseSampling,
     ) -> None:
-        super().__init__(gene_mutation_rate_determinator)
+        super().__init__(gene_mutation_rate_determinator, gene_mutator)
         self._sampling = sampling
 
     def _mutate_chromosome(self):
@@ -44,6 +46,5 @@ class CrossDiversityGeneMutationSelector(RandomGeneMutationSelector):
             lambda g: g.decision_variable.cross_diversity_coefficient,
         )
         for g in genes_for_mutation:
-            g.mutate()
-            self._gene_mutated(g)
+            self._gene_mutator.mutate(g)
         return len(genes_for_mutation)

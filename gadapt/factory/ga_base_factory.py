@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
@@ -15,7 +16,9 @@ from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector 
 )
 from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
-from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import (
+    BaseChromosomeMutationSelector,
+)
 
 """
     Factory definition for creating  class instances based on GA options
@@ -26,20 +29,21 @@ class BaseGAFactory(ABC):
 
     def __init__(self) -> None:
         super().__init__()
-        self.cost_finder = None
-        self.population_immigrator = None
-        self.chromosome_immigrator = None
-        self.gene_mutation_selector = None
-        self.gene_mutation_rate_determinator = None
-        self.gene_mutator = None
-        self.chromosome_mutation_selector = None
-        self.chromosome_mutation_rate_determinator = None
-        self.parent_selector = None
-        self.gene_combination = None
-        self.exit_checker = None
-        self.variable_updater = None
         self.population_updater = None
-        self.crossover = None
+        self._ga = None
+        self._options = None
+        self.variable_updater = None
+        self.cost_finder: Optional[BaseCostFinder] = None
+        self.population_immigrator: Optional[BasePopulationImmigrator] = None
+        self.chromosome_immigrator: Optional[BaseChromosomeImmigrator] = None
+        self.gene_mutator: Optional[BaseGeneMutator] = None
+        self.gene_mutation_selector: Optional[BaseGeneMutationSelector] = None
+        self.chromosome_mutation_selector: Optional[BaseChromosomeMutationSelector] = (
+            None
+        )
+        self.parent_selector: Optional[BaseParentSelector] = None
+        self.exit_checker: Optional[BaseExitChecker] = None
+        self.crossover: Optional[BaseCrossover] = None
 
     def initialize_factory(self, ga):
         self._ga = ga
@@ -204,7 +208,7 @@ class BaseGAFactory(ABC):
         pass
 
     @abstractmethod
-    def _get_crossover(self):
+    def _get_crossover(self) -> BaseCrossover:
         """
         Crossover Instance
         """

@@ -119,7 +119,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
         else:
             population_size = self.options.population_size
         keep_elitism_percentage = self.options.keep_elitism_percentage
-        if not (0 <= self.options.keep_elitism_percentage <=100):
+        if not (0 <= self.options.keep_elitism_percentage <= 100):
             self._add_message("Elitism percentage value must be between 0 and 100!")
             rslt &= False
         immigration_number = 0
@@ -169,7 +169,8 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 if (
                     population_size > 0
                     and self.options.number_of_mutation_chromosomes
-                    > round(population_size * (keep_elitism_percentage / 100)) - immigration_number
+                    > round(population_size * (keep_elitism_percentage / 100))
+                    - immigration_number
                 ):
                     self._add_message(
                         "Invalid number of mutation chromosomes: {0}".format(
@@ -434,9 +435,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif definitions.PARAM_SEPARATOR in self.options.gene_mutation:
             mutator_strings = [
                 ms.strip()
-                for ms in self.options.gene_mutation.split(
-                    definitions.PARAM_SEPARATOR
-                )
+                for ms in self.options.gene_mutation.split(definitions.PARAM_SEPARATOR)
             ]
             for mutator_string in mutator_strings:
                 if mutator_string not in definitions.GENE_MUTATION_STRINGS:
@@ -444,16 +443,11 @@ class CommonOptionsValidator(BaseOptionsValidator):
                         "Invalid value of Gene Mutation:\
                             {0}. Allowed values: {1}".format(
                             mutator_string,
-                            self._get_allowed_values(
-                                definitions.GENE_MUTATION_STRINGS
-                            ),
+                            self._get_allowed_values(definitions.GENE_MUTATION_STRINGS),
                         )
                     )
                     rslt &= False
-        elif (
-                self.options.gene_mutation
-                not in definitions.GENE_MUTATION_STRINGS
-        ):
+        elif self.options.gene_mutation not in definitions.GENE_MUTATION_STRINGS:
             self._add_message(
                 "Invalid value of Gene Mutation: {0}. Allowed values: {1}".format(
                     self.options.gene_mutation,

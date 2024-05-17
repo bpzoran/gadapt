@@ -1,5 +1,5 @@
 import gadapt.utils.ga_utils as ga_utils
-from operations.mutation.chromosome_mutation.random_gene_mutation_rate_determinator import (
+from gadapt.operations.mutation.chromosome_mutation.random_gene_mutation_rate_determinator import (
     RandomGeneMutationRateDeterminator,
 )
 

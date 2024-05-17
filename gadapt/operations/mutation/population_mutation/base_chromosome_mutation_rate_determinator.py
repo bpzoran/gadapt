@@ -8,7 +8,6 @@ class BaseChromosomeMutationRateDeterminator(ABC):
 
     def __init__(self) -> None:
         super().__init__()
-        self.population = None
         self.max_number_of_mutation_chromosomes = -1
 
     def get_number_of_mutation_chromosomes(

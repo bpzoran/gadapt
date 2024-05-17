@@ -3,7 +3,7 @@ import math
 from gadapt.operations.population_update.base_population_updater import (
     BasePopulationUpdater,
 )
-from utils import ga_utils
+from gadapt.utils import ga_utils
 
 
 class CommonPopulationUpdater(BasePopulationUpdater):

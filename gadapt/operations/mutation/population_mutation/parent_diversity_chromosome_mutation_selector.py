@@ -8,6 +8,9 @@ from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_sel
     BaseChromosomeMutationSelector,
 )
 from gadapt.operations.sampling.base_sampling import BaseSampling
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
+    BaseGeneMutationSelector,
+)
 
 
 class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
@@ -18,9 +21,10 @@ class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
     def __init__(
         self,
         chromosome_mutation_rate_determinator: BaseChromosomeMutationRateDeterminator,
+        gene_mutation_selector: BaseGeneMutationSelector,
         sampling: BaseSampling,
     ) -> None:
-        super().__init__(chromosome_mutation_rate_determinator)
+        super().__init__(chromosome_mutation_rate_determinator, gene_mutation_selector)
         self._sampling = sampling
 
     def _sort_key_parent_diversity_random(self, c: Chromosome):
@@ -55,5 +59,7 @@ class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
             )
             chromosomes_for_mutation.extend(other_chromosomes_for_mutation)
         for c in chromosomes_for_mutation:
-            c.mutate(self.population.options.number_of_mutation_genes)
+            self._gene_mutation_selector.mutate(
+                c, self.population.options.number_of_mutation_genes
+            )
         return len(chromosomes_for_mutation)

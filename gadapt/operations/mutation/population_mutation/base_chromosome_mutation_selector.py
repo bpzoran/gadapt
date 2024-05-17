@@ -6,6 +6,9 @@ from gadapt.ga_model.chromosome import Chromosome
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
     BaseChromosomeMutationRateDeterminator,
 )
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
+    BaseGeneMutationSelector,
+)
 
 
 class BaseChromosomeMutationSelector(ABC):
@@ -16,6 +19,7 @@ class BaseChromosomeMutationSelector(ABC):
     def __init__(
         self,
         chromosome_mutation_rate_determinator: BaseChromosomeMutationRateDeterminator,
+        gene_mutation_selector: BaseGeneMutationSelector,
     ) -> None:
         """
         Base class for selecting mating chromosomes in population
@@ -26,8 +30,8 @@ class BaseChromosomeMutationSelector(ABC):
         self._chromosome_mutation_rate_determinator = (
             chromosome_mutation_rate_determinator
         )
-        self.population = None
         self.number_of_mutation_chromosomes = -1
+        self._gene_mutation_selector = gene_mutation_selector
 
     def mutate(self, population):
         """
@@ -47,6 +51,9 @@ class BaseChromosomeMutationSelector(ABC):
     @abstractmethod
     def _mutate_population(self):
         pass
+
+    def mutate_chromosome(self, c: Chromosome, number_of_mutated_chromosomes: int):
+        self._gene_mutation_selector.mutate(c, number_of_mutated_chromosomes)
 
     def _get_unallocated_chromosomes(self, sort_key_function=None) -> List[Chromosome]:
         def unallocated_chromosomes_condition(c: Chromosome) -> bool:

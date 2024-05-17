@@ -1,13 +1,19 @@
 from abc import ABC, abstractmethod
 
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
+    BaseChromosomeImmigrator,
+)
+
 
 class BasePopulationImmigrator(ABC):
     """
     Base class for population immigration
     """
 
-    def __init__(self):
+    def __init__(self, chromosome_immigrator: BaseChromosomeImmigrator):
         self.population = None
+        self._chromosome_immigrator = chromosome_immigrator
 
     def immigrate(self, population):
         """
@@ -21,3 +27,6 @@ class BasePopulationImmigrator(ABC):
     @abstractmethod
     def _immigrate_population(self):
         pass
+
+    def _immigrate_chromosome(self, c: Chromosome):
+        self._chromosome_immigrator.immigrate(c)

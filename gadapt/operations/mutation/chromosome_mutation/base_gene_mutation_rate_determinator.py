@@ -7,10 +7,11 @@ class BaseGeneMutationRateDeterminator(ABC):
         Provides a framework for determining the number of mutation genes in a chromosome.
         """
         super().__init__()
-        self.chromosome = None
-        self.max_number_of_mutation_genes = -1
+        self.max_number_of_mutation_genes: int = -1
 
-    def get_number_of_mutation_genes(self, chromosome, max_number_of_mutation_genes):
+    def get_number_of_mutation_genes(
+        self, chromosome, max_number_of_mutation_genes: int
+    ):
         if max_number_of_mutation_genes is None:
             raise Exception("max_number_of_mutation_genes must not be None")
         if not chromosome:

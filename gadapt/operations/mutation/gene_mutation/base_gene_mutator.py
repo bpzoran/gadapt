@@ -8,9 +8,6 @@ class BaseGeneMutator(ABC):
     Mutates the variable value of a gene.
     """
 
-    def __init__(self) -> None:
-        self.gene = None
-
     def mutate(self, g: Gene):
         self.gene = g
         self.gene.variable_value = self._make_mutated_value()

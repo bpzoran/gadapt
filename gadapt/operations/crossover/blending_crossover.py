@@ -22,9 +22,7 @@ class BlendingCrossover(BaseCrossover):
         mutator: BaseGeneMutationSelector,
         immigrator: BaseChromosomeImmigrator,
     ):
-        super(BlendingCrossover, self).__init__(
-            mutator, immigrator
-        )
+        super(BlendingCrossover, self).__init__(mutator, immigrator)
         self._current_gene_number = -1
 
     def _combine(self):
@@ -46,4 +44,3 @@ class BlendingCrossover(BaseCrossover):
             decision_variable.decimal_places,
         )
         return val1, val2
-

@@ -23,5 +23,5 @@ class CommonPopulationImmigrator(BasePopulationImmigrator):
             chromosome_list, key=lambda c: (-c.cost_value, -c.chromosome_id)
         )[: self.population.options.immigration_number]
         for c in chromosome_list:
-            c.immigrate()
+            self._chromosome_immigrator.immigrate(c)
             c.population_generation = self.population.population_generation

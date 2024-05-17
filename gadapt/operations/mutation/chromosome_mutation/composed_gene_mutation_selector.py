@@ -7,6 +7,7 @@ from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_dete
 from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
     BaseGeneMutationSelector,
 )
+from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 
 
 class ComposedGeneMutationSelector(BaseGeneMutationSelector):
@@ -15,9 +16,11 @@ class ComposedGeneMutationSelector(BaseGeneMutationSelector):
     """
 
     def __init__(
-        self, gene_mutation_rate_determinator: BaseGeneMutationRateDeterminator
+        self,
+        gene_mutation_rate_determinator: BaseGeneMutationRateDeterminator,
+        gene_mutator: BaseGeneMutator,
     ) -> None:
-        super().__init__(gene_mutation_rate_determinator)
+        super().__init__(gene_mutation_rate_determinator, gene_mutator)
         self.selectors: List[BaseGeneMutationSelector] = []
 
     def append(self, selector: BaseGeneMutationSelector):

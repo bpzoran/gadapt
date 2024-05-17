@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 
+from gadapt.ga_model.gene import Gene
 from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import (
     BaseGeneMutationRateDeterminator,
 )
+from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 
 
 class BaseGeneMutationSelector(ABC):
@@ -11,13 +13,16 @@ class BaseGeneMutationSelector(ABC):
     """
 
     def __init__(
-        self, gene_mutation_rate_determinator: BaseGeneMutationRateDeterminator
+        self,
+        gene_mutation_rate_determinator: BaseGeneMutationRateDeterminator,
+        gene_mutator: BaseGeneMutator,
     ):
         """
         Initializes an instance of the class by setting the gene_mutation_rate_determinator attribute.
         """
         self.chromosome = None
         self._gene_mutation_rate_determinator = gene_mutation_rate_determinator
+        self._gene_mutator = gene_mutator
         self.number_of_mutation_genes = -1
 
     def mutate(self, c, number_of_mutation_genes: int):
@@ -37,8 +42,14 @@ class BaseGeneMutationSelector(ABC):
     def _mutate_chromosome(self):
         pass
 
+    def _mutate_gene(self, g: Gene):
+        self._gene_mutator.mutate(g)
+        self._gene_mutated(g)
+
     def _gene_mutated(self, g):
-        self.chromosome.mutated_variables_id_list.append(g.decision_variable.variable_id)
+        self.chromosome.mutated_variables_id_list.append(
+            g.decision_variable.variable_id
+        )
 
     def _chromosome_mutated(self):
         self.chromosome.is_mutated = True

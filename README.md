@@ -300,10 +300,10 @@ class BottomMutationSelector(BaseChromosomeMutationSelector):
             lambda chrom: (self.population.options.cost_function([g.variable_value for g in chrom]))
         )
         chromosomes_for_mutation = unallocated_chromosomes[
-            len(unallocated_chromosomes) - self.number_of_mutation_chromosomes:
-        ]
+                                   len(unallocated_chromosomes) - self.number_of_mutation_chromosomes:
+                                   ]
         for c in chromosomes_for_mutation:
-            c.mutate(self.population.options.number_of_mutation_genes)
+            self._gene_mutation_selector.mutate(c, self.population.options.number_of_mutation_genes)
 
 
 def some_func(args):

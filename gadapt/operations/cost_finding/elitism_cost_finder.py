@@ -33,7 +33,8 @@ class ElitismCostFinder(BaseCostFinder):
             min(better_chromosomes, key=lambda x: x.cost_value)
         ).cost_value
         better_chromosomes_without_immigrants = better_chromosomes[
-            : self.population.options.keep_number - self.population.options.immigration_number
+            : self.population.options.keep_number
+            - self.population.options.immigration_number
         ]
         self.population.avg_cost = sum(
             [c.cost_value for c in better_chromosomes_without_immigrants]

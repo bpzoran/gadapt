@@ -9,32 +9,20 @@ import gadapt.ga_model.definitions as definitions
 from gadapt.ga_model.decision_variable import DecisionVariable
 from gadapt.ga_model.gene import Gene
 from gadapt.ga_model.ranking_model import RankingModel
-from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
-    BaseChromosomeImmigrator,
-)
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
-    BaseGeneMutationSelector,
-)
 
 
 class Chromosome(RankingModel):
     def __init__(
         self,
-        mutator: BaseGeneMutationSelector,
-        immigrator: BaseChromosomeImmigrator,
         population_generation: int,
     ):
         """
         Chromosome class.
         Chromosome is a part of the Population. Chromosome consists of Genes.
         Args:
-            immigrator (BaseChromosomeImmigrator): Immigration algorithm
-            population_generation (int): Generation in which the\
-                chromosome is created in the population
+            population_generation: population generation
         """
         super().__init__()
-        self._mutator = mutator
-        self._immigrator = immigrator
         self._cost_value = definitions.FLOAT_NAN
         self._is_immigrant = False
         self._population_generation = population_generation
@@ -97,28 +85,6 @@ class Chromosome(RankingModel):
         if self._chromosome_string is None:
             self._chromosome_string = self._to_string()
         return self._chromosome_string
-
-    @property
-    def mutator(self) -> BaseGeneMutationSelector:
-        """
-        Mutation algorithm
-        """
-        return self._mutator
-
-    @mutator.setter
-    def mutator(self, value: BaseGeneMutationSelector):
-        self._mutator = value
-
-    @property
-    def immigrator(self) -> BaseChromosomeImmigrator:
-        """
-        Immigration algorithm
-        """
-        return self._immigrator
-
-    @immigrator.setter
-    def immigrator(self, value: BaseChromosomeImmigrator):
-        self._immigrator = value
 
     @property
     def number_of_mutation_genes(self):
@@ -294,18 +260,6 @@ class Chromosome(RankingModel):
     @succ.setter
     def succ(self, value: bool):
         self._succ = value
-
-    def mutate(self, number_of_mutation_genes: int):
-        """
-        Mutates chromosome
-        """
-        self.mutator.mutate(self, number_of_mutation_genes)
-
-    def immigrate(self):
-        """
-        Immigrates chromosome
-        """
-        self.immigrator.immigrate(self)
 
     @property
     def mutated_variables_id_list(self) -> List[int]:
