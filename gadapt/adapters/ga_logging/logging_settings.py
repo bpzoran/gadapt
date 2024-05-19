@@ -23,6 +23,12 @@ def init_logging(is_logging: bool):
         except Exception:
             return -1
 
+    logger = logging.getLogger("gadapt_logger")
+    if not is_logging:
+        logger.disabled = True
+    else:
+        logger.disabled = False
+        return
     path = os.path.join(os.getcwd(), "log")
     if not os.path.exists(path):
         os.mkdir(path)
@@ -36,7 +42,6 @@ def init_logging(is_logging: bool):
                         os.path.join(path, f), os.path.join(path, "gadapt_log.log.1")
                     )
                 except Exception:
-                    print("Unable to rename log file: " + os.path.join(path, f))
                     break
             elif f.startswith("gadapt_log.log."):
                 n_last_number = get_last_num(f)
@@ -51,7 +56,7 @@ def init_logging(is_logging: bool):
                 except Exception:
                     break
     logpath = os.path.join(path, "gadapt_log.log")
-    logger = logging.getLogger("gadapt_logger")
+
     handler = logging.FileHandler(logpath)
     handler.setFormatter(
         TimestampFormatter("%(asctime)s - %(levelname)s - %(message)s")
@@ -60,12 +65,13 @@ def init_logging(is_logging: bool):
         logger.removeHandler(h)
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
-    if not is_logging:
-        logger.disabled = True
-    else:
-        logger.disabled = False
 
 
 def gadapt_log_info(msg: str):
     logger = logging.getLogger("gadapt_logger")
-    logger.info(msg)
+    if logger.disabled:
+        return
+    try:
+        logger.info(msg)
+    except Exception:
+        pass
