@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="gadapt",
-    version="0.4.2",
+    version="0.4.3",
     author="Zoran Jankovic",
     author_email="bpzoran@yahoo.com",
     url="https://github.com/bpzoran/gadapt",
@@ -11,5 +11,7 @@ setup(
     long_description_content_type="text/markdown",
     description="GAdapt: A Python Library for\
         Self-Adaptive Genetic Algorithm.",
-    install_requires=["numpy==1.26.4"],
+    install_requires=[
+        "numpy==1.26.4"
+    ],
 )
