@@ -26,9 +26,9 @@ def init_logging(is_logging: bool):
     logger = logging.getLogger("gadapt_logger")
     if not is_logging:
         logger.disabled = True
+        return
     else:
         logger.disabled = False
-        return
     path = os.path.join(os.getcwd(), "log")
     if not os.path.exists(path):
         os.mkdir(path)
