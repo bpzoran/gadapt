@@ -23,10 +23,7 @@ def init_logging(is_logging: bool):
         except Exception:
             return -1
 
-    if not is_logging:
-        logging.disable(logging.INFO)
-        return
-    path = os.getcwd() + "\\log"
+    path = os.path.join(os.getcwd(), "log")
     if not os.path.exists(path):
         os.mkdir(path)
     else:
@@ -35,10 +32,9 @@ def init_logging(is_logging: bool):
         for f in onlyfiles:
             if f == "log.log":
                 try:
-                    os.rename(path + "\\" + f, path + "\\" + "log.log.1")
+                    os.rename(os.path.join(path, f), os.path.join(path, "log.log.1"))
                 except Exception:
-                    # print("Unable to rename log file: " + path + "\\" + f)
-                    # traceback.print_exc()
+                    print("Unable to rename log file: " + os.path.join(path, f))
                     break
             elif f.startswith("log.log."):
                 n_last_number = get_last_num(f)
@@ -46,14 +42,14 @@ def init_logging(is_logging: bool):
                     continue
                 n_last_number += 1
                 try:
-                    os.rename(path + "\\" + f, path + "\\log.log." + str(n_last_number))
+                    os.rename(
+                        os.path.join(path, f),
+                        os.path.join(path, "log.log." + str(n_last_number)),
+                    )
                 except Exception:
-                    # print("Unable to rename log file: " + path + "\\" + f)
-                    # traceback.print_exc()
                     break
-    logpath = path + "\\log.log"
-    logging.basicConfig(filename=logpath, level=logging.INFO)
-    logger = logging.getLogger("")
+    logpath = os.path.join(path, "log.log")
+    logger = logging.getLogger("gadapt_logger")
     handler = logging.FileHandler(logpath)
     handler.setFormatter(
         TimestampFormatter("%(asctime)s - %(levelname)s - %(message)s")
@@ -62,3 +58,12 @@ def init_logging(is_logging: bool):
         logger.removeHandler(h)
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
+    if not is_logging:
+        logger.disabled = True
+    else:
+        logger.disabled = False
+
+
+def gadapt_log_info(msg: str):
+    logger = logging.getLogger("gadapt_logger")
+    logger.info(msg)

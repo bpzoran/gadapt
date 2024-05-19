@@ -1,8 +1,8 @@
-import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Optional
 
+from gadapt.adapters.ga_logging.logging_settings import gadapt_log_info
 from gadapt.ga_model.population import Population
 
 
@@ -44,7 +44,7 @@ class BaseExitChecker(ABC):
         else:
             self.attempt_no = 0
         if self.attempt_no >= self.max_attempt_no:
-            logging.info("function exit.")
+            gadapt_log_info("function exit.")
             return True
         return False
 

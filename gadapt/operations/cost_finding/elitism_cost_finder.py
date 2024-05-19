@@ -1,7 +1,7 @@
-import logging
 import math
 from typing import List
 
+from gadapt.adapters.ga_logging.logging_settings import gadapt_log_info
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
 
@@ -44,4 +44,4 @@ class ElitismCostFinder(BaseCostFinder):
 
     def _log_population(self):
         if self.population.options.logging:
-            logging.info(str(self.population))
+            gadapt_log_info(str(self.population))

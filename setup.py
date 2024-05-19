@@ -11,7 +11,5 @@ setup(
     long_description_content_type="text/markdown",
     description="GAdapt: A Python Library for\
         Self-Adaptive Genetic Algorithm.",
-    install_requires=[
-        "numpy==1.26.4"
-    ],
+    install_requires=["numpy==1.26.4"],
 )
