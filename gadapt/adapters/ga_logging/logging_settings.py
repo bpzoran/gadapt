@@ -12,9 +12,9 @@ def init_logging(is_logging: bool):
 
     def get_last_num(s: str) -> int:
         try:
-            if not s.startswith("log.log"):
+            if not s.startswith("gadapt_log.log"):
                 return -1
-            if s == "log.log":
+            if s == "gadapt_log.log":
                 return 0
             s_last_number = s.rsplit(".", 1)[-1]
             n_last_number = int(s_last_number)
@@ -30,13 +30,15 @@ def init_logging(is_logging: bool):
         onlyfiles = [f for f in os.listdir(path) if isfile(join(path, f))]
         onlyfiles.sort(reverse=True, key=get_last_num)
         for f in onlyfiles:
-            if f == "log.log":
+            if f == "gadapt_log.log":
                 try:
-                    os.rename(os.path.join(path, f), os.path.join(path, "log.log.1"))
+                    os.rename(
+                        os.path.join(path, f), os.path.join(path, "gadapt_log.log.1")
+                    )
                 except Exception:
                     print("Unable to rename log file: " + os.path.join(path, f))
                     break
-            elif f.startswith("log.log."):
+            elif f.startswith("gadapt_log.log."):
                 n_last_number = get_last_num(f)
                 if n_last_number == -1:
                     continue
@@ -44,11 +46,11 @@ def init_logging(is_logging: bool):
                 try:
                     os.rename(
                         os.path.join(path, f),
-                        os.path.join(path, "log.log." + str(n_last_number)),
+                        os.path.join(path, "gadapt_log.log." + str(n_last_number)),
                     )
                 except Exception:
                     break
-    logpath = os.path.join(path, "log.log")
+    logpath = os.path.join(path, "gadapt_log.log")
     logger = logging.getLogger("gadapt_logger")
     handler = logging.FileHandler(logpath)
     handler.setFormatter(
