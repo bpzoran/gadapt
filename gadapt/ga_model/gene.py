@@ -43,7 +43,6 @@ class Gene(RankingModel):
     @decision_variable.setter
     def decision_variable(self, value: DecisionVariable):
         if not isinstance(value, DecisionVariable):
-            pass
             raise
         self._decision_variable = value
 

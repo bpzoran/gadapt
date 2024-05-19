@@ -53,24 +53,26 @@ class GAExecutor:
                 )
             )
             self.ga_options.logging = False
-        # try:
+        try:
 
-        self.find_costs()
-        while not self.exit():
-            self.immigrate()
-            self.mate()
-            self.mutate()
             self.find_costs()
-        if self.population.timeout_expired:
-            results.messages.append((message_levels.WARNING, "Timeout expired!"))
-        best_individual = self.population.best_individual
-        results.min_cost = self.population.min_cost
-        results.number_of_iterations = self.population.population_generation
-        for g in best_individual:
-            results.result_values[g.decision_variable.variable_id] = g.variable_value
-        # except Exception as ex:
-        #    results.success = False
-        #    results.messages.append((message_levels.ERROR, str(ex)))
+            while not self.exit():
+                self.immigrate()
+                self.mate()
+                self.mutate()
+                self.find_costs()
+            if self.population.timeout_expired:
+                results.messages.append((message_levels.WARNING, "Timeout expired!"))
+            best_individual = self.population.best_individual
+            results.min_cost = self.population.min_cost
+            results.number_of_iterations = self.population.population_generation
+            for g in best_individual:
+                results.result_values[g.decision_variable.variable_id] = (
+                    g.variable_value
+                )
+        except Exception as ex:
+            results.success = False
+            results.messages.append((message_levels.ERROR, str(ex)))
         return results
 
     def exit(self) -> bool:
