@@ -194,3 +194,4 @@ pypi.bat
 /poetry.lock
 /gadapt/create_diagrams.bat
 comparing_tests/
+requirements_local.txt
