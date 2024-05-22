@@ -14,6 +14,7 @@ from gadapt.factory.ga_factory import GAFactory
 from gadapt.ga_model.decision_variable import DecisionVariable
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.ga_results import GAResults
+import copy
 
 
 class GA:
@@ -230,7 +231,7 @@ class GA:
             return results
         ga_options = GAOptions(self)
         factory: BaseGAFactory = self.get_factory()
-        factory.initialize_factory(self)
+        factory.initialize_factory(self.clone())
         return GAExecutor(ga_options, factory).execute()
 
     def get_factory(self) -> BaseGAFactory:
@@ -740,3 +741,12 @@ class GA:
     @timeout.setter
     def timeout(self, value: int | str) -> None:
         self._timeout = ga_utils.try_get_int(value)
+
+    def clone(self):
+        # Create a new instance of the class
+        new_instance = self.__class__.__new__(self.__class__)
+
+        # Copy the attributes from the current instance to the new instance
+        new_instance.__dict__ = copy.deepcopy(self.__dict__)
+
+        return new_instance

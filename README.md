@@ -311,7 +311,9 @@ def some_func(args):
 
 
 custom_factory = GAFactory()
-custom_factory.chromosome_mutation_selector = BottomMutationSelector(RandomChromosomeMutationRateDeterminator())
+custom_factory.chromosome_mutation_selector = (
+    BottomMutationSelector(custom_factory.chromosome_mutation_rate_determinator,
+                           custom_factory.get_gene_mutation_selector()))
 ga = GA(cost_function=some_func, factory=custom_factory)
 ga.add(-25, 25, 1)
 ga.add(-5, 5, 0.1)

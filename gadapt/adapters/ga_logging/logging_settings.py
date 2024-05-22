@@ -1,7 +1,6 @@
 import datetime
 import logging
 import os
-from os.path import isfile, join
 
 from gadapt.utils.TimeStampFormatter import TimestampFormatter
 
@@ -21,7 +20,9 @@ def init_logging(is_logging: bool):
         os.mkdir(path)
     now = datetime.datetime.now()
 
-    formatted_date_time = now.strftime('%Y_%m_%d_%H_%M_%S_') + f'{now.microsecond // 1000:03d}'
+    formatted_date_time = (
+        now.strftime("%Y_%m_%d_%H_%M_%S_") + f"{now.microsecond // 1000:03d}"
+    )
     logpath = os.path.join(path, f"gadapt_log_{formatted_date_time}.log")
     handler = logging.FileHandler(logpath)
     handler.setFormatter(
