@@ -40,6 +40,7 @@ class Population:
         self.average_cost_step = float("NaN")
         self.average_cost_step_in_first_population = float("NaN")
         self.timeout_expired = False
+        self.min_cost_per_generation = []
 
     def __iter__(self):
         return PopulationIterator(self)

@@ -50,3 +50,4 @@ class BaseCostFinder(ABC):
         """
         self.population = population
         self._find_costs_for_population()
+        self.population.min_cost_per_generation.append(self.population.min_cost)

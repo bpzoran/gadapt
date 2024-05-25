@@ -15,6 +15,7 @@ class GAResults:
         self._success = True
         self.result_values = {}
         self._messages: List[str] = []
+        self._min_cost_per_generation = []
 
     def __str__(self) -> str:
         return ga_strings.results_to_string(self)
@@ -43,6 +44,17 @@ class GAResults:
     @min_cost.setter
     def min_cost(self, value: float):
         self._min_cost = value
+
+    @property
+    def min_cost_per_generation(self) -> List[float]:
+        """
+        Minimal costs for each generation
+        """
+        return self._min_cost_per_generation
+
+    @min_cost_per_generation.setter
+    def min_cost_per_generation(self, value: List[float]):
+        self._min_cost_per_generation = value
 
     @property
     def number_of_iterations(self) -> float:

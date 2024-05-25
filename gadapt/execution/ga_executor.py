@@ -66,6 +66,7 @@ class GAExecutor:
             best_individual = self.population.best_individual
             results.min_cost = self.population.min_cost
             results.number_of_iterations = self.population.population_generation
+            results.min_cost_per_generation = self.population.min_cost_per_generation
             for g in best_individual:
                 results.result_values[g.decision_variable.variable_id] = (
                     g.variable_value
