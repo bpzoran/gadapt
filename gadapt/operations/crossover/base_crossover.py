@@ -4,32 +4,14 @@ from typing import Tuple, List
 
 from gadapt.ga_model.gene import Gene
 from gadapt.ga_model.chromosome import Chromosome
-from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
-    BaseChromosomeImmigrator,
-)
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
-    BaseGeneMutationSelector,
-)
 
 
 class BaseCrossover(ABC):
-    """Base Crossover Class
-
-    Args:
-        mutator (BaseGeneMutationSelector): mutation algorithm to
-        be passed to offspring chromosomes
-        immigrator (BaseChromosomeImmigrator): immigration algorithm
-        to be passed to offspring chromosomes
-        should be mutated on both sides with the same probability
-    """
+    """Base Crossover Class"""
 
     def __init__(
         self,
-        mutator: BaseGeneMutationSelector,
-        immigrator: BaseChromosomeImmigrator,
     ):
-        self._mutator = mutator
-        self._immigrator = immigrator
         self._current_gene_number = -1
 
     def mate(self, chromosome_pairs: List[Tuple[Chromosome, Chromosome]], population):

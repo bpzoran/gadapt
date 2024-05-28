@@ -1,12 +1,6 @@
 import random
 
 from gadapt.operations.crossover.base_crossover import BaseCrossover
-from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
-    BaseChromosomeImmigrator,
-)
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
-    BaseGeneMutationSelector,
-)
 
 
 class BlendingCrossover(BaseCrossover):
@@ -19,10 +13,8 @@ class BlendingCrossover(BaseCrossover):
 
     def __init__(
         self,
-        mutator: BaseGeneMutationSelector,
-        immigrator: BaseChromosomeImmigrator,
     ):
-        super(BlendingCrossover, self).__init__(mutator, immigrator)
+        super(BlendingCrossover, self).__init__()
         self._current_gene_number = -1
 
     def _combine(self):

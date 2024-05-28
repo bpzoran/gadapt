@@ -15,7 +15,7 @@ class GAResults:
         self._success = True
         self.result_values = {}
         self._messages: List[str] = []
-        self._min_cost_per_generation = []
+        self._min_cost_per_generation: List[float] = []
 
     def __str__(self) -> str:
         return ga_strings.results_to_string(self)

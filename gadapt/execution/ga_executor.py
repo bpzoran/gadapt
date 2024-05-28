@@ -54,7 +54,6 @@ class GAExecutor:
             )
             self.ga_options.logging = False
         try:
-
             self.find_costs()
             while not self.exit():
                 self.immigrate()
@@ -68,9 +67,9 @@ class GAExecutor:
             results.number_of_iterations = self.population.population_generation
             results.min_cost_per_generation = self.population.min_cost_per_generation
             for g in best_individual:
-                results.result_values[g.decision_variable.variable_id] = (
-                    g.variable_value
-                )
+                results.result_values[
+                    g.decision_variable.variable_id
+                ] = g.variable_value
         except Exception as ex:
             results.success = False
             results.messages.append((message_levels.ERROR, str(ex)))

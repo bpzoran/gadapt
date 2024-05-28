@@ -26,7 +26,6 @@ from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_sel
 
 
 class BaseGAFactory(ABC):
-
     def __init__(self) -> None:
         super().__init__()
         self.population_updater = None
@@ -38,9 +37,9 @@ class BaseGAFactory(ABC):
         self.chromosome_immigrator: Optional[BaseChromosomeImmigrator] = None
         self.gene_mutator: Optional[BaseGeneMutator] = None
         self.gene_mutation_selector: Optional[BaseGeneMutationSelector] = None
-        self.chromosome_mutation_selector: Optional[BaseChromosomeMutationSelector] = (
-            None
-        )
+        self.chromosome_mutation_selector: Optional[
+            BaseChromosomeMutationSelector
+        ] = None
         self.parent_selector: Optional[BaseParentSelector] = None
         self.exit_checker: Optional[BaseExitChecker] = None
         self.crossover: Optional[BaseCrossover] = None

@@ -2,12 +2,6 @@ import random
 from typing import Tuple
 
 from gadapt.operations.crossover.base_crossover import BaseCrossover
-from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
-    BaseChromosomeImmigrator,
-)
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
-    BaseGeneMutationSelector,
-)
 
 
 class UniformCrossover(BaseCrossover):
@@ -17,10 +11,8 @@ class UniformCrossover(BaseCrossover):
 
     def __init__(
         self,
-        mutator: BaseGeneMutationSelector,
-        immigrator: BaseChromosomeImmigrator,
     ):
-        super(UniformCrossover, self).__init__(mutator, immigrator)
+        super(UniformCrossover, self).__init__()
 
     def _combine(self) -> Tuple[float, float]:
         rnd = random.randint(0, 2)

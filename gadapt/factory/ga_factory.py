@@ -388,9 +388,10 @@ class GAFactory(BaseGAFactory):
             ms.strip()
             for ms in self._ga.chromosome_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        main_gene_mutation_rate_determinator, helper_gene_mutation_rate_determinator = (
-            self._get_gene_mutation_rate_determinators()
-        )
+        (
+            main_gene_mutation_rate_determinator,
+            helper_gene_mutation_rate_determinator,
+        ) = self._get_gene_mutation_rate_determinators()
         gene_mutation_selectors = []
         if definitions.RANDOM in mutator_strings:
             gene_mutation_selectors.append(
@@ -518,24 +519,12 @@ class GAFactory(BaseGAFactory):
             not population_mutation_selection_strings
             or definitions.PARENT_DIVERSITY in mutator_strings
         ):
-            return BlendingParentDiversityCrossover(
-                self.get_gene_mutation_selector(),
-                self.get_chromosome_immigrator(),
-            )
+            return BlendingParentDiversityCrossover()
         if self._ga.crossover == definitions.BLENDING:
-            return BlendingCrossover(
-                self.get_gene_mutation_selector(),
-                self.get_chromosome_immigrator(),
-            )
+            return BlendingCrossover()
         if self._ga.crossover == definitions.UNIFORM:
-            return UniformCrossover(
-                self.get_gene_mutation_selector(),
-                self.get_chromosome_immigrator(),
-            )
-        return BlendingParentDiversityCrossover(
-            self.get_gene_mutation_selector(),
-            self.get_chromosome_immigrator(),
-        )
+            return UniformCrossover()
+        return BlendingParentDiversityCrossover()
 
     def _get_variable_updater(self):
         """

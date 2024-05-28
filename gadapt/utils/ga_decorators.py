@@ -1,5 +1,4 @@
 class ExecuteUntilChanges:
-
     def __init__(self, current_value, number_of_attempts=5):
         self.current_value = current_value
         self.number_of_attempts = number_of_attempts

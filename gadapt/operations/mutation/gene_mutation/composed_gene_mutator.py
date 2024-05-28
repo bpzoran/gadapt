@@ -5,7 +5,6 @@ from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneM
 
 
 class ComposedGeneMutator(BaseGeneMutator):
-
     def __init__(self) -> None:
         super().__init__()
         self.mutators: List[BaseGeneMutator] = []

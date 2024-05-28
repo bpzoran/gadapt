@@ -1,9 +1,3 @@
-from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
-    BaseChromosomeImmigrator,
-)
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
-    BaseGeneMutationSelector,
-)
 from gadapt.utils import ga_utils
 from gadapt.operations.crossover.blending_crossover import BlendingCrossover
 
@@ -14,12 +8,8 @@ class BlendingParentDiversityCrossover(BlendingCrossover):
     Calculates diversity of parents and save it to chromosomes.
     """
 
-    def __init__(
-        self,
-        mutator: BaseGeneMutationSelector,
-        immigrator: BaseChromosomeImmigrator,
-    ):
-        super(BlendingParentDiversityCrossover, self).__init__(mutator, immigrator)
+    def __init__(self):
+        super(BlendingParentDiversityCrossover, self).__init__()
         self._genetic_diversity = None
 
     def _get_genetic_diversity(self) -> float:

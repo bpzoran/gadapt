@@ -8,7 +8,6 @@ from gadapt.utils.ga_utils import get_rand_bool, get_rand_bool_with_probability
 
 # *** Obsolete ***
 class ExtremePointedGeneMutator(RandomGeneMutator):
-
     def _make_mutated_value(self):
         return self._make_mutation()
 
