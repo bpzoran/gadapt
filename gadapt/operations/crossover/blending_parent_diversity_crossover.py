@@ -4,11 +4,11 @@ from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigr
 from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
     BaseGeneMutationSelector,
 )
-from gadapt.operations.crossover.uniform_crossover import UniformCrossover
 from gadapt.utils import ga_utils
+from operations.crossover.blending_crossover import BlendingCrossover
 
 
-class BlendingParentDiversityCrossover(UniformCrossover):
+class BlendingParentDiversityCrossover(BlendingCrossover):
     """
     Blending Crossover. Genes from parents' chromosomes are combined in a blending way.
     Calculates diversity of parents and save it to chromosomes.
