@@ -5,7 +5,7 @@ from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector 
     BaseGeneMutationSelector,
 )
 from gadapt.utils import ga_utils
-from operations.crossover.blending_crossover import BlendingCrossover
+from gadapt.operations.crossover.blending_crossover import BlendingCrossover
 
 
 class BlendingParentDiversityCrossover(BlendingCrossover):
