@@ -46,5 +46,5 @@ class CrossDiversityGeneMutationSelector(RandomGeneMutationSelector):
             lambda g: g.decision_variable.cross_diversity_coefficient,
         )
         for g in genes_for_mutation:
-            self._gene_mutator.mutate(g)
+            self._mutate_gene(g)
         return len(genes_for_mutation)

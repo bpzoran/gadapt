@@ -1,5 +1,6 @@
 from gadapt.utils import ga_utils
 from gadapt.operations.crossover.blending_crossover import BlendingCrossover
+from gadapt.operations.crossover.uniform_crossover import UniformCrossover
 
 
 class BlendingParentDiversityCrossover(BlendingCrossover):
