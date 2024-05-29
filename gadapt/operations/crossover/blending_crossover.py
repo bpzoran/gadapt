@@ -1,6 +1,7 @@
 import random
 
 from gadapt.operations.crossover.base_crossover import BaseCrossover
+from gadapt.operations.crossover.base_crossover_event_handler import BaseCrossoverEventHandler
 
 
 class BlendingCrossover(BaseCrossover):
@@ -13,8 +14,9 @@ class BlendingCrossover(BaseCrossover):
 
     def __init__(
         self,
+        event_handler: BaseCrossoverEventHandler
     ):
-        super(BlendingCrossover, self).__init__()
+        super(BlendingCrossover, self).__init__(event_handler)
         self._current_gene_number = -1
 
     def _combine(self):

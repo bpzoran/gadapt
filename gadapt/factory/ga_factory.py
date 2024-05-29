@@ -5,9 +5,6 @@ from gadapt.factory.ga_base_factory import BaseGAFactory
 from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
 from gadapt.operations.cost_finding.elitism_cost_finder import ElitismCostFinder
 from gadapt.operations.crossover.base_crossover import BaseCrossover
-from gadapt.operations.crossover.blending_parent_diversity_crossover import (
-    BlendingParentDiversityCrossover,
-)
 from gadapt.operations.exit_check.avg_cost_exit_checker import AvgCostExitChecker
 from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
 from gadapt.operations.exit_check.min_cost_exit_checker import MinCostExitChecker
@@ -118,6 +115,8 @@ from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rat
 from gadapt.operations.population_update.common_population_updater import (
     CommonPopulationUpdater,
 )
+from gadapt.operations.crossover.base_crossover_event_handler import BaseCrossoverEventHandler
+from gadapt.operations.crossover.parent_diversity_crossover_event_handler import ParentDiversityCrossoverEventHandler
 
 
 class GAFactory(BaseGAFactory):
@@ -515,16 +514,18 @@ class GAFactory(BaseGAFactory):
             for value in mutator_strings
             if value in definitions.POPULATION_MUTATION_SELECTION_STRINGS
         ]
+        crossover_event_handler: BaseCrossoverEventHandler = BaseCrossoverEventHandler()
         if (
             not population_mutation_selection_strings
             or definitions.PARENT_DIVERSITY in mutator_strings
         ):
-            return BlendingParentDiversityCrossover()
+            crossover_event_handler = ParentDiversityCrossoverEventHandler()
+
         if self._ga.crossover == definitions.BLENDING:
-            return BlendingCrossover()
+            return BlendingCrossover(crossover_event_handler)
         if self._ga.crossover == definitions.UNIFORM:
-            return UniformCrossover()
-        return BlendingParentDiversityCrossover()
+            return UniformCrossover(crossover_event_handler)
+        return BlendingCrossover(crossover_event_handler)
 
     def _get_variable_updater(self):
         """

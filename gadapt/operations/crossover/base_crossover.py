@@ -4,6 +4,7 @@ from typing import Tuple, List
 
 from gadapt.ga_model.gene import Gene
 from gadapt.ga_model.chromosome import Chromosome
+from gadapt.operations.crossover.base_crossover_event_handler import BaseCrossoverEventHandler
 
 
 class BaseCrossover(ABC):
@@ -11,8 +12,11 @@ class BaseCrossover(ABC):
 
     def __init__(
         self,
+        event_handler: BaseCrossoverEventHandler
+
     ):
         self._current_gene_number = -1
+        self._event_handler = event_handler
 
     def mate(self, chromosome_pairs: List[Tuple[Chromosome, Chromosome]], population):
         """
@@ -65,6 +69,7 @@ class BaseCrossover(ABC):
         return self._offspring1, self._offspring2
 
     def _cross_genetic_material(self):
+        self._event_handler.pre_cross_genetic_material()
         number_of_genes = len(self._father)
         for self._current_gene_number in range(number_of_genes):
             self._mother_gene, self._father_gene = self._get_mother_father_genes()
@@ -174,7 +179,7 @@ class BaseCrossover(ABC):
         self._offspring2.last_immigrant_generation = current_generation
 
     def _decision_variable_crossed(self):
-        pass
+        self._event_handler.on_decision_variable_crossed(mother_gene=self._mother_gene, father_gene=self._father_gene)
 
     def _all_decision_variable_crossed(self):
-        pass
+        self._event_handler.on_all_decision_variable_crossed(offspring1=self._offspring1, offspring2=self._offspring2)
