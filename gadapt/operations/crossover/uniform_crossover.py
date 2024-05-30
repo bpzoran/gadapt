@@ -2,6 +2,7 @@ import random
 from typing import Tuple
 
 from gadapt.operations.crossover.base_crossover import BaseCrossover
+from gadapt.operations.crossover.base_crossover_event_handler import BaseCrossoverEventHandler
 
 
 class UniformCrossover(BaseCrossover):
@@ -11,8 +12,9 @@ class UniformCrossover(BaseCrossover):
 
     def __init__(
         self,
+        event_handler: BaseCrossoverEventHandler
     ):
-        super(UniformCrossover, self).__init__()
+        super(UniformCrossover, self).__init__(event_handler)
 
     def _combine(self) -> Tuple[float, float]:
         rnd = random.randint(0, 2)
