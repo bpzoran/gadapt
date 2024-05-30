@@ -1,3 +1,5 @@
+from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.gene import Gene
 from gadapt.utils import ga_utils
 from gadapt.operations.crossover.base_crossover_event_handler import BaseCrossoverEventHandler
 
@@ -21,19 +23,13 @@ class ParentDiversityCrossoverEventHandler(BaseCrossoverEventHandler):
     def _get_parent_diversity(self):
         return round(ga_utils.average(self._genetic_diversity), 2)
 
-    def on_decision_variable_crossed(self, *args, **kwargs):
-        mother_gene = kwargs.get('mother_gene')
-        father_gene = kwargs.get('father_gene')
+    def on_decision_variable_crossed(self, mother_gene: Gene, father_gene: Gene):
         if mother_gene is None or father_gene is None:
             return
         self._genetic_diversity.append(self._get_genetic_diversity(mother_gene, father_gene))
 
-    def on_all_decision_variable_crossed(self, *args, **kwargs):
+    def on_all_decision_variable_crossed(self, offspring1: Chromosome, offspring2: Chromosome):
         parent_diversity = self._get_parent_diversity()
-        offspring1 = kwargs.get('offspring1')
-        offspring2 = kwargs.get('offspring2')
-        if offspring1 is None or offspring2 is None:
-            return
         offspring1.parent_diversity = parent_diversity
         offspring2.parent_diversity = parent_diversity
 
