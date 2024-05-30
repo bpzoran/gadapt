@@ -195,3 +195,6 @@ pypi.bat
 /gadapt/create_diagrams.bat
 comparing_tests/
 requirements_local.txt
+/diversity_based_mutation_use_case_1.py
+/diversity_based_mutation_use_case_2.py
+/exp_logging.py
