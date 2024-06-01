@@ -1,12 +1,12 @@
 from gadapt.ga_model.chromosome import Chromosome
-from gadapt.ga_model.gene import Gene
+from gadapt.ga_model.allele import Allele
 
 
 class BaseCrossoverEventHandler:
     """
     Handles crossover events
     """
-    def on_decision_variable_crossed(self, mother_gene: Gene, father_gene: Gene):
+    def on_decision_variable_crossed(self, mother_gene: Allele, father_gene: Allele):
         pass
 
     def on_all_decision_variable_crossed(self, offspring1: Chromosome, offspring2: Chromosome):

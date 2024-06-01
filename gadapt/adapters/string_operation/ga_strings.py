@@ -7,9 +7,9 @@ Genetic algorithm string operations
 
 def gene_to_string(g):
     """
-    Creates string  from the gene
+    Creates string  from the gene value
     Args:
-        g: Gene for string representation
+        g: Allele for string representation
     """
     return str(g.decision_variable.variable_id) + ": " + str(round(g.variable_value, 2))
 

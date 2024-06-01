@@ -15,5 +15,5 @@ class NormalDistributionCrossDiversityGeneMutator(NormalDistributionGeneMutator)
         min_std_dev = 0.05
         max_std_dev = 0.5
         std_dev_range = max_std_dev - min_std_dev
-        dv_rsd = np.clip(self.gene.decision_variable.cross_diversity_coefficient, 0, 1)
+        dv_rsd = np.clip(self.gene_value.decision_variable.cross_diversity_coefficient, 0, 1)
         return min_std_dev + (std_dev_range * dv_rsd)

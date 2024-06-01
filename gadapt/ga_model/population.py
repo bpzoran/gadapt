@@ -10,7 +10,7 @@ import gadapt.adapters.string_operation.ga_strings as ga_strings
 import gadapt.ga_model.definitions as definitions
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.ga_options import GAOptions
-from gadapt.ga_model.gene import Gene
+from gadapt.ga_model.allele import Allele
 
 
 class Population:
@@ -206,7 +206,7 @@ class Population:
             self.last_chromosome_id += 1
         if len(chromosome) == 0:
             for dv in self.options.decision_variables:
-                g = Gene(dv)
+                g = Allele(dv)
                 chromosome.append(g)
         self.append(chromosome)
 

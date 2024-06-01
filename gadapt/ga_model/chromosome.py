@@ -7,7 +7,7 @@ from typing import List
 import gadapt.adapters.string_operation.ga_strings as ga_strings
 import gadapt.ga_model.definitions as definitions
 from gadapt.ga_model.decision_variable import DecisionVariable
-from gadapt.ga_model.gene import Gene
+from gadapt.ga_model.allele import Allele
 from gadapt.ga_model.ranking_model import RankingModel
 
 
@@ -18,7 +18,7 @@ class Chromosome(RankingModel):
     ):
         """
         Chromosome class.
-        Chromosome is a part of the Population. Chromosome consists of Genes.
+        Chromosome is a part of the Population. Chromosome consists of Gene's alleles'.
         Args:
             population_generation: population generation
         """
@@ -37,12 +37,12 @@ class Chromosome(RankingModel):
         self._father_id = -1
         self._is_mutated = False
         self._is_immigrant = False
-        self._genes: List[Gene] = []
+        self._genes: List[Allele] = []
 
     def __str__(self) -> str:
         return self._get_chromosome_string()
 
-    def __getitem__(self, index) -> Gene:
+    def __getitem__(self, index) -> Allele:
         return self._genes[index]
 
     def __next__(self):
@@ -57,9 +57,9 @@ class Chromosome(RankingModel):
     def _get_sorted(self, key: None = None, reverse: bool = False):
         return sorted(self._genes, key=key, reverse=reverse)
 
-    def append(self, g: Gene):
+    def append(self, g: Allele):
         """
-        Appends a new gene into the chromosom
+        Appends a new gene value into the chromosome
         """
         self._genes.append(g)
 
@@ -167,9 +167,9 @@ class Chromosome(RankingModel):
         self, gen_var: DecisionVariable, gen_var_value: float = definitions.FLOAT_NAN
     ):
         """
-        Adds a gene to the chromosome
+        Adds a gene value to the chromosome
         """
-        g = Gene(gen_var, gen_var_value)
+        g = Allele(gen_var, gen_var_value)
         self.append(g)
 
     @property

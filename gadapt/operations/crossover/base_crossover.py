@@ -2,7 +2,7 @@ import math
 from abc import ABC, abstractmethod
 from typing import Tuple, List
 
-from gadapt.ga_model.gene import Gene
+from gadapt.ga_model.allele import Allele
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.operations.crossover.base_crossover_event_handler import BaseCrossoverEventHandler
 
@@ -98,7 +98,7 @@ class BaseCrossover(ABC):
         self._offspring1.father_id = self._father.chromosome_id
         self._offspring2.father_id = self._father.chromosome_id
 
-    def _get_mother_father_genes(self) -> Tuple[Gene, Gene]:
+    def _get_mother_father_genes(self) -> Tuple[Allele, Allele]:
         if self._current_gene_number == -1:
             raise Exception("_current_gene_number not set")
         father_gene = self._father[self._current_gene_number]

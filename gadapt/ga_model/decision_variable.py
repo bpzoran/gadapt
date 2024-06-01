@@ -12,7 +12,7 @@ class DecisionVariable:
     def __init__(self, id: int) -> None:
         """
         Decision variable class defines genes.
-        Each gene has a reference to one decision variable.
+        Each allele has a reference to one decision variable.
         Decision variable contains common values for genes: variable id, maximal\
             value, minimal value, step.
         Args:

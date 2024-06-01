@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from gadapt.ga_model.gene import Gene
+from gadapt.ga_model.allele import Allele
 
 
 class BaseGeneMutator(ABC):
@@ -8,16 +8,16 @@ class BaseGeneMutator(ABC):
     Mutates the variable value of a gene.
     """
 
-    def mutate(self, g: Gene):
-        self.gene = g
-        self.gene.variable_value = self._make_mutated_value()
+    def mutate(self, gene_value: Allele):
+        self.gene_value = gene_value
+        self.gene_value.variable_value = self._make_mutated_value()
 
     @abstractmethod
     def _make_mutated_value(self):
         pass
 
     def _execute_function_until_value_changed(self, f):
-        current_gene_value = self.gene.variable_value
+        current_gene_value = self.gene_value.variable_value
         number_of_attempts = 5
         i = 0
         while True:

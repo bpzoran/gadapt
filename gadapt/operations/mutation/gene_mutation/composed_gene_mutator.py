@@ -18,12 +18,12 @@ class ComposedGeneMutator(BaseGeneMutator):
         self.mutators.append(mutator)
 
     def _make_mutated_value(self):
-        if self.gene is None:
-            raise Exception("Gene must not be null")
+        if self.gene_value is None:
+            raise Exception("Allele must not be null")
         if len(self.mutators) == 0:
             raise Exception("at least one mutator must be added")
         for mutator in self.mutators:
-            mutator.gene = self.gene
+            mutator.gene_value = self.gene_value
         if len(self.mutators) > 1:
             random.shuffle(self.mutators)
         return self.mutators[0]._make_mutated_value()

@@ -1,5 +1,5 @@
 """
-Gene
+Allele
 """
 
 import math
@@ -10,14 +10,14 @@ from gadapt.ga_model.decision_variable import DecisionVariable
 from gadapt.ga_model.ranking_model import RankingModel
 
 
-class Gene(RankingModel):
+class Allele(RankingModel):
     def __init__(self, gen_variable, var_value=None):
         """
-        Gene class. Gene is a part of chromosome.
-        It contains concrete values for decision variables.
+        Allele class. Allele is a part of chromosome.
+        It contains concrete value of Gene.
         Args:
-            gen_variable: Decision variable which defines the gene
-            var_value: Value of the gene
+            gen_variable: Gene which defines the allele
+            var_value: Variable value
         """
         super().__init__()
         self.decision_variable = gen_variable
@@ -36,7 +36,7 @@ class Gene(RankingModel):
     @property
     def decision_variable(self) -> DecisionVariable:
         """
-        Decision variable which defines the gene
+        Decision variable which defines the allele
         """
         return self._decision_variable
 
@@ -49,7 +49,7 @@ class Gene(RankingModel):
     @property
     def variable_value(self):
         """
-        Value of the gene
+        Variable value
         """
         return self._variable_value
 

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from gadapt.ga_model.gene import Gene
+from gadapt.ga_model.allele import Allele
 from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_rate_determinator import (
     BaseGeneMutationRateDeterminator,
 )
@@ -42,7 +42,7 @@ class BaseGeneMutationSelector(ABC):
     def _mutate_chromosome(self):
         pass
 
-    def _mutate_gene(self, g: Gene):
+    def _mutate_gene(self, g: Allele):
         self._gene_mutator.mutate(g)
         self._gene_mutated(g)
 

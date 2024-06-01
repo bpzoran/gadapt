@@ -149,7 +149,7 @@ class GAFactory(BaseGAFactory):
 
     def _get_gene_mutation_selector(self) -> BaseGeneMutationSelector:
         """
-        Gene Mutation Selector Instance
+        Allele Mutation Selector Instance
         """
         return self._get_gene_mutation_selector_combined()
 

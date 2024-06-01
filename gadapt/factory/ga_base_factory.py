@@ -82,7 +82,7 @@ class BaseGAFactory(ABC):
 
     def get_gene_mutator(self) -> BaseGeneMutator:
         """
-        Gene Mutator Instance
+        Allele Mutator Instance
         """
         if self.gene_mutator is None:
             self.gene_mutator = self._get_gene_mutator()
@@ -167,7 +167,7 @@ class BaseGAFactory(ABC):
     @abstractmethod
     def _get_gene_mutator(self) -> BaseGeneMutator:
         """
-        Gene Mutator Instance
+        Allele Mutator Instance
         """
         pass
 
