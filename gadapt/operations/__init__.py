@@ -8,5 +8,5 @@ Genetic Algorithm Operations:
 - Mutation
 - Parent Selection
 - Sampling
-- Variable Update
+- Gene Update
 """

@@ -6,10 +6,11 @@ class BaseCrossoverEventHandler:
     """
     Handles crossover events
     """
-    def on_decision_variable_crossed(self, mother_gene: Allele, father_gene: Allele):
+
+    def on_gene_crossed(self, mother_gene: Allele, father_gene: Allele):
         pass
 
-    def on_all_decision_variable_crossed(self, offspring1: Chromosome, offspring2: Chromosome):
+    def on_all_genes_crossed(self, offspring1: Chromosome, offspring2: Chromosome):
         pass
 
     def pre_cross_genetic_material(self, *args, **kwargs):

@@ -6,7 +6,7 @@ import math
 
 import gadapt.adapters.string_operation.ga_strings as ga_strings
 import gadapt.ga_model.definitions as definitions
-from gadapt.ga_model.decision_variable import DecisionVariable
+from gadapt.ga_model.gene import Gene
 from gadapt.ga_model.ranking_model import RankingModel
 
 
@@ -20,7 +20,7 @@ class Allele(RankingModel):
             var_value: Variable value
         """
         super().__init__()
-        self.decision_variable = gen_variable
+        self.gene = gen_variable
         self.variable_value = var_value
         self._rank = -1
         self._cummulative_probability = definitions.FLOAT_NAN
@@ -31,20 +31,20 @@ class Allele(RankingModel):
         return self._to_string()
 
     def _to_string(self):
-        return ga_strings.gene_to_string(self)
+        return ga_strings.gene_value_to_string(self)
 
     @property
-    def decision_variable(self) -> DecisionVariable:
+    def gene(self) -> Gene:
         """
-        Decision variable which defines the allele
+        Gene which defines the allele
         """
-        return self._decision_variable
+        return self._gene
 
-    @decision_variable.setter
-    def decision_variable(self, value: DecisionVariable):
-        if not isinstance(value, DecisionVariable):
+    @gene.setter
+    def gene(self, value: Gene):
+        if not isinstance(value, Gene):
             raise
-        self._decision_variable = value
+        self._gene = value
 
     @property
     def variable_value(self):
@@ -61,4 +61,4 @@ class Allele(RankingModel):
         """
         Sets a random value for the variable_value property
         """
-        self.variable_value = self.decision_variable.make_random_value()
+        self.variable_value = self.gene.make_random_value()

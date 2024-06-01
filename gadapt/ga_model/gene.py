@@ -1,5 +1,5 @@
 """
-Decision variable
+Gene
 """
 
 import random
@@ -8,15 +8,15 @@ import sys
 import gadapt.ga_model.definitions as definitions
 
 
-class DecisionVariable:
+class Gene:
     def __init__(self, id: int) -> None:
         """
-        Decision variable class defines genes.
-        Each allele has a reference to one decision variable.
-        Decision variable contains common values for genes: variable id, maximal\
+        Gene class defines variable to be optimized.
+        Each allele has a reference to one gene.
+        Gene contains common values for optimized variables and alleles: variable id, maximal\
             value, minimal value, step.
         Args:
-            id (int): identifier of the decision variable
+            id (int): identifier of the gene
         """
         self._max_value = sys.float_info.min
         self._decimal_places = -1
@@ -26,7 +26,7 @@ class DecisionVariable:
         self._initial_st_dev = -1.0
 
     def __eq__(self, other):
-        if not isinstance(other, DecisionVariable):
+        if not isinstance(other, Gene):
             return False
         return self.variable_id == other.variable_id
 
@@ -36,7 +36,7 @@ class DecisionVariable:
     @property
     def variable_id(self) -> int:
         """
-        Unique ID for decision variable
+        Unique ID for the gene
         """
         return self._variable_id
 
@@ -99,7 +99,7 @@ class DecisionVariable:
     @property
     def stacked(self) -> bool:
         """
-        Indicates if all genes have the same value for the same decision variable
+        Indicates if all alleles have the same value for the same gene
         """
         return self._stacked
 
@@ -110,7 +110,7 @@ class DecisionVariable:
     @property
     def cross_diversity_coefficient(self) -> float:
         """
-        Relative standard deviation of all genes for the same decision variable
+        Relative standard deviation of all alleles for the same gene
         """
         return self._standard_deviation
 

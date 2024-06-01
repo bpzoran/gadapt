@@ -13,14 +13,14 @@ class CommonOptionsValidator(BaseOptionsValidator):
 
     def _validate_options(self):
         self.success &= self._check_nones_types_and_values()
-        self.success &= self._check_decision_variables()
+        self.success &= self._check_genes()
         self.success &= self._check_cost_function()
 
-    def _check_decision_variables(self) -> bool:
-        if self.options._decision_variables is None:
+    def _check_genes(self) -> bool:
+        if self.options._genes is None:
             return False
         rslt = True
-        for v in self.options._decision_variables:
+        for v in self.options._genes:
             if v.min_value is None or v.max_value is None or v.step is None:
                 self._add_message(
                     "Min value, max value and step must not be\
@@ -81,7 +81,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
             return False
         argsmin = {}
         argsmax = {}
-        for v in self.options._decision_variables:
+        for v in self.options._genes:
             argsmin[v.variable_id] = v.min_value
             argsmax[v.variable_id] = v.max_value
         try:
@@ -199,12 +199,12 @@ class CommonOptionsValidator(BaseOptionsValidator):
                     )
                 )
                 rslt &= False
-        if self.options._decision_variables is None:
-            self._add_message("Decision variables must not be None!")
+        if self.options._genes is None:
+            self._add_message("Genes must not be None!")
             rslt &= False
-        num_of_decision_variables = len(self.options._decision_variables)  # type: ignore
-        if num_of_decision_variables < 1:
-            self._add_message("At least one decision variable must be added!")
+        num_of_genes = len(self.options._genes)  # type: ignore
+        if num_of_genes < 1:
+            self._add_message("At least one gene must be added!")
             rslt &= False
         if (
             self.options.number_of_mutation_genes is None
@@ -229,8 +229,8 @@ class CommonOptionsValidator(BaseOptionsValidator):
             and (self.options.number_of_mutation_genes > 0)
         ):
             if (
-                num_of_decision_variables > 0
-                and self.options.number_of_mutation_genes > num_of_decision_variables
+                num_of_genes > 0
+                and self.options.number_of_mutation_genes > num_of_genes
             ):
                 self._add_message(
                     "Invalid number of mutation genes: {0}".format(

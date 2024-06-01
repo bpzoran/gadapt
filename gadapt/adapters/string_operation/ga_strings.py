@@ -5,13 +5,13 @@ Genetic algorithm string operations
 """
 
 
-def gene_to_string(g):
+def gene_value_to_string(allele):
     """
     Creates string  from the gene value
     Args:
-        g: Allele for string representation
+        allele: Allele for string representation
     """
-    return str(g.decision_variable.variable_id) + ": " + str(round(g.variable_value, 2))
+    return str(allele.gene.variable_id) + ": " + str(round(allele.variable_value, 2))
 
 
 def chromosome_to_string(c):
@@ -27,10 +27,7 @@ def chromosome_to_string(c):
     str_res = str_res + id_str + " - "
     for g in c:
         str_res += (
-            str(g.decision_variable.variable_id)
-            + ": "
-            + str(round(g.variable_value, 2))
-            + "; "
+            str(g.gene.variable_id) + ": " + str(round(g.variable_value, 2)) + "; "
         )
     str_res += "Cost value: " + str(c.cost_value) + "; "
     str_res += "Chromosome generation: " + str(c.chromosome_generation) + "; "

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class BaseVariableUpdater(ABC):
+class BaseGeneUpdater(ABC):
     """
     Base class for variable update
     """

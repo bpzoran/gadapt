@@ -4,17 +4,15 @@ from typing import Tuple, List
 
 from gadapt.ga_model.allele import Allele
 from gadapt.ga_model.chromosome import Chromosome
-from gadapt.operations.crossover.base_crossover_event_handler import BaseCrossoverEventHandler
+from gadapt.operations.crossover.base_crossover_event_handler import (
+    BaseCrossoverEventHandler,
+)
 
 
 class BaseCrossover(ABC):
     """Base Crossover Class"""
 
-    def __init__(
-        self,
-        event_handler: BaseCrossoverEventHandler
-
-    ):
+    def __init__(self, event_handler: BaseCrossoverEventHandler):
         self._current_gene_number = -1
         self._event_handler = event_handler
 
@@ -73,26 +71,22 @@ class BaseCrossover(ABC):
         number_of_genes = len(self._father)
         for self._current_gene_number in range(number_of_genes):
             self._mother_gene, self._father_gene = self._get_mother_father_genes()
-            decision_variable_father = self._mother_gene.decision_variable
-            decision_variable_mother = self._father_gene.decision_variable
-            if decision_variable_father != decision_variable_mother:
-                decision_variable_mother = next(
-                    (
-                        item.decision_variable
-                        for item in self._mother
-                        if item.decision_variable == decision_variable_father
-                    ),
+            gene_father = self._mother_gene.gene
+            gene_mother = self._father_gene.gene
+            if gene_father != gene_mother:
+                gene_mother = next(
+                    (item.gene for item in self._mother if item.gene == gene_father),
                     None,
                 )
-            if decision_variable_mother is None:
+            if gene_mother is None:
                 raise Exception(
                     "chromosomes in crossover do not have the same structure!"
                 )
-            self._decision_variable_crossed()
+            self._gene_crossed()
             var1, var2 = self._combine()
-            self._offspring1.add_gene(decision_variable_father, var1)
-            self._offspring2.add_gene(decision_variable_father, var2)
-        self._all_decision_variable_crossed()
+            self._offspring1.add_gene(gene_father, var1)
+            self._offspring2.add_gene(gene_father, var2)
+        self._all_genes_crossed()
         self._offspring1.mother_id = self._mother.chromosome_id
         self._offspring2.mother_id = self._mother.chromosome_id
         self._offspring1.father_id = self._father.chromosome_id
@@ -178,8 +172,12 @@ class BaseCrossover(ABC):
         self._offspring1.last_immigrant_generation = current_generation
         self._offspring2.last_immigrant_generation = current_generation
 
-    def _decision_variable_crossed(self):
-        self._event_handler.on_decision_variable_crossed(mother_gene=self._mother_gene, father_gene=self._father_gene)
+    def _gene_crossed(self):
+        self._event_handler.on_gene_crossed(
+            mother_gene=self._mother_gene, father_gene=self._father_gene
+        )
 
-    def _all_decision_variable_crossed(self):
-        self._event_handler.on_all_decision_variable_crossed(offspring1=self._offspring1, offspring2=self._offspring2)
+    def _all_genes_crossed(self):
+        self._event_handler.on_all_genes_crossed(
+            offspring1=self._offspring1, offspring2=self._offspring2
+        )

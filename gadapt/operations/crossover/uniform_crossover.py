@@ -2,7 +2,9 @@ import random
 from typing import Tuple
 
 from gadapt.operations.crossover.base_crossover import BaseCrossover
-from gadapt.operations.crossover.base_crossover_event_handler import BaseCrossoverEventHandler
+from gadapt.operations.crossover.base_crossover_event_handler import (
+    BaseCrossoverEventHandler,
+)
 
 
 class UniformCrossover(BaseCrossover):
@@ -10,10 +12,7 @@ class UniformCrossover(BaseCrossover):
     Uniform Crossover. Genes from parents' chromosomes are combined in a uniform way.
     """
 
-    def __init__(
-        self,
-        event_handler: BaseCrossoverEventHandler
-    ):
+    def __init__(self, event_handler: BaseCrossoverEventHandler):
         super(UniformCrossover, self).__init__(event_handler)
 
     def _combine(self) -> Tuple[float, float]:

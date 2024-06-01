@@ -12,7 +12,7 @@ from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneM
 
 class CrossDiversityGeneMutationSelector(RandomGeneMutationSelector):
     """
-    Selects and mutates a chromosome based on the cross diversity of decision variables in the population.
+    Selects and mutates a chromosome based on the cross diversity of genes in the population.
     """
 
     def __init__(
@@ -28,7 +28,7 @@ class CrossDiversityGeneMutationSelector(RandomGeneMutationSelector):
         if self.number_of_mutation_genes == 0:
             self.number_of_mutation_genes = 1
         x_genes = [g for g in self.chromosome]
-        x_genes.sort(key=lambda g: -g.decision_variable.cross_diversity_coefficient)
+        x_genes.sort(key=lambda g: -g.gene.cross_diversity_coefficient)
         number_of_mutation_genes = (
             self._gene_mutation_rate_determinator.get_number_of_mutation_genes(
                 self.chromosome, self.number_of_mutation_genes
@@ -43,7 +43,7 @@ class CrossDiversityGeneMutationSelector(RandomGeneMutationSelector):
         genes_for_mutation = self._sampling.get_sample(
             x_genes,
             max_number_of_mutation_genes,
-            lambda g: g.decision_variable.cross_diversity_coefficient,
+            lambda g: g.gene.cross_diversity_coefficient,
         )
         for g in genes_for_mutation:
             self._mutate_gene(g)

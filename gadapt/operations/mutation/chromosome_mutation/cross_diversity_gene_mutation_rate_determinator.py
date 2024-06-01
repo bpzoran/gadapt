@@ -6,7 +6,7 @@ from gadapt.operations.mutation.chromosome_mutation.random_gene_mutation_rate_de
 
 class CrossDiversityGeneMutationRateDeterminator(RandomGeneMutationRateDeterminator):
     """
-    Determines the number of mutation genes in a chromosome based on the cross diversity coefficient of the decision variables.
+    Determines the number of mutation alleles in a chromosome based on the cross diversity coefficient of the gene.
     """
 
     def __init__(
@@ -15,12 +15,10 @@ class CrossDiversityGeneMutationRateDeterminator(RandomGeneMutationRateDetermina
         super().__init__()
 
     def _get_number_of_mutation_genes(self) -> int:
-        decision_variables = [g.decision_variable for g in self.chromosome]
+        genes = [g.gene for g in self.chromosome]
 
         def get_mutation_rate() -> float:
-            avg_rsd = ga_utils.average(
-                [dv.cross_diversity_coefficient for dv in decision_variables]
-            )
+            avg_rsd = ga_utils.average([g.cross_diversity_coefficient for g in genes])
             if avg_rsd > 1:
                 avg_rsd = 1
             if avg_rsd < 0:

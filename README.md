@@ -4,7 +4,7 @@
 
 ## What Innovations Does GAdapt Bring?
 
-**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost, and cross-diversity of decision variables in the population. Less diversity increases the probability of mutation, thereby enhancing accuracy and performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
+**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost, and cross-diversity of genes in the population. Less diversity increases the probability of mutation, thereby enhancing accuracy and performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
 
 ## Installation
 
@@ -166,7 +166,7 @@ Supported values:
 
 **chromosome_mutation**=*"cross_diversity,random"* - The type of gene selection in chromosomes for mutation  
 Supported values:
-- *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this decision variable approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_sampling* parameter.  
+- *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this gene approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_sampling* parameter.  
 - *"random"* - Genes are randomly selected for the mutation
 
 **gene_mutation**=*"cross_diversity,random"* - The type of assigning mutated values to genes

@@ -205,22 +205,10 @@ class Population:
             chromosome.chromosome_id = self.last_chromosome_id
             self.last_chromosome_id += 1
         if len(chromosome) == 0:
-            for dv in self.options.decision_variables:
-                g = Allele(dv)
-                chromosome.append(g)
+            for g in self.options.genes:
+                a = Allele(g)
+                chromosome.append(a)
         self.append(chromosome)
-
-    def update_variables(self):
-        """
-        Updates decision variables
-        """
-        self.variable_updater.update_variables(self)
-
-    def update_population(self):
-        """
-        Updates population
-        """
-        self.population_updater.update_population(self)
 
 
 class PopulationIterator:

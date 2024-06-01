@@ -6,7 +6,7 @@ from typing import List
 
 import gadapt.adapters.string_operation.ga_strings as ga_strings
 import gadapt.ga_model.definitions as definitions
-from gadapt.ga_model.decision_variable import DecisionVariable
+from gadapt.ga_model.gene import Gene
 from gadapt.ga_model.allele import Allele
 from gadapt.ga_model.ranking_model import RankingModel
 
@@ -163,9 +163,7 @@ class Chromosome(RankingModel):
     def father_id(self, value: int):
         self._father_id = value
 
-    def add_gene(
-        self, gen_var: DecisionVariable, gen_var_value: float = definitions.FLOAT_NAN
-    ):
+    def add_gene(self, gen_var: Gene, gen_var_value: float = definitions.FLOAT_NAN):
         """
         Adds a gene value to the chromosome
         """

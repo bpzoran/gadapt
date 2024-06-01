@@ -4,7 +4,7 @@ Genetic algorithm options
 
 from typing import List
 
-from gadapt.ga_model.decision_variable import DecisionVariable
+from gadapt.ga_model.gene import Gene
 
 
 class GAOptions:
@@ -24,7 +24,7 @@ class GAOptions:
         self._max_attempt_no = ga.max_attempt_no
         self._requested_cost = ga.requested_cost
         self._logging = ga.logging
-        self._decision_variables = ga._decision_variables
+        self._genes = ga._genes
         self._set_number_of_mutation_genes(ga)
         self._must_mutate_for_same_parents = ga.must_mutate_for_same_parents
         self._timeout = ga.timeout
@@ -72,8 +72,7 @@ class GAOptions:
             and 0.0 <= ga.percentage_of_mutation_genes <= 100
         ):
             self._number_of_mutation_genes = round(
-                float(len(self._decision_variables))
-                * (ga.percentage_of_mutation_genes / 100)
+                float(len(self._genes)) * (ga.percentage_of_mutation_genes / 100)
             )
         else:
             self._number_of_mutation_genes = ga.number_of_mutation_genes
@@ -181,11 +180,11 @@ class GAOptions:
         self._number_of_crossover_parents = value
 
     @property
-    def decision_variables(self) -> List[DecisionVariable]:
+    def genes(self) -> List[Gene]:
         """
-        Collection of decision variables
+        Collection of genes
         """
-        return self._decision_variables
+        return self._genes
 
     @property
     def _abandon_number(self) -> int:

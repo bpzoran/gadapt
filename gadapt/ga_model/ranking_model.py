@@ -28,7 +28,7 @@ class RankingModel:
     @property
     def action_probability(self):
         """
-        A probability for executing some action (e.g. pairing or mutation)
+        A probability for executing some action (e.allele. pairing or mutation)
         """
         return self._cummulative_probability
 

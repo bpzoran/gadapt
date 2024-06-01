@@ -95,8 +95,8 @@ from gadapt.operations.sampling.from_top_to_bottom_sampling import (
 from gadapt.operations.sampling.random_sampling import RandomSampling
 from gadapt.operations.sampling.roulette_wheel_sampling import RouletteWheelSampling
 from gadapt.operations.sampling.tournament_sampling import TournamentSampling
-from gadapt.operations.variable_update.common_variable_updater import (
-    CommonVariableUpdater,
+from gadapt.operations.gene_update.common_gene_updater import (
+    CommonGeneUpdater,
 )
 from gadapt.operations.crossover.blending_crossover import BlendingCrossover
 from gadapt.operations.crossover.uniform_crossover import UniformCrossover
@@ -115,8 +115,12 @@ from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rat
 from gadapt.operations.population_update.common_population_updater import (
     CommonPopulationUpdater,
 )
-from gadapt.operations.crossover.base_crossover_event_handler import BaseCrossoverEventHandler
-from gadapt.operations.crossover.parent_diversity_crossover_event_handler import ParentDiversityCrossoverEventHandler
+from gadapt.operations.crossover.base_crossover_event_handler import (
+    BaseCrossoverEventHandler,
+)
+from gadapt.operations.crossover.parent_diversity_crossover_event_handler import (
+    ParentDiversityCrossoverEventHandler,
+)
 
 
 class GAFactory(BaseGAFactory):
@@ -527,11 +531,11 @@ class GAFactory(BaseGAFactory):
             return UniformCrossover(crossover_event_handler)
         return BlendingCrossover(crossover_event_handler)
 
-    def _get_variable_updater(self):
+    def _get_gene_updater(self):
         """
-        Variable Updater Instance
+        Gene Updater Instance
         """
-        return CommonVariableUpdater()
+        return CommonGeneUpdater()
 
     def _get_population_updater(self):
         """

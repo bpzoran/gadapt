@@ -31,7 +31,7 @@ class GAExecutor:
         self.chromosome_immigrator = self.factory.get_chromosome_immigrator()
         self.selector = self.factory.get_parent_selector()
         self.crossover = self.factory.get_crossover()
-        self.variable_updater = self.factory.get_variable_updater()
+        self.gene_updater = self.factory.get_gene_updater()
         self.population_updater = self.factory.get_population_updater()
         self.gene_mutator = self.factory.get_gene_mutator()
 
@@ -67,9 +67,7 @@ class GAExecutor:
             results.number_of_iterations = self.population.population_generation
             results.min_cost_per_generation = self.population.min_cost_per_generation
             for g in best_individual:
-                results.result_values[
-                    g.decision_variable.variable_id
-                ] = g.variable_value
+                results.result_values[g.gene.variable_id] = g.variable_value
         except Exception as ex:
             results.success = False
             results.messages.append((message_levels.ERROR, str(ex)))
@@ -91,7 +89,7 @@ class GAExecutor:
         self.population.previous_avg_cost = self.population.avg_cost
         self.population.previous_min_cost = self.population.min_cost
         self.cost_finder.find_costs(self.population)
-        self.variable_updater.update_variables(self.population)
+        self.gene_updater.update_variables(self.population)
         self.population_updater.update_population(self.population)
 
     def immigrate(self):

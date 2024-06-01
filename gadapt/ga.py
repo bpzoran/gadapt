@@ -11,7 +11,7 @@ from gadapt.adapters.validation.common_options_validator import CommonOptionsVal
 from gadapt.execution.ga_executor import GAExecutor
 from gadapt.factory.ga_base_factory import BaseGAFactory
 from gadapt.factory.ga_factory import GAFactory
-from gadapt.ga_model.decision_variable import DecisionVariable
+from gadapt.ga_model.gene import Gene
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.ga_results import GAResults
 import copy
@@ -206,7 +206,7 @@ class GA:
         self.gene_mutation = gene_mutation
         self.immigration_number = immigration_number
         self.logging = logging
-        self._decision_variables: List[DecisionVariable] = []
+        self._genes: List[Gene] = []
         self.cross_diversity_mutation_gene_sampling = (
             cross_diversity_mutation_gene_sampling
         )
@@ -292,11 +292,11 @@ class GA:
             not isinstance(max_value, float) and not isinstance(max_value, int)
         ):
             raise Exception("min value, max value and step must be numerical values!")
-        decision_variable = DecisionVariable(self._current_dv_id)
-        decision_variable.min_value = min_value
-        decision_variable.max_value = max_value
-        decision_variable.step = step
-        self._decision_variables.append(decision_variable)
+        gene = Gene(self._current_dv_id)
+        gene.min_value = min_value
+        gene.max_value = max_value
+        gene.step = step
+        self._genes.append(gene)
         self._current_dv_id += 1
 
     @property
@@ -503,7 +503,7 @@ class GA:
 
         **"cross_diversity"** - Considers the diversity of genes of the same
         type in the population. Lower diversity can mean
-        that this decision variable approaches some local
+        that this gene approaches some local
         minimums, and therefore such genes increase the
         chance for mutation. Based on the calculated
         cross-diversity, chromosomes may be selected by

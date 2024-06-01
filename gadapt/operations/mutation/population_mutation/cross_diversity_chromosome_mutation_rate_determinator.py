@@ -8,7 +8,7 @@ class CrossDiversityChromosomeMutationRateDeterminator(
     BaseChromosomeMutationRateDeterminator
 ):
     """
-    Determining the number of chromosomes to be mutated in a population based on the cross-diversity coefficient of the decision variables.
+    Determining the number of chromosomes to be mutated in a population based on the cross-diversity coefficient of the genes.
     """
 
     def __init__(
@@ -19,10 +19,7 @@ class CrossDiversityChromosomeMutationRateDeterminator(
     def _get_number_of_mutation_chromosomes(self) -> int:
         def get_mutation_rate() -> float:
             avg_rsd = ga_utils.average(
-                [
-                    dv.cross_diversity_coefficient
-                    for dv in self.population.options.decision_variables
-                ]
+                [g.cross_diversity_coefficient for g in self.population.options.genes]
             )
             if avg_rsd > 1:
                 avg_rsd = 1

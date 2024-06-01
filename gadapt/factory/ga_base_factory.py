@@ -31,15 +31,15 @@ class BaseGAFactory(ABC):
         self.population_updater = None
         self._ga = None
         self._options = None
-        self.variable_updater = None
+        self.gene_updater = None
         self.cost_finder: Optional[BaseCostFinder] = None
         self.population_immigrator: Optional[BasePopulationImmigrator] = None
         self.chromosome_immigrator: Optional[BaseChromosomeImmigrator] = None
         self.gene_mutator: Optional[BaseGeneMutator] = None
         self.gene_mutation_selector: Optional[BaseGeneMutationSelector] = None
-        self.chromosome_mutation_selector: Optional[
-            BaseChromosomeMutationSelector
-        ] = None
+        self.chromosome_mutation_selector: Optional[BaseChromosomeMutationSelector] = (
+            None
+        )
         self.parent_selector: Optional[BaseParentSelector] = None
         self.exit_checker: Optional[BaseExitChecker] = None
         self.crossover: Optional[BaseCrossover] = None
@@ -112,13 +112,13 @@ class BaseGAFactory(ABC):
             self.exit_checker = self._get_exit_checker()
         return self.exit_checker
 
-    def get_variable_updater(self):
+    def get_gene_updater(self):
         """
-        Variable Updater Instance
+        Gene Updater Instance
         """
-        if self.variable_updater is None:
-            self.variable_updater = self._get_variable_updater()
-        return self.variable_updater
+        if self.gene_updater is None:
+            self.gene_updater = self._get_gene_updater()
+        return self.gene_updater
 
     def get_population_updater(self):
         """
@@ -193,9 +193,9 @@ class BaseGAFactory(ABC):
         pass
 
     @abstractmethod
-    def _get_variable_updater(self):
+    def _get_gene_updater(self):
         """
-        Variable Updater Instance
+        Gene Updater Instance
         """
         pass
 
