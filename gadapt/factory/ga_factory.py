@@ -95,8 +95,8 @@ from gadapt.operations.sampling.from_top_to_bottom_sampling import (
 from gadapt.operations.sampling.random_sampling import RandomSampling
 from gadapt.operations.sampling.roulette_wheel_sampling import RouletteWheelSampling
 from gadapt.operations.sampling.tournament_sampling import TournamentSampling
-from gadapt.operations.gene_update.common_gene_updater import (
-    CommonGeneUpdater,
+from gadapt.operations.gene_update.cross_diversity_gene_updater import (
+    CrossDiversityGeneUpdater,
 )
 from gadapt.operations.crossover.blending_crossover import BlendingCrossover
 from gadapt.operations.crossover.uniform_crossover import UniformCrossover
@@ -112,14 +112,14 @@ from gadapt.operations.mutation.gene_mutation.normal_distribution_cross_diversit
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
     BaseChromosomeMutationRateDeterminator,
 )
-from gadapt.operations.population_update.common_population_updater import (
-    CommonPopulationUpdater,
+from gadapt.operations.population_update.cost_diversity_population_updater import (
+    CostDiversityPopulationUpdater,
 )
-from gadapt.operations.crossover.base_crossover_event_handler import (
-    BaseCrossoverEventHandler,
+from operations.chromosome_update.base_chromosome_updater import (
+    BaseChromosomeUpdater,
 )
-from gadapt.operations.crossover.parent_diversity_crossover_event_handler import (
-    ParentDiversityCrossoverEventHandler,
+from operations.chromosome_update.parent_diversity_chromosome_updater import (
+    ParentDiversityChromosomeUpdater,
 )
 
 
@@ -518,27 +518,27 @@ class GAFactory(BaseGAFactory):
             for value in mutator_strings
             if value in definitions.POPULATION_MUTATION_SELECTION_STRINGS
         ]
-        crossover_event_handler: BaseCrossoverEventHandler = BaseCrossoverEventHandler()
+        chromosome_updater: BaseChromosomeUpdater = BaseChromosomeUpdater()
         if (
             not population_mutation_selection_strings
             or definitions.PARENT_DIVERSITY in mutator_strings
         ):
-            crossover_event_handler = ParentDiversityCrossoverEventHandler()
+            chromosome_updater = ParentDiversityChromosomeUpdater()
 
         if self._ga.crossover == definitions.BLENDING:
-            return BlendingCrossover(crossover_event_handler)
+            return BlendingCrossover(chromosome_updater)
         if self._ga.crossover == definitions.UNIFORM:
-            return UniformCrossover(crossover_event_handler)
-        return BlendingCrossover(crossover_event_handler)
+            return UniformCrossover(chromosome_updater)
+        return BlendingCrossover(chromosome_updater)
 
     def _get_gene_updater(self):
         """
         Gene Updater Instance
         """
-        return CommonGeneUpdater()
+        return CrossDiversityGeneUpdater()
 
     def _get_population_updater(self):
         """
         Population Updater Instance
         """
-        return CommonPopulationUpdater()
+        return CostDiversityPopulationUpdater()

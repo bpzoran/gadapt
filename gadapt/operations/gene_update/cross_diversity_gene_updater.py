@@ -4,7 +4,7 @@ from gadapt.ga_model.gene import Gene
 from gadapt.operations.gene_update.base_gene_updater import BaseGeneUpdater
 
 
-class CommonGeneUpdater(BaseGeneUpdater):
+class CrossDiversityGeneUpdater(BaseGeneUpdater):
     """
     Common variable updater
     """

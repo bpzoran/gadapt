@@ -2,8 +2,8 @@ import random
 from typing import Tuple
 
 from gadapt.operations.crossover.base_crossover import BaseCrossover
-from gadapt.operations.crossover.base_crossover_event_handler import (
-    BaseCrossoverEventHandler,
+from operations.chromosome_update.base_chromosome_updater import (
+    BaseChromosomeUpdater,
 )
 
 
@@ -12,8 +12,8 @@ class UniformCrossover(BaseCrossover):
     Uniform Crossover. Genes from parents' chromosomes are combined in a uniform way.
     """
 
-    def __init__(self, event_handler: BaseCrossoverEventHandler):
-        super(UniformCrossover, self).__init__(event_handler)
+    def __init__(self, chromosome_updater: BaseChromosomeUpdater):
+        super(UniformCrossover, self).__init__(chromosome_updater)
 
     def _combine(self) -> Tuple[float, float]:
         rnd = random.randint(0, 2)

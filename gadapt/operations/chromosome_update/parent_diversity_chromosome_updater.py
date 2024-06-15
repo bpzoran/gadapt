@@ -1,14 +1,14 @@
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.allele import Allele
 from gadapt.utils import ga_utils
-from gadapt.operations.crossover.base_crossover_event_handler import (
-    BaseCrossoverEventHandler,
+from operations.chromosome_update.base_chromosome_updater import (
+    BaseChromosomeUpdater,
 )
 
 
-class ParentDiversityCrossoverEventHandler(BaseCrossoverEventHandler):
+class ParentDiversityChromosomeUpdater(BaseChromosomeUpdater):
     """
-    Handles crossover events using parent diversity mutation.
+    Updates chromosome for the parent diversity purpose.
     """
 
     def __init__(self):
@@ -22,17 +22,17 @@ class ParentDiversityCrossoverEventHandler(BaseCrossoverEventHandler):
     def _get_parent_diversity(self):
         return round(ga_utils.average(self._genetic_diversity), 2)
 
-    def on_gene_crossed(self, mother_gene: Allele, father_gene: Allele):
+    def chromosome_prepare_update(self, mother_gene: Allele, father_gene: Allele):
         if mother_gene is None or father_gene is None:
             return
         self._genetic_diversity.append(
             self._get_genetic_diversity(mother_gene, father_gene)
         )
 
-    def on_all_genes_crossed(self, offspring1: Chromosome, offspring2: Chromosome):
+    def chromosome_update(self, offspring1: Chromosome, offspring2: Chromosome):
         parent_diversity = self._get_parent_diversity()
         offspring1.parent_diversity = parent_diversity
         offspring2.parent_diversity = parent_diversity
 
-    def pre_cross_genetic_material(self, *args, **kwargs):
+    def chromosome_start_update(self, *args, **kwargs):
         self._genetic_diversity = []

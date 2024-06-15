@@ -6,7 +6,7 @@ from gadapt.operations.population_update.base_population_updater import (
 from gadapt.utils import ga_utils
 
 
-class CommonPopulationUpdater(BasePopulationUpdater):
+class CostDiversityPopulationUpdater(BasePopulationUpdater):
     """
     Common population updater
     """
