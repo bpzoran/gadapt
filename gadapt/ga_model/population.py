@@ -37,8 +37,8 @@ class Population:
         self.chromosomes: List[Chromosome] = []
         self.generate_initial_population()
         self.start_time = datetime.now()
-        self.average_cost_step = float("NaN")
-        self.average_cost_step_in_first_population = float("NaN")
+        self.absolute_cost_diversity = float("NaN")
+        self.absolute_cost_diversity_in_first_population = float("NaN")
         self.timeout_expired = False
         self.min_cost_per_generation: List[float] = []
 

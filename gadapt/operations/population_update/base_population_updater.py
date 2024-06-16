@@ -1,7 +1,4 @@
-from abc import ABC, abstractmethod
-
-
-class BasePopulationUpdater(ABC):
+class BasePopulationUpdater:
     """
     Base class for population update
     """
@@ -14,6 +11,5 @@ class BasePopulationUpdater(ABC):
         self.population = population
         self._update_population()
 
-    @abstractmethod
     def _update_population(self):
         pass

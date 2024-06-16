@@ -31,8 +31,8 @@ class ParentDiversityChromosomeUpdater(BaseChromosomeUpdater):
 
     def chromosome_update(self, offspring1: Chromosome, offspring2: Chromosome):
         parent_diversity = self._get_parent_diversity()
-        offspring1.parent_diversity = parent_diversity
-        offspring2.parent_diversity = parent_diversity
+        offspring1.parent_diversity_coefficient = parent_diversity
+        offspring2.parent_diversity_coefficient = parent_diversity
 
     def chromosome_start_update(self, *args, **kwargs):
         self._genetic_diversity = []

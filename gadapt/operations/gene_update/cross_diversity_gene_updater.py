@@ -9,7 +9,7 @@ class CrossDiversityGeneUpdater(BaseGeneUpdater):
     Common variable updater
     """
 
-    def _update_variables(self):
+    def _update_genes(self):
         def scale_values(g: Gene, values):
             scaled_values = []
             if g.min_value == g.max_value:

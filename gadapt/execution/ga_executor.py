@@ -89,7 +89,7 @@ class GAExecutor:
         self.population.previous_avg_cost = self.population.avg_cost
         self.population.previous_min_cost = self.population.min_cost
         self.cost_finder.find_costs(self.population)
-        self.gene_updater.update_variables(self.population)
+        self.gene_updater.update_genes(self.population)
         self.population_updater.update_population(self.population)
 
     def immigrate(self):

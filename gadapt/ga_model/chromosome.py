@@ -23,6 +23,7 @@ class Chromosome(RankingModel):
             population_generation: population generation
         """
         super().__init__()
+        self._parent_diversity_coefficient = float("NaN")
         self._cost_value = definitions.FLOAT_NAN
         self._is_immigrant = False
         self._population_generation = population_generation
@@ -171,15 +172,15 @@ class Chromosome(RankingModel):
         self.append(g)
 
     @property
-    def parent_diversity(self) -> float:
+    def parent_diversity_coefficient(self) -> float:
         """
         Diversity of parents
         """
-        return self._parent_diversity
+        return self._parent_diversity_coefficient
 
-    @parent_diversity.setter
-    def parent_diversity(self, value: float):
-        self._parent_diversity = value
+    @parent_diversity_coefficient.setter
+    def parent_diversity_coefficient(self, value: float):
+        self._parent_diversity_coefficient = value
 
     @property
     def population_generation(self) -> int:

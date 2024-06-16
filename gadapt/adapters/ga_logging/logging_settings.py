@@ -42,3 +42,21 @@ def gadapt_log_info(msg: str):
         logger.info(msg)
     except Exception:
         pass
+
+
+def gadapt_log_warning(msg: str):
+    logger = logging.getLogger("gadapt_logger")
+    if logger.disabled:
+        return
+    try:
+        logger.warning(msg)
+    except Exception:
+        pass
+
+
+def gadapt_log_error(msg: str):
+    logger = logging.getLogger("gadapt_logger")
+    try:
+        logger.error(msg)
+    except Exception:
+        pass

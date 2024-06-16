@@ -1,7 +1,4 @@
-from abc import ABC, abstractmethod
-
-
-class BaseGeneUpdater(ABC):
+class BaseGeneUpdater:
     """
     Base class for variable update
     """
@@ -9,10 +6,9 @@ class BaseGeneUpdater(ABC):
     def __init__(self):
         self.population = None
 
-    def update_variables(self, population):
+    def update_genes(self, population):
         self.population = population
-        self._update_variables()
+        self._update_genes()
 
-    @abstractmethod
-    def _update_variables(self):
+    def _update_genes(self):
         pass

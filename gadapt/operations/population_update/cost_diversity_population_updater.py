@@ -11,7 +11,7 @@ class CostDiversityPopulationUpdater(BasePopulationUpdater):
     Common population updater
     """
 
-    def _calculate_average_cost_step(self):
+    def _calculate_absolute_cost_diversity(self):
         allocated_values = [
             c.cost_value
             for c in self.population.chromosomes
@@ -22,8 +22,10 @@ class CostDiversityPopulationUpdater(BasePopulationUpdater):
         return float("NaN")
 
     def _update_population(self):
-        self.population.average_cost_step = self._calculate_average_cost_step()
-        if math.isnan(self.population.average_cost_step_in_first_population):
-            self.population.average_cost_step_in_first_population = (
-                self.population.average_cost_step
+        self.population.absolute_cost_diversity = (
+            self._calculate_absolute_cost_diversity()
+        )
+        if math.isnan(self.population.absolute_cost_diversity_in_first_population):
+            self.population.absolute_cost_diversity_in_first_population = (
+                self.population.absolute_cost_diversity
             )

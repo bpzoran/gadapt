@@ -121,6 +121,8 @@ from operations.chromosome_update.base_chromosome_updater import (
 from operations.chromosome_update.parent_diversity_chromosome_updater import (
     ParentDiversityChromosomeUpdater,
 )
+from operations.gene_update.base_gene_updater import BaseGeneUpdater
+from operations.population_update.base_population_updater import BasePopulationUpdater
 
 
 class GAFactory(BaseGAFactory):
@@ -509,21 +511,7 @@ class GAFactory(BaseGAFactory):
         """
         if self._ga is None:
             raise Exception("ga object must not be None!")
-        mutator_strings = [
-            ms.strip()
-            for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
-        ]
-        population_mutation_selection_strings = [
-            value
-            for value in mutator_strings
-            if value in definitions.POPULATION_MUTATION_SELECTION_STRINGS
-        ]
-        chromosome_updater: BaseChromosomeUpdater = BaseChromosomeUpdater()
-        if (
-            not population_mutation_selection_strings
-            or definitions.PARENT_DIVERSITY in mutator_strings
-        ):
-            chromosome_updater = ParentDiversityChromosomeUpdater()
+        chromosome_updater = self.get_chromosome_updater()
 
         if self._ga.crossover == definitions.BLENDING:
             return BlendingCrossover(chromosome_updater)
@@ -535,10 +523,50 @@ class GAFactory(BaseGAFactory):
         """
         Gene Updater Instance
         """
-        return CrossDiversityGeneUpdater()
+        population_mutator_strings = [
+            ms.strip()
+            for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
+        ]
+        chromosome_mutator_strings = [
+            ms.strip()
+            for ms in self._ga.chromosome_mutation.split(definitions.PARAM_SEPARATOR)
+        ]
+        gene_mutator_strings = [
+            ms.strip()
+            for ms in self._ga.gene_mutation.split(definitions.PARAM_SEPARATOR)
+        ]
+        all_mutator_strings = (
+            population_mutator_strings
+            + chromosome_mutator_strings
+            + gene_mutator_strings
+        )
+        if definitions.CROSS_DIVERSITY in all_mutator_strings:
+            return CrossDiversityGeneUpdater()
+        return BaseGeneUpdater()
+
+    def get_chromosome_updater(self):
+        population_mutator_strings = [
+            ms.strip()
+            for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
+        ]
+        if (
+            not population_mutator_strings
+            or definitions.PARENT_DIVERSITY in population_mutator_strings
+        ):
+            return ParentDiversityChromosomeUpdater()
+        return BaseChromosomeUpdater()
 
     def _get_population_updater(self):
         """
         Population Updater Instance
         """
-        return CostDiversityPopulationUpdater()
+        population_mutator_strings = [
+            ms.strip()
+            for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
+        ]
+        if (
+            not population_mutator_strings
+            or definitions.COST_DIVERSITY in population_mutator_strings
+        ):
+            return CostDiversityPopulationUpdater()
+        return BasePopulationUpdater()

@@ -1,5 +1,8 @@
+import math
+
 import numpy as np
 
+from adapters.ga_logging.logging_settings import gadapt_log_error
 from gadapt.operations.mutation.gene_mutation.normal_distribution_gene_mutator import (
     NormalDistributionGeneMutator,
 )
@@ -12,6 +15,11 @@ class NormalDistributionCrossDiversityGeneMutator(NormalDistributionGeneMutator)
     """
 
     def _calculate_normal_distribution_standard_deviation(self):
+        if self.gene_value.gene.cross_diversity_coefficient is None or math.isnan(
+            self.gene_value.gene.cross_diversity_coefficient
+        ):
+            gadapt_log_error("cross_diversity_coefficient not set!")
+            return 0.05
         min_std_dev = 0.05
         max_std_dev = 0.5
         std_dev_range = max_std_dev - min_std_dev
