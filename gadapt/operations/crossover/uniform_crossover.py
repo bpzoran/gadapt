@@ -2,7 +2,7 @@ import random
 from typing import Tuple
 
 from gadapt.operations.crossover.base_crossover import BaseCrossover
-from operations.chromosome_update.base_chromosome_updater import (
+from gadapt.operations.chromosome_update.base_chromosome_updater import (
     BaseChromosomeUpdater,
 )
 

@@ -115,14 +115,16 @@ from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rat
 from gadapt.operations.population_update.cost_diversity_population_updater import (
     CostDiversityPopulationUpdater,
 )
-from operations.chromosome_update.base_chromosome_updater import (
+from gadapt.operations.chromosome_update.base_chromosome_updater import (
     BaseChromosomeUpdater,
 )
-from operations.chromosome_update.parent_diversity_chromosome_updater import (
+from gadapt.operations.chromosome_update.parent_diversity_chromosome_updater import (
     ParentDiversityChromosomeUpdater,
 )
-from operations.gene_update.base_gene_updater import BaseGeneUpdater
-from operations.population_update.base_population_updater import BasePopulationUpdater
+from gadapt.operations.gene_update.base_gene_updater import BaseGeneUpdater
+from gadapt.operations.population_update.base_population_updater import (
+    BasePopulationUpdater,
+)
 
 
 class GAFactory(BaseGAFactory):

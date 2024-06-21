@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 
-from adapters.ga_logging.logging_settings import gadapt_log_error
+from gadapt.adapters.ga_logging.logging_settings import gadapt_log_error
 from gadapt.operations.mutation.gene_mutation.normal_distribution_gene_mutator import (
     NormalDistributionGeneMutator,
 )

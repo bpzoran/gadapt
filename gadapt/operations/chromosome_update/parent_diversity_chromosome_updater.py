@@ -1,7 +1,7 @@
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.allele import Allele
 from gadapt.utils import ga_utils
-from operations.chromosome_update.base_chromosome_updater import (
+from gadapt.operations.chromosome_update.base_chromosome_updater import (
     BaseChromosomeUpdater,
 )
 

@@ -1,6 +1,6 @@
 import math
 
-from adapters.ga_logging.logging_settings import gadapt_log_error
+from gadapt.adapters.ga_logging.logging_settings import gadapt_log_error
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
     BaseChromosomeMutationRateDeterminator,
 )

@@ -1,7 +1,7 @@
 from math import isnan
 
 import gadapt.utils.ga_utils as ga_utils
-from adapters.ga_logging.logging_settings import gadapt_log_error
+from gadapt.adapters.ga_logging.logging_settings import gadapt_log_error
 from gadapt.operations.mutation.chromosome_mutation.random_gene_mutation_rate_determinator import (
     RandomGeneMutationRateDeterminator,
 )

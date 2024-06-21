@@ -1,7 +1,7 @@
 import random
 from math import isnan
 
-from adapters.ga_logging.logging_settings import gadapt_log_error
+from gadapt.adapters.ga_logging.logging_settings import gadapt_log_error
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
     BaseChromosomeMutationRateDeterminator,
