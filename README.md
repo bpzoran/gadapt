@@ -13,6 +13,7 @@ A comprehensive and customizable genetic algorithm library.
   - [Parameter Settings](#parameter-settings)
   - [Parameters Description](#parameters-description)
   - [Adding Variables](#adding-variables)
+  - [GA Execution and Optimisation Results](#ga-execution-and-optimisation-results)
 - [GA Customisation](#ga-customisation)
 
 ## Introduction
@@ -21,7 +22,9 @@ A comprehensive and customizable genetic algorithm library.
 
 ### What Innovations Does GAdapt Bring?
 
-**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost, and cross-diversity of genes in the population. Less diversity increases the probability of mutation, thereby enhancing accuracy and performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
+**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. In addition, it determines the gene alteration type. This determination is based on the diversity of parents, diversity of cost, and cross-diversity of genes in the population. The higher diversity and lower convergence necessitate fewer mutated chromosomes. A high diversity level also allows for more mutated genes within each chromosome. At this stage, gene value alterations are encouraged to be unbiased, favoring a uniform distribution of values. This approach ensures that mutations are not overly frequent, but selected chromosomes can undergo significant changes, promoting the exploration of potential solutions. As diversity decreases and convergence increases, the frequency of mutated chromosomes rises, the number of mutated genes inside chromosomes decreases, and gene value changes are biased towards previously attained values, encouraging greater exploitation and fine-tuning of existing solutions. Throughout this process, the selection of mutated chromosomes and gene values should prioritize those with lower diversity and higher convergence levels, maintaining exploration and preventing GA from getting stuck in some local optimums.
+
+The proposed method refines mutation selection, rate determination, and alteration processes, potentially surpassing the limitations of traditional mutation techniques and opening up new possibilities for significantly improved GA performance.
 
 ## Installation
 
@@ -229,7 +232,7 @@ ga.add(-25, 25, 1) # Refers to args[0]
 ga.add(-5, 5, 0.1) # Refers to args[1]
 
 ```
-# GA Execution and Optimisation Results
+### GA Execution and Optimisation Results
 Genetic algorithm optimization executes by calling *execute* method, without parameters. This method returns the object of type *GAResults*, which contain following properties:
 - **success**  - Indicates if genetic algorithm optimisation executed successfully.
 - **min_cost** - The minimal cost for optimized variables
