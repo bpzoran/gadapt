@@ -241,6 +241,10 @@ class GAFactory(BaseGAFactory):
             chromosome_mutation_rate_determinators.append(
                 RandomChromosomeMutationRateDeterminator()
             )
+        if definitions.STRICT in mutator_strings:
+            chromosome_mutation_rate_determinators.append(
+                StrictChromosomeMutationRateDeterminator()
+            )
         if definitions.CROSS_DIVERSITY in mutator_strings:
             chromosome_mutation_rate_determinators.append(
                 CrossDiversityChromosomeMutationRateDeterminator()
@@ -349,6 +353,10 @@ class GAFactory(BaseGAFactory):
         if definitions.RANDOM in mutator_strings:
             gene_mutation_rate_determinators.append(
                 RandomGeneMutationRateDeterminator()
+            )
+        if definitions.STRICT in mutator_strings:
+            gene_mutation_rate_determinators.append(
+                StrictGeneMutationRateDeterminator()
             )
         if definitions.CROSS_DIVERSITY in mutator_strings:
             gene_mutation_rate_determinators.append(

@@ -1,8 +1,25 @@
 # GAdapt: Self-Adaptive Genetic Algorithm
 
+A comprehensive and customizable genetic algorithm library.
+
+## Table of Contents
+- [Introduction](#introduction)
+  - [What Innovations Does GAdapt Bring?](what-innovations-does-gadapt-bring)
+- [Installation](#installation)
+- [Releases](#releases)
+- [Source code](#source-code)
+- [API Documentation](#api-documentation)
+- [Usage](#usage)
+  - [Parameter Settings](#parameter-settings)
+  - [Parameters Description](#parameters-description)
+  - [Adding Variables](#adding-variables)
+- [GA Customisation](#ga-customisation)
+
+## Introduction
+
 [GAdapt](https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for adaptive mutation of genes and chromosomes.
 
-## What Innovations Does GAdapt Bring?
+### What Innovations Does GAdapt Bring?
 
 **GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. This determination is based on the diversity of parents, diversity of cost, and cross-diversity of genes in the population. Less diversity increases the probability of mutation, thereby enhancing accuracy and performance of the optimization. Default settings provide a self-adaptive determination of mutation chromosomes and genes.
 
@@ -14,16 +31,16 @@ To install **GAdapt**, use **pip** with the following command:
 pip install gadapt
 ```
 
-# Releases
+## Releases
 The latest releases of GAdapt can be found at the PyPI repository: [GAdapt on PyPI](https://pypi.org/project/gadapt/)
 
-# Source Code
+## Source Code
 The source code is available on GitHub: [GAdapt on GitHub](https://github.com/bpzoran/gadapt/)
 
-# API Documentation
+## API Documentation
 For detailed API documentation, refer to: [GAdapt API Documentation](https://www.gadapt.com/api/)
 
-# Getting started
+## Usage
 Below is an example optimizing variable values for a complex trigonometric function:
 ```python
 from gadapt.ga import GA
@@ -67,7 +84,7 @@ Parameter values:
 ```
 
 In this example, the genetic algorithm searches for the combination of seven parameters, bringing the lowest value for the passed function. The only mandatory attribute to the genetic algorithm is *cost_function*, and other attributes in this example took default values. Parameters to be optimized are added by the "add" method. There are seven parameters to be optimized in this example.
-# Parameter Settings
+### Parameter Settings
 GAdapt genetic algorithm can receive parameters through constructor, properties, or a combination of both. Below are the supported parameters:
 
 Passing parameters through the class constructor:
@@ -106,7 +123,7 @@ ga.max_attempt_no=20
 ga.logging=True
 ga.timeout=3600
 ```
-# Parameters description
+### Parameters Description
 **cost_function**=*None* - Custom function for the cost calculation (fitness). The optimisation goal is minimising the output of the cost function. *cost_function* must be the function with one argument - a dictionary of values, where the key is an index (the ordinal of adding parameters) and the key is the parameter's value to be optimised. When adding parameters, there should be as many parameters as the function uses. The *cost_function* is the only mandatory parameter.
 
 **population_size**=*32* - Number of chromosomes in the population.
@@ -152,6 +169,7 @@ Supported values:
 - *"cross_diversity"* - It applies to the number of mutation chromosomes. Determines the number of mutated chromosomes based on dispersion of gene values. The lower dispersion indicates the higher number of mutated chromosomes. The minimal value of mutated chromosomes is 0, and the maximal value is determined by the value of *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes* parameters.
 - *"parent_diversity"* - It applies to the way how mutation chromosomes will be selected. *"parent_diversity"* selects chromosomes to be mutated using the diversity of their parents. The more similar parents (lower parent diversity) mean a higher probability of mutation for the child. Based on the calculated parent diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *parent_diversity_mutation_chromosome_sampling* parameter.  
 - *"random"* - It applies to the number of mutation chromosomes and to the way how mutation chromosomes will be selected. *"random"* selects chromosomes to be mutated randomly, and randomly determines the number of mutated chromosomes (with the upper bound of **number_of_mutation_chromosomes**)
+- *"strict"* - It applies to the number of mutation chromosomes. The strict number of chromosomes will be mutated, determined by **number_of_mutation_chromosomes** parameter.
 
 Population_mutation may have more values, separated by a comma. It means that more than one method can be chosen for the mutation of chromosomes in the population. For example, *"cost_diversity,parent_diversity"* means that number of mutation chromosomes will be determined by the cost diversity and the selection of chromosomes to be mutated will be defined by parent diversity. *"cost_diversity,random"* means that the cost diversity will determine the number of mutation chromosomes, and the selection of chromosomes to be mutated will be chosen randomly.
     
@@ -162,12 +180,13 @@ Supported values:
 - *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and selects chromosomes for mutation.  
 - *"random"* - Random selection algorithm uses a uniform random number generator to select chromosomes for mutation. In this case, selection for mutation will not depend on parent diversity.  
     
-**must_mutate_for_same_parents**=*True* - Indicates if completely the same parents must influence mutation for their children. In other words, each child will be mutated if it has parents with a diversity value of 0. If *must_mutate_for_same_parents* has the value True, the number of mutated chromosomes can outreach value determined by *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes*
+**must_mutate_for_same_parents**=*True* - Indicates if completely the same parents must influence mutation for their children. In other words, each child will be mutated if it has parents with a diversity of value of 0. If *must_mutate_for_same_parents* has the value True, the number of mutated chromosomes can outreach value determined by *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes*
 
 **chromosome_mutation**=*"cross_diversity,random"* - The type of gene selection in chromosomes for mutation  
 Supported values:
 - *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this gene approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_sampling* parameter.  
-- *"random"* - Genes are randomly selected for the mutation
+- *"random"* - Genes are randomly selected for the mutation. Random number of genes for mutation is determined, up to *number_of_mutation_genes*
+- *"strict"* - Strict number of genes will be mutated, determined by *number_of_mutation_genes* parameter.
 
 **gene_mutation**=*"cross_diversity,random"* - The type of assigning mutated values to genes
 Supported values:
@@ -186,7 +205,7 @@ Supported values:
 
 **logging**=*False* - If this parameter has a True value, the log file will be created in the current working directory. The log file contains the flow of genetic algorithm execution, along with values of chromosomes, genes and cost functions in each generation
 
-# Adding Variables
+### Adding Variables
 Variables to be optimized can be added by calling the *add* method of the *GA* object. Parameters of this method are the minimum value, the maximum value, and the step. The minimum and maximum value determine a range of possible variable values. The *step* parameter specifies the step that will be used in changing the variables values during the optimization.
 
 For example:
@@ -212,7 +231,7 @@ ga.add(-5, 5, 0.1) # Refers to args[1]
 ```
 # GA Execution and Optimisation Results
 Genetic algorithm optimization executes by calling *execute* method, without parameters. This method returns the object of type *GAResults*, which contain following properties:
-- **success**  - Indicates if genetic algorithm optimisation executed successfuly.
+- **success**  - Indicates if genetic algorithm optimisation executed successfully.
 - **min_cost** - The minimal cost for optimized variables
 - **number_of_iterations** - The number of iterations in which the optimization reached the minimal cost
 - **result_values** - The dictionary that contains variables' optimized values. The key of this dictionary is the sequence number of variable adding, and also the argument index in the cost function. The value of this dictionary is the optimized value for the variable.
@@ -236,14 +255,14 @@ ga.add(-5, 5, 0.1) # Refers to args[1]
 , the genetic algorithm execution can return results as it follows:
 ```python
 results = ga.execute()
-if results.success: # indicates if the optimisation succeded
+if results.success: # indicates if the optimisation succeeded
     print("Minimal cost: " + str(results.min_cost))
     print("Number of iterations: " + str(results.number_of_iterations))
     print("Parameter values:")
     for x in results.result_values:
         print(str(x) + ": " + str(results.result_values[x]))               
 else:
-    print("Calculation not succesful.")
+    print("Calculation not successful.")
 
 for m in results.messages:
     print(m[0] + ": " + m[1])
@@ -275,7 +294,7 @@ Parameter values:
 1: 0.0
 ```
 
-# GA Customisation
+## GA Customisation
 GAdapt follows clean architecture and SOLID principles, allowing easy customization. Create new implementations of abstract classes and pass them to the genetic algorithm through the factory object.
 
 For example, customizing the chromosome mutation selector:
@@ -285,7 +304,6 @@ import math
 from gadapt.factory.ga_factory import GAFactory
 from gadapt.ga import GA
 from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
-from operations.mutation.population_mutation.random_chromosome_mutation_rate_determinator import RandomChromosomeMutationRateDeterminator
 
 
 class BottomMutationSelector(BaseChromosomeMutationSelector):
