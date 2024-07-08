@@ -70,9 +70,9 @@ class BaseCrossover(ABC):
         self._chromosome_updater.chromosome_start_update()
         number_of_genes = len(self._father)
         for self._current_gene_number in range(number_of_genes):
-            self._mother_gene, self._father_gene = self._get_mother_father_genes()
-            gene_father = self._mother_gene.gene
-            gene_mother = self._father_gene.gene
+            self._mother_allele, self._father_allele = self._get_mother_father_allele()
+            gene_father = self._mother_allele.gene
+            gene_mother = self._father_allele.gene
             if gene_father != gene_mother:
                 gene_mother = next(
                     (item.gene for item in self._mother if item.gene == gene_father),
@@ -92,12 +92,12 @@ class BaseCrossover(ABC):
         self._offspring1.father_id = self._father.chromosome_id
         self._offspring2.father_id = self._father.chromosome_id
 
-    def _get_mother_father_genes(self) -> Tuple[Allele, Allele]:
+    def _get_mother_father_allele(self) -> Tuple[Allele, Allele]:
         if self._current_gene_number == -1:
             raise Exception("_current_gene_number not set")
-        father_gene = self._father[self._current_gene_number]
-        mother_gene = self._mother[self._current_gene_number]
-        return mother_gene, father_gene
+        father_allele = self._father[self._current_gene_number]
+        mother_allele = self._mother[self._current_gene_number]
+        return mother_allele, father_allele
 
     @abstractmethod
     def _combine(self):
@@ -174,7 +174,7 @@ class BaseCrossover(ABC):
 
     def _gene_crossed(self):
         self._chromosome_updater.chromosome_prepare_update(
-            mother_gene=self._mother_gene, father_gene=self._father_gene
+            mother_gene=self._mother_allele, father_gene=self._father_allele
         )
 
     def _all_genes_crossed(self):

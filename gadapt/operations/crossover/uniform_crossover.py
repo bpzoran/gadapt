@@ -18,8 +18,8 @@ class UniformCrossover(BaseCrossover):
     def _combine(self) -> Tuple[float, float]:
         rnd = random.randint(0, 2)
         if rnd == 0:
-            return self._father_gene.variable_value, self._mother_gene.variable_value
+            return self._father_allele.variable_value, self._mother_allele.variable_value
         elif rnd == 1:
-            return self._father_gene.variable_value, self._father_gene.variable_value
+            return self._father_allele.variable_value, self._father_allele.variable_value
         else:
-            return self._mother_gene.variable_value, self._mother_gene.variable_value
+            return self._mother_allele.variable_value, self._mother_allele.variable_value

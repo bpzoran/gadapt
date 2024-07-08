@@ -19,9 +19,9 @@ class BlendingCrossover(BaseCrossover):
         self._current_gene_number = -1
 
     def _combine(self):
-        gene = self._father_gene.gene
-        val_father = self._father_gene.variable_value
-        val_mother = self._mother_gene.variable_value
+        gene = self._father_allele.gene
+        val_father = self._father_allele.variable_value
+        val_mother = self._mother_allele.variable_value
         x = 1
         if val_mother > val_father:
             x = -1
