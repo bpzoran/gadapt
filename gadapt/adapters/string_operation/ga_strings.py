@@ -27,7 +27,7 @@ def chromosome_to_string(c):
     str_res = str_res + id_str + " - "
     for g in c:
         str_res += (
-            str(g.gene.variable_id) + ": " + str(round(g.variable_value, 2)) + "; "
+            str(g.gene.variable_id) + ": " + str(round(g.variable_value, g.gene.decimal_places)) + "; "
         )
     str_res += "Cost value: " + str(c.cost_value) + "; "
     str_res += "Chromosome generation: " + str(c.chromosome_generation) + "; "

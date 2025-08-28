@@ -52,7 +52,7 @@ class GA:
         cross_diversity_mutation_gene_sampling=definitions.ROULETTE_WHEEL,
         immigration_number=0,
         logging=False,
-        timeout=120,
+        timeout=600,
         factory: Optional[BaseGAFactory] = None,
     ) -> None:
         """
