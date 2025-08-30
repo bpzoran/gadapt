@@ -79,11 +79,11 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif not callable(self.options.cost_function):
             self._add_message("Cost Function must be callable!")
             return False
-        argsmin = {}
-        argsmax = {}
+        argsmin = []
+        argsmax = []
         for v in self.options._genes:
-            argsmin[v.variable_id] = v.min_value
-            argsmax[v.variable_id] = v.max_value
+            argsmin.append(v.min_value)
+            argsmax.append(v.max_value)
         try:
             func_result_min = self.options.cost_function(argsmin)
             func_result_max = self.options.cost_function(argsmax)
