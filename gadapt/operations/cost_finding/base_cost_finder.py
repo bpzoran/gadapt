@@ -25,14 +25,15 @@ class BaseCostFinder(ABC):
             c (Chromosome): The chromosome with
             genes containing values for the function execution.
         """
-        dict = {}
+        var_dict = {}
         for g in c:
-            dict[g.gene.variable_id] = g.variable_value
+            var_dict[g.gene.variable_id] = g.variable_value
         try:
-            cost_value = cost_function(dict)
+            sorted_var_dict = dict(sorted(var_dict.items()))
+            cost_value = cost_function(list(sorted_var_dict.values()))
             c.cost_value = cost_value
-        except Exception:
-            print(Exception)
+        except Exception as ex:
+            print(ex)
             traceback.print_exc()
             c.succ = False
             c.cost_value = sys.float_info.max
