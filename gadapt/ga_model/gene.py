@@ -122,21 +122,12 @@ class Gene:
         """
         Makes random value, based on min value, max value, and step
         """
-        if self.step <= 0:
-            # fall back to continuous if step is invalid
-            return random.uniform(self.min_value, self.max_value)
-
-        span = self.max_value - self.min_value
-        # Use floor so we never step past max_value.
-        n_steps = int(math.floor((span + 1e-12) / self.step))
-
-        k = random.randint(0, n_steps)  # inclusive
-        v = self.min_value + k * self.step
-
-        # Clamp and round to declared precision to kill FP noise.
-        if v > self.max_value:
-            v = self.max_value
-        return round(v, self.decimal_places if self.decimal_places >= 0 else 12)
+        v = random.uniform(self.min_value, self.max_value)
+        if self.step is not None and self.step > 0:
+            k = round((v - self.min_value) / self.step)
+            v = self.min_value + k * self.step
+            v = min(max(v, self.min_value), self.max_value)
+        return v
 
     @property
     def initial_st_dev(self) -> float:
