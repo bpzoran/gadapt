@@ -27,7 +27,8 @@ class ElitismCostFinder(BaseCostFinder):
             self._execute_function(self.population.options.cost_function, c)
         better_chromosomes: List[Chromosome] = self.population.get_sorted(
             key=lambda x: x.cost_value
-        )[: self.population.options.keep_number]
+        )
+        better_chromosomes = better_chromosomes[:self.population.options.keep_number]
         self.population.best_individual = better_chromosomes[0]
         self.population.min_cost = (
             min(better_chromosomes, key=lambda x: x.cost_value)

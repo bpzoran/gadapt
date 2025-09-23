@@ -11,6 +11,7 @@ import gadapt.ga_model.definitions as definitions
 from gadapt.ga_model.chromosome import Chromosome
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.allele import Allele
+from copy import copy as _shallow_copy, deepcopy as _deepcopy
 
 
 class Population:
@@ -209,6 +210,45 @@ class Population:
                 a = Allele(g)
                 chromosome.append(a)
         self.append(chromosome)
+
+    def clone(self) -> "Population":
+        """Deep clone of the entire population (lists, chromosomes, alleles, etc.)."""
+        return _deepcopy(self)
+
+    def copy(self) -> "Population":
+        """Shallow copy (top-level object only; lists/objects are shared!)."""
+        return _shallow_copy(self)
+
+    def __deepcopy__(self, memo):
+        # allocate without calling __init__
+        cls = self.__class__
+        dup = cls.__new__(cls)
+        memo[id(self)] = dup
+
+        # copy simple fields
+        dup._previous_min_cost = self._previous_min_cost
+        dup._avg_cost = self._avg_cost
+        dup._min_cost = self._min_cost
+        dup._previous_avg_cost = getattr(self, "_previous_avg_cost", self._avg_cost)
+        dup.last_chromosome_id = self.last_chromosome_id
+        dup._population_generation = self._population_generation
+        dup.start_time = _deepcopy(self.start_time, memo)
+        dup.absolute_cost_diversity = self.absolute_cost_diversity
+        dup.absolute_cost_diversity_in_first_population = self.absolute_cost_diversity_in_first_population
+        dup.timeout_expired = self.timeout_expired
+        dup.min_cost_per_generation = _deepcopy(self.min_cost_per_generation, memo)
+
+        # options: choose deep or shallow
+        dup._options = _deepcopy(self._options, memo)  # deep
+        # dup._options = self._options                      # or share same options
+
+        # best individual (if set)
+        dup._best_individual = _deepcopy(getattr(self, "_best_individual", None), memo)
+
+        # chromosomes list
+        dup.chromosomes = _deepcopy(self.chromosomes, memo)
+
+        return dup
 
 
 class PopulationIterator:

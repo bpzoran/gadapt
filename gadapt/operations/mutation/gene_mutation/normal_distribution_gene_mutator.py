@@ -1,4 +1,5 @@
 import math
+import sys
 
 from gadapt.utils.ga_utils import (
     normally_distributed_random,
@@ -26,14 +27,25 @@ class NormalDistributionGeneMutator(BaseGeneMutator):
         curr_value = self.gene_value.variable_value
         if math.isnan(curr_value):
             curr_value = self.gene_value.gene.make_random_value()
-        gene_range = self.gene_value.gene.max_value - self.gene_value.gene.min_value
-        mean = (curr_value - self.gene_value.gene.min_value) / gene_range
-        normal_distribution_random_value = normally_distributed_random(
-            mean, self._calculate_normal_distribution_standard_deviation(), 0, 1
-        )
-        number_of_steps = round(
-            (normal_distribution_random_value * gene_range) / self.gene_value.gene.step
-        )
-        return (
-            self.gene_value.gene.min_value + number_of_steps * self.gene_value.gene.step
-        )
+
+        gene = self.gene_value.gene
+        gene_range = gene.max_value - gene.min_value
+
+        # mean normalized to [0,1]
+        mean = (curr_value - gene.min_value) / gene_range
+        std = self._calculate_normal_distribution_standard_deviation()
+
+        # draw random value from truncated normal in [0,1]
+        normal_distribution_random_value = normally_distributed_random(mean, std, 0, 1)
+
+        if hasattr(gene, "step") and gene.step is not None and gene.step > 0 and gene.step > sys.float_info.min:
+            # --- Discrete case (snap to step multiples) ---
+            number_of_steps = round(
+                (normal_distribution_random_value * gene_range) / gene.step
+            )
+            value = gene.min_value + number_of_steps * gene.step
+        else:
+            # --- Continuous case (no step) ---
+            value = gene.min_value + normal_distribution_random_value * gene_range
+
+        return value

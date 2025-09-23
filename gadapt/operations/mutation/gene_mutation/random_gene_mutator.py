@@ -1,3 +1,5 @@
+import sys
+
 from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
 
 
@@ -7,7 +9,10 @@ class RandomGeneMutator(BaseGeneMutator):
     """
 
     def _make_mutated_value(self):
-        return round(
-            self.gene_value.gene.make_random_value(),
-            self.gene_value.gene.decimal_places,
-        )
+        if (self.gene_value.gene.decimal_places is not None) and 0 < self.gene_value.gene.decimal_places < 308:
+            return round(
+                self.gene_value.gene.make_random_value(),
+                self.gene_value.gene.decimal_places,
+            )
+        else:
+            return self.gene_value.gene.make_random_value()

@@ -34,6 +34,7 @@ class GAExecutor:
         self.gene_updater = self.factory.get_gene_updater()
         self.population_updater = self.factory.get_population_updater()
         self.gene_mutator = self.factory.get_gene_mutator()
+        self.initial_population: Optional[Population] = None
 
     def execute(self) -> GAResults:
         """
@@ -43,6 +44,7 @@ class GAExecutor:
         if self.population is None:
             raise Exception("population object is None!")
         results = GAResults()
+        results.initial_population = self.population.clone()
         try:
             init_logging(self.ga_options.logging)
         except Exception as ex:

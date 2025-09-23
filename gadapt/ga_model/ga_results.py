@@ -2,9 +2,10 @@
 Results for the genetic algorithm execution
 """
 
-from typing import List
+from typing import List, Optional
 
 import gadapt.adapters.string_operation.ga_strings as ga_strings
+from gadapt.ga_model.population import Population
 
 
 class GAResults:
@@ -16,6 +17,7 @@ class GAResults:
         self.result_values = {}
         self._messages: List[str] = []
         self._min_cost_per_generation: List[float] = []
+        self._initial_population: Optional[Population] = None
 
     def __str__(self) -> str:
         return ga_strings.results_to_string(self)
@@ -95,6 +97,14 @@ class GAResults:
         Messages from the optimization sublimed to one string
         """
         return self._get_message()
+
+    @property
+    def initial_population(self) -> Population:
+        return self._initial_population
+
+    @initial_population.setter
+    def initial_population(self, value):
+        self._initial_population = value
 
     def _get_message(self):
         return ga_strings.get_results_message(self)

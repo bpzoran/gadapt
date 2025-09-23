@@ -5,6 +5,8 @@ import math
 import random
 import sys
 
+import numpy
+
 import gadapt.ga_model.definitions as definitions
 
 
@@ -122,12 +124,16 @@ class Gene:
         """
         Makes random value, based on min value, max value, and step
         """
-        v = random.uniform(self.min_value, self.max_value)
-        if self.step is not None and self.step > 0:
-            k = round((v - self.min_value) / self.step)
-            v = self.min_value + k * self.step
-            v = min(max(v, self.min_value), self.max_value)
-        return v
+        if self.step is not None and self.step > 0 and (not math.isnan(self.step)) and self.step > sys.float_info.min:
+            v = numpy.random.uniform(low=self.min_value,
+                                     high=self.max_value,
+                                     size=1)
+        else:
+            v = numpy.random.choice(numpy.arange(self.min_value,
+                                                 self.max_value,
+                                                 step=self.step),
+                                                 size=1)
+        return v[0]
 
     @property
     def initial_st_dev(self) -> float:
