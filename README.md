@@ -4,7 +4,7 @@ A comprehensive and customizable genetic algorithm library.
 
 ## Table of Contents
 - [Introduction](#introduction)
-  - [What Innovations Does GAdapt Bring?](what-innovations-does-gadapt-bring)
+  - [What Innovations Does GAdapt Bring?](#what-innovations-does-gadapt-bring)
 - [Installation](#installation)
 - [Releases](#releases)
 - [Source code](#source-code)
