@@ -19,10 +19,18 @@ class GAOptions:
         self._keep_elitism_percentage = ga.keep_elitism_percentage
         self._number_of_crossover_parents = ga.number_of_crossover_parents
         self._cost_function = ga.cost_function
+        self._cost_diversity_coefficient_function = None
         self._immigration_number = ga.immigration_number
+        self._crossover_probability = ga.crossover_probability
+        self._crossover_min_probability = ga.crossover_min_probability
+        self._crossover_max_probability = ga.crossover_max_probability
         self._set_number_of_mutation_chromosomes(ga)
         self._max_attempt_no = ga.max_attempt_no
         self._requested_cost = ga.requested_cost
+        self._ensure_unique_individuals = ga.ensure_unique_individuals
+        self._decrease_step_automatically = ga.decrease_step_automatically
+        self._normal_distribution_mutation_min_std_dev = ga.normal_distribution_mutation_min_std_dev
+        self._normal_distribution_mutation_max_std_dev = ga.normal_distribution_mutation_max_std_dev
         self._logging = ga.logging
         self._genes = ga._genes
         self._set_number_of_mutation_genes(ga)
@@ -89,6 +97,38 @@ class GAOptions:
         self._requested_cost = value
 
     @property
+    def ensure_unique_individuals(self) -> bool:
+        return self._ensure_unique_individuals
+
+    @ensure_unique_individuals.setter
+    def ensure_unique_individuals(self, value: bool):
+        self._ensure_unique_individuals = value
+
+    @property
+    def decrease_step_automatically(self) -> bool:
+        return self._decrease_step_automatically
+
+    @decrease_step_automatically.setter
+    def decrease_step_automatically(self, value: bool):
+        self._decrease_step_automatically = value
+
+    @property
+    def normal_distribution_mutation_min_std_dev(self) -> float:
+        return self._normal_distribution_mutation_min_std_dev
+
+    @normal_distribution_mutation_min_std_dev.setter
+    def normal_distribution_mutation_min_std_dev(self, value: float):
+        self._normal_distribution_mutation_min_std_dev = value
+
+    @property
+    def normal_distribution_mutation_max_std_dev(self) -> float:
+        return self._normal_distribution_mutation_max_std_dev
+
+    @normal_distribution_mutation_max_std_dev.setter
+    def normal_distribution_mutation_max_std_dev(self, value: float):
+        self._normal_distribution_mutation_max_std_dev = value
+
+    @property
     def max_attempt_no(self) -> int:
         """
         Determines the number of generations in which there is no\
@@ -110,6 +150,30 @@ class GAOptions:
     @immigration_number.setter
     def immigration_number(self, value: int):
         self._immigration_number = value
+
+    @property
+    def crossover_probability(self) -> float:
+        return self._crossover_probability
+
+    @crossover_probability.setter
+    def crossover_probability(self, value: float):
+        self._crossover_probability = value
+
+    @property
+    def crossover_min_probability(self) -> float:
+        return self._crossover_min_probability
+
+    @crossover_min_probability.setter
+    def crossover_min_probability(self, value: float):
+        self._crossover_min_probability = value
+
+    @property
+    def crossover_max_probability(self) -> float:
+        return self._crossover_max_probability
+
+    @crossover_max_probability.setter
+    def crossover_max_probability(self, value: float):
+        self._crossover_max_probability = value
 
     @property
     def number_of_mutation_chromosomes(self) -> int:
@@ -140,9 +204,20 @@ class GAOptions:
         """
         return self._cost_function
 
+    @property
+    def cost_diversity_coefficient_function(self):
+        return self._cost_diversity_coefficient_function
+
+    @cost_diversity_coefficient_function.setter
+    def cost_diversity_coefficient_function(self, value):
+        self._cost_diversity_coefficient_function = value
+
     @cost_function.setter
     def cost_function(self, value):
         self._cost_function = value
+
+    def get_cost_diversity_coefficient_function(self):
+        return self.cost_diversity_coefficient_function
 
     @property
     def population_size(self) -> int:

@@ -1,7 +1,8 @@
 """
 Chromosome
 """
-
+import sys
+import traceback
 from typing import List
 
 import gadapt.adapters.string_operation.ga_strings as ga_strings
@@ -23,7 +24,9 @@ class Chromosome(RankingModel):
             population_generation: population generation
         """
         super().__init__()
-        self._parent_diversity_coefficient = float("NaN")
+        self._chromosome_generation = None
+        self._parent_structural_diversity_coefficient = float("NaN")
+        self._parent_cost_diversity_coefficient = float("NaN")
         self._cost_value = definitions.FLOAT_NAN
         self._is_immigrant = False
         self._population_generation = population_generation
@@ -38,37 +41,67 @@ class Chromosome(RankingModel):
         self._father_id = -1
         self._is_mutated = False
         self._is_immigrant = False
-        self._genes: List[Allele] = []
+        self._alleles: List[Allele] = []
+        self._hash_cache = None
 
     def __str__(self) -> str:
         return self._get_chromosome_string()
 
     def __getitem__(self, index) -> Allele:
-        return self._genes[index]
+        return self._alleles[index]
 
     def __next__(self):
-        return next(self._genes)
+        return next(self._alleles)
 
     def __len__(self):
-        return len(self._genes)
+        return len(self._alleles)
 
     def __iter__(self):
         return ChromosomeIterator(self)
 
+    def __eq__(self, other: object) -> bool:
+        """
+        Two chromosomes are equal if they have the same gene values in the same order.
+        """
+        if self is other:
+            return True
+        if not isinstance(other, Chromosome):
+            return False
+        if len(self._alleles) != len(other._alleles):
+            return False
+        # Comparing tuples is very fast in Python
+        return self._get_values_tuple() == other._get_values_tuple()
+
+    def __hash__(self):
+        if self._hash_cache is None:
+            self._hash_cache = hash(tuple(g.variable_value for g in self._alleles))
+        return self._hash_cache
+
+    def reset_hash_cache(self):
+        self._hash_cache = None
+
+    def _get_values_tuple(self) -> tuple:
+        """
+        Helper to extract variable values into a hashable tuple.
+        """
+        return tuple(gene.variable_value for gene in self._alleles)
+
+
+
     def _get_sorted(self, key: None = None, reverse: bool = False):
-        return sorted(self._genes, key=key, reverse=reverse)
+        return sorted(self._alleles, key=key, reverse=reverse)
 
     def append(self, g: Allele):
         """
         Appends a new gene value into the chromosome
         """
-        self._genes.append(g)
+        self._alleles.append(g)
 
     def clear(self):
         """
         Clears all genes from the chromosome
         """
-        self._genes.clear()
+        self._alleles.clear()
 
     def _to_string(self):
         """
@@ -172,15 +205,26 @@ class Chromosome(RankingModel):
         self.append(g)
 
     @property
-    def parent_diversity_coefficient(self) -> float:
+    def parent_structural_diversity_coefficient(self) -> float:
         """
         Diversity of parents
         """
-        return self._parent_diversity_coefficient
+        return self._parent_structural_diversity_coefficient
 
-    @parent_diversity_coefficient.setter
-    def parent_diversity_coefficient(self, value: float):
-        self._parent_diversity_coefficient = value
+    @parent_structural_diversity_coefficient.setter
+    def parent_structural_diversity_coefficient(self, value: float):
+        self._parent_structural_diversity_coefficient = value
+
+    @property
+    def parent_cost_diversity_coefficient(self) -> float:
+        """
+        Diversity of parents
+        """
+        return self._parent_cost_diversity_coefficient
+
+    @parent_cost_diversity_coefficient.setter
+    def parent_cost_diversity_coefficient(self, value: float):
+        self._parent_cost_diversity_coefficient = value
 
     @property
     def population_generation(self) -> int:
@@ -277,8 +321,8 @@ class ChromosomeIterator:
         return self
 
     def __next__(self):
-        if self.index < len(self.chromosome._genes):
-            result = self.chromosome._genes[self.index]
+        if self.index < len(self.chromosome._alleles):
+            result = self.chromosome._alleles[self.index]
             self.index += 1
             return result
         else:

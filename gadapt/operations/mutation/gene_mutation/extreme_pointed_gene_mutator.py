@@ -51,7 +51,7 @@ class ExtremePointedGeneMutator(RandomGeneMutator):
         )
 
     def _get_mutate_func(self):
-        prob = self.gene_value.gene.cross_diversity_coefficient
+        prob = self.gene_value.gene.columnar_diversity_coefficient
         if prob > 1.0:
             prob = 1.0
         should_mutate_random = get_rand_bool_with_probability(prob)

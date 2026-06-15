@@ -26,8 +26,8 @@ def chromosome_to_string(c):
         id_str = " " + id_str
     str_res = str_res + id_str + " - "
     for g in c:
-        decimal_places = 6
-        if g.gene.decimal_places < 7:
+        decimal_places = 12
+        if 12 > g.gene.decimal_places > 0:
             decimal_places = g.gene.decimal_places
         str_res += (
             str(g.gene.variable_id) + ": " + str(round(g.variable_value, decimal_places)) + "; "
@@ -89,9 +89,9 @@ def population_to_string(p):
     str_res += "Population number: " + str(p.population_generation) + new_line
     str_res += (
         "Min Cost: "
-        + str(round(p.min_cost, 2))
+        + str(round(p.min_cost, 12))
         + "; Avg cost: "
-        + str(round(p.avg_cost, 2))
+        + str(round(p.avg_cost, 12))
         + "; "
     )
     str_res += "Best individual variable values: " + str(p.best_individual)

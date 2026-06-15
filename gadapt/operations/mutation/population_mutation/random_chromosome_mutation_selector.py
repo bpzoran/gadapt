@@ -24,7 +24,7 @@ class RandomChromosomeMutationSelector(BaseChromosomeMutationSelector):
     ) -> None:
         super().__init__(chromosome_mutation_rate_determinator, gene_mutation_selector)
 
-    def _mutate_population(self):
+    def _get_chromosomes_for_mutation(self):
         if self.population is None:
             raise Exception("population must not be None")
         unallocated_chromosomes = self._get_unallocated_chromosomes(
@@ -34,11 +34,7 @@ class RandomChromosomeMutationSelector(BaseChromosomeMutationSelector):
         if mutation_chromosome_number == 0:
             return 0
         chromosomes_for_mutation = unallocated_chromosomes[:mutation_chromosome_number]
-        for c in chromosomes_for_mutation:
-            self._gene_mutation_selector.mutate(
-                c, self.population.options.number_of_mutation_genes
-            )
-        return mutation_chromosome_number
+        return chromosomes_for_mutation
 
     def _sort_key_random(self, _: Chromosome):
         return random.random()

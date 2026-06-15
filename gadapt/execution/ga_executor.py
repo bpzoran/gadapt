@@ -33,6 +33,7 @@ class GAExecutor:
         self.crossover = self.factory.get_crossover()
         self.gene_updater = self.factory.get_gene_updater()
         self.population_updater = self.factory.get_population_updater()
+        self.chromosome_updater = self.factory.get_chromosome_updater()
         self.gene_mutator = self.factory.get_gene_mutator()
         self.initial_population: Optional[Population] = None
 
@@ -41,6 +42,7 @@ class GAExecutor:
         Executes the genetic algorithm
         """
         self.population = Population(self.ga_options)
+        self.ga_options.cost_diversity_coefficient_function = lambda: self.population.get_relative_cost_diversity_coefficient()
         if self.population is None:
             raise Exception("population object is None!")
         results = GAResults()
@@ -57,6 +59,8 @@ class GAExecutor:
             self.ga_options.logging = False
         try:
             self.find_costs()
+            self.chromosome_updater.cost_diversity_in_initial_population = (
+                self.population.absolute_cost_diversity_in_first_population)
             while not self.exit():
                 self.immigrate()
                 self.mate()

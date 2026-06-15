@@ -27,7 +27,7 @@ class ComposedChromosomeMutationSelector(BaseChromosomeMutationSelector):
         """
         self.selectors.append(selector)
 
-    def _mutate_population(self):
+    def _get_chromosomes_for_mutation(self):
         if self.population is None:
             raise Exception("Population must not be null")
         if len(self.selectors) == 0:
@@ -37,13 +37,14 @@ class ComposedChromosomeMutationSelector(BaseChromosomeMutationSelector):
         nmc = 0
         limit_number_of_mutation_chromosomes = self.number_of_mutation_chromosomes
         if limit_number_of_mutation_chromosomes == 0:
-            return 0
+            return []
+        chromosomes_for_mutation = []
         for m in self.selectors:
             if nmc < limit_number_of_mutation_chromosomes:
                 m.population = self.population
                 m.number_of_mutation_chromosomes = (
                     limit_number_of_mutation_chromosomes - nmc
                 )
-                mc = m._mutate_population()
-                nmc += mc
-        return nmc
+                chromosomes_for_mutation.extend(m._get_chromosomes_for_mutation())
+                nmc += len(chromosomes_for_mutation)
+        return chromosomes_for_mutation

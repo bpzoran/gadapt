@@ -1,4 +1,5 @@
 import random
+from abc import abstractmethod
 from math import isnan
 
 from gadapt.adapters.ga_logging.logging_settings import gadapt_log_error
@@ -29,23 +30,29 @@ class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
         super().__init__(chromosome_mutation_rate_determinator, gene_mutation_selector)
         self._sampling = sampling
 
-    def _sort_key_parent_diversity_random(self, c: Chromosome):
-        return (c.parent_diversity_coefficient, random.random())
+    @abstractmethod
+    def _sort_key_parent_diversity(self, c: Chromosome):
+        pass
 
-    def _mutate_population(self):
+    @abstractmethod
+    def _get_diversity_coefficient(self, chromosome):
+        """Returns the diversity coefficient for a given chromosome."""
+        pass
+
+    def _get_chromosomes_for_mutation(self):
         if self.population is None:
             raise Exception("Population must not be null")
         unallocated_chromosomes: list[Chromosome] = self._get_unallocated_chromosomes(
-            self._sort_key_parent_diversity_random
+            self._sort_key_parent_diversity
         )
-        if any(isnan(c.parent_diversity_coefficient) for c in unallocated_chromosomes):
-            gadapt_log_error("parent_diversity_coefficient not set!")
+        if any(isnan(c.parent_structural_diversity_coefficient) for c in unallocated_chromosomes):
+            gadapt_log_error("parent_structural_diversity_coefficient not set!")
         chromosomes_for_mutation: list[Chromosome] = []
         if self.population.options.must_mutate_for_same_parents:
             chromosomes_for_mutation = [
                 c
                 for c in unallocated_chromosomes
-                if c.parent_diversity_coefficient == 0
+                if c.parent_structural_diversity_coefficient == 0
             ]
         chromosomes_for_mutation_count = len(chromosomes_for_mutation)
         rest_number = (
@@ -56,18 +63,14 @@ class ParentDiversityChromosomeMutationSelector(BaseChromosomeMutationSelector):
                 other_chromosomes_for_mutation = [
                     c
                     for c in unallocated_chromosomes
-                    if (not c.parent_diversity_coefficient == 0)
+                    if (not c.parent_structural_diversity_coefficient == 0)
                 ]
             else:
                 other_chromosomes_for_mutation = [c for c in unallocated_chromosomes]
             other_chromosomes_for_mutation = self._sampling.get_sample(
                 other_chromosomes_for_mutation,
                 rest_number,
-                lambda c: c.parent_diversity_coefficient,
+                self._get_diversity_coefficient,
             )
             chromosomes_for_mutation.extend(other_chromosomes_for_mutation)
-        for c in chromosomes_for_mutation:
-            self._gene_mutation_selector.mutate(
-                c, self.population.options.number_of_mutation_genes
-            )
-        return len(chromosomes_for_mutation)
+        return chromosomes_for_mutation

@@ -3,7 +3,7 @@ The main genetic algorithm module
 """
 
 import sys
-from typing import List, Optional
+from typing import List, Optional, Callable
 
 import gadapt.ga_model.definitions as definitions
 import gadapt.utils.ga_utils as ga_utils
@@ -29,9 +29,11 @@ class GA:
         keep_elitism_percentage=50,
         number_of_crossover_parents=-1,
         exit_check=definitions.AVG_COST,
+        exit_function: Callable = None,
         requested_cost=sys.float_info.max,
-        number_of_generations=200,
+        number_of_generations=-1,
         max_attempt_no=2,
+        max_attempt_no_for_step_decrease = None,
         parent_selection=definitions.ROULETTE_WHEEL,
         crossover=definitions.BLENDING,
         population_mutation="{0}{1}{2}{3}{4}".format(
@@ -50,7 +52,14 @@ class GA:
         number_of_mutation_genes=-1,
         percentage_of_mutation_genes=20.0,
         cross_diversity_mutation_gene_sampling=definitions.ROULETTE_WHEEL,
+        crossover_probability=0.5,
+        crossover_min_probability=0.5,
+        crossover_max_probability=1.0,
         immigration_number=0,
+        ensure_unique_individuals: bool = True,
+        decrease_step_automatically: bool = False,
+        normal_distribution_mutation_max_std_dev: float = 0.6,
+        normal_distribution_mutation_min_std_dev: float = 0.001,
         logging=False,
         timeout=600,
         factory: Optional[BaseGAFactory] = None,
@@ -74,6 +83,8 @@ class GA:
             population_size: Number of chromosomes in the population.
 
             exit_check: A criteria for the exit for the genetic algorithm
+
+            exit_function: A function that forces GA exit if returns True
 
             requested_cost: This parameter only takes place when exit_check
             has value “requested”. It determines the requested value
@@ -123,9 +134,9 @@ class GA:
 
             parent_diversity_mutation_chromosome_sampling: The
             sampling algorithm for mutating chromosomes when population_mutation
-            contains value “parent_diversity”.
+            contains value “parent_structural_diversity”.
                 It only applies when population_mutation has value
-                “parent_diversity”. It determines the way how chromosomes are to
+                “parent_structural_diversity”. It determines the way how chromosomes are to
                 be selected based on the diversity of their parents.
 
             must_mutate_for_same_parents: Indicates if completely the same
@@ -167,7 +178,8 @@ class GA:
                 It only applies when chromosome_mutation has value
                 “cross_diversity” . It determines the way how genes
                 are to be selected based on the cross-diversity.
-
+            ensure_unique_individuals: If this parameter has a True value, the genetic algorithm will ensure that all individuals in the population are unique. This means that no two individuals will have the same set of genes, promoting diversity within the population and potentially leading to better optimization results.
+            decrease_step_automatically: If this parameter has a True value, the genetic algorithm will automatically decrease the step size for gene mutation when it detects that the optimization process is stuck in a local minimum. This adaptive step size adjustment can help the algorithm escape local minima and explore the solution space more effectively.
             immigration_number: Refers to the “Random Immigrants”
             concepts. This strategy introduces a certain number of
             individuals into the population during the evolution process.
@@ -191,9 +203,11 @@ class GA:
         self.keep_elitism_percentage = keep_elitism_percentage
         self.number_of_crossover_parents = number_of_crossover_parents
         self.exit_check = exit_check
+        self.exit_function = exit_function
         self.requested_cost = requested_cost
         self.number_of_generations = number_of_generations
         self.max_attempt_no = max_attempt_no
+        self._max_attempt_no_for_step_decrease = max_attempt_no_for_step_decrease
         self.parent_selection = parent_selection
         self.crossover = crossover
         self.population_mutation = population_mutation
@@ -205,6 +219,9 @@ class GA:
         self.chromosome_mutation = chromosome_mutation
         self.gene_mutation = gene_mutation
         self.immigration_number = immigration_number
+        self.crossover_probability = crossover_probability
+        self.crossover_min_probability = crossover_min_probability
+        self.crossover_max_probability = crossover_max_probability
         self.logging = logging
         self._genes: List[Gene] = []
         self.cross_diversity_mutation_gene_sampling = (
@@ -213,6 +230,10 @@ class GA:
         self.parent_diversity_mutation_chromosome_sampling = (
             parent_diversity_mutation_chromosome_sampling
         )
+        self.ensure_unique_individuals = ensure_unique_individuals
+        self.decrease_step_automatically = decrease_step_automatically
+        self.normal_distribution_mutation_max_std_dev = normal_distribution_mutation_max_std_dev
+        self.normal_distribution_mutation_min_std_dev = normal_distribution_mutation_min_std_dev
         self.timeout = timeout
         self._current_dv_id = 0
         self._factory = factory
@@ -229,9 +250,9 @@ class GA:
             results.success = False
             results.messages = validator.validation_messages
             return results
-        ga_options = GAOptions(self)
+        ga_options = GAOptions(self.clone())
         factory: BaseGAFactory = self.get_factory()
-        factory.initialize_factory(self.clone())
+        factory.initialize_factory(self, ga_options)
         return GAExecutor(ga_options, factory).execute()
 
     def get_factory(self) -> BaseGAFactory:
@@ -276,7 +297,7 @@ class GA:
         self,
         min_value: float = -sys.float_info.max,
         max_value: float = sys.float_info.max,
-        step: float = sys.float_info.min,
+        step: float = None,
     ):
         """
         Adds variables to be optimized.
@@ -402,6 +423,33 @@ class GA:
         self._immigration_number = ga_utils.try_get_int(value)
 
     @property
+    def crossover_probability(self) -> float:
+
+        return self._crossover_probability
+
+    @crossover_probability.setter
+    def crossover_probability(self, value: float):
+        self._crossover_probability = ga_utils.try_get_float(value)
+
+    @property
+    def crossover_min_probability(self) -> float:
+
+        return self._crossover_min_probability
+
+    @property
+    def crossover_max_probability(self) -> float:
+
+        return self._crossover_max_probability
+
+    @crossover_max_probability.setter
+    def crossover_max_probability(self, value: float):
+        self._crossover_max_probability = ga_utils.try_get_float(value)
+
+    @crossover_min_probability.setter
+    def crossover_min_probability(self, value: float):
+        self._crossover_min_probability = ga_utils.try_get_float(value)
+
+    @property
     def population_mutation(self) -> str:
         """
         A type of mutation for the entire population.
@@ -419,7 +467,7 @@ class GA:
         “cost_diversity”, the number of mutation chromosomes is a
         random value from 1 to number_of_mutation_chromosomes
         value (or to value determined by percentage_of_mutation_chromosomes value).
-        “cost_diversity” means that the “parent_diversity” method is selected
+        “cost_diversity” means that the “parent_structural_diversity” method is selected
         to select chromosomes to be mutated. This method only determines
         the number of mutated chromosomes, but not how
         chromosomes are selected for the mutation.
@@ -449,9 +497,9 @@ class GA:
     def parent_diversity_mutation_chromosome_sampling(self) -> str:
         """
         The sampling algorithm for mutating chromosomes when
-        population_mutation contains value “parent_diversity”.
+        population_mutation contains value “parent_structural_diversity”.
         It only applies when population_mutation has value
-        “parent_diversity”. It determines the way how chromosomes are
+        “parent_structural_diversity”. It determines the way how chromosomes are
         to be selected based on the diversity of their parents.
 
         Supported values:
@@ -590,6 +638,14 @@ class GA:
         self._max_attempt_no = ga_utils.try_get_int(value)
 
     @property
+    def max_attempt_no_for_step_decrease(self) -> int:
+        return self._max_attempt_no_for_step_decrease
+
+    @max_attempt_no_for_step_decrease.setter
+    def max_attempt_no_for_step_decrease(self, value: int):
+        self._max_attempt_no_for_step_decrease = ga_utils.try_get_int(value)
+
+    @property
     def exit_check(self) -> str:
         """
         A criteria for the exit for the genetic algorithm.
@@ -613,7 +669,15 @@ class GA:
         self._exit_check = ga_utils.prepare_string(value)
 
     @property
-    def number_of_generations(self) -> float:
+    def exit_function(self) -> Callable:
+        return self._exit_function
+
+    @exit_function.setter
+    def exit_function(self, value: Callable):
+        self._exit_function = value
+
+    @property
+    def number_of_generations(self) -> int:
         """
         This parameter only takes place when exit_check
         has value “generations”. It determines the number of generations
@@ -622,8 +686,8 @@ class GA:
         return self._number_of_generations
 
     @number_of_generations.setter
-    def number_of_generations(self, value: float):
-        self._number_of_generations = ga_utils.try_get_float(value)
+    def number_of_generations(self, value: int):
+        self._number_of_generations = ga_utils.try_get_int(value)
 
     @property
     def parent_selection(self) -> str:
@@ -694,6 +758,38 @@ class GA:
     @requested_cost.setter
     def requested_cost(self, value: float):
         self._requested_cost = ga_utils.try_get_float(value)
+
+    @property
+    def ensure_unique_individuals(self) -> bool:
+        return self._ensure_unique_individuals
+
+    @ensure_unique_individuals.setter
+    def ensure_unique_individuals(self, value: bool):
+        self._ensure_unique_individuals = ga_utils.try_get_bool(value)
+
+    @property
+    def decrease_step_automatically(self) -> bool:
+        return self._decrease_step_automatically
+
+    @decrease_step_automatically.setter
+    def decrease_step_automatically(self, value: bool):
+        self._decrease_step_automatically = ga_utils.try_get_bool(value)
+
+    @property
+    def normal_distribution_mutation_max_std_dev(self) -> float:
+        return self._normal_distribution_mutation_max_std_dev
+
+    @normal_distribution_mutation_max_std_dev.setter
+    def normal_distribution_mutation_max_std_dev(self, value: float):
+        self._normal_distribution_mutation_max_std_dev = ga_utils.try_get_float(value)
+
+    @property
+    def normal_distribution_mutation_min_std_dev(self) -> float:
+        return self._normal_distribution_mutation_min_std_dev
+
+    @normal_distribution_mutation_min_std_dev.setter
+    def normal_distribution_mutation_min_std_dev(self, value: float):
+        self._normal_distribution_mutation_min_std_dev = ga_utils.try_get_float(value)
 
     @property
     def logging(self) -> bool:

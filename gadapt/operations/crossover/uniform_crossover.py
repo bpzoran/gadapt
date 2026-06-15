@@ -5,6 +5,8 @@ from gadapt.operations.crossover.base_crossover import BaseCrossover
 from gadapt.operations.chromosome_update.base_chromosome_updater import (
     BaseChromosomeUpdater,
 )
+from gadapt.operations.crossover.base_crossover_probability_determinator import BaseCrossoverProbabilityDeterminator
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import BaseGeneMutationSelector
 
 
 class UniformCrossover(BaseCrossover):
@@ -12,8 +14,8 @@ class UniformCrossover(BaseCrossover):
     Uniform Crossover. Genes from parents' chromosomes are combined in a uniform way.
     """
 
-    def __init__(self, chromosome_updater: BaseChromosomeUpdater):
-        super(UniformCrossover, self).__init__(chromosome_updater)
+    def __init__(self, chromosome_updater: BaseChromosomeUpdater, mutator: BaseGeneMutationSelector, crossover_rate_determinator: BaseCrossoverProbabilityDeterminator):
+        super(UniformCrossover, self).__init__(chromosome_updater, mutator, crossover_rate_determinator)
 
     def _combine(self) -> Tuple[float, float]:
         rnd = random.randint(0, 2)

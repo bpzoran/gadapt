@@ -119,3 +119,14 @@ def average_difference(diff_list):
     differences = [diff_list[i + 1] - diff_list[i] for i in range(len(diff_list) - 1)]
     avg_difference = float(sum(differences) / len(differences))
     return avg_difference
+
+
+def get_columnar_diversity_rate(population) -> float:
+    avg_rsd = average(
+        [g.columnar_diversity_coefficient for g in population.options.genes]
+    )
+    if avg_rsd > 1:
+        avg_rsd = 1
+    if avg_rsd < 0:
+        avg_rsd = 0
+    return 1 - avg_rsd

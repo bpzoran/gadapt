@@ -10,7 +10,7 @@ class BaseChromosomeUpdater:
     def chromosome_prepare_update(self, mother_gene: Allele, father_gene: Allele):
         pass
 
-    def chromosome_update(self, offspring1: Chromosome, offspring2: Chromosome):
+    def chromosome_update(self, offspring1: Chromosome, offspring2: Chromosome, mother: Chromosome, father: Chromosome):
         pass
 
     def chromosome_start_update(self, *args, **kwargs):

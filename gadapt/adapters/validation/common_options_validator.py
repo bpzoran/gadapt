@@ -21,9 +21,9 @@ class CommonOptionsValidator(BaseOptionsValidator):
             return False
         rslt = True
         for v in self.options._genes:
-            if v.min_value is None or v.max_value is None or v.step is None:
+            if v.min_value is None or v.max_value is None:
                 self._add_message(
-                    "Min value, max value and step must not be\
+                    "Min value and max value must not be\
                         None! (Variable {var_no})".format(
                         var_no=v.variable_id
                     )
@@ -32,7 +32,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
             elif (
                 not (isinstance(v.min_value, float) or isinstance(v.min_value, int))
                 or not (isinstance(v.max_value, float) or isinstance(v.max_value, int))
-                or not (isinstance(v.step, float) or isinstance(v.step, int))
+                or not (v.step is None or isinstance(v.step, float) or isinstance(v.step, int))
             ):
                 self._add_message(
                     "Min value, max value and step must be float or int\
@@ -49,21 +49,21 @@ class CommonOptionsValidator(BaseOptionsValidator):
                     )
                 )
                 rslt &= False
-            elif v.step <= 0.0:
+            elif v.step is not None and v.step <= 0.0:
                 self._add_message(
                     "Step must be positive float value! (Variable {var_no})".format(
                         var_no=v.variable_id
                     )
                 )
                 rslt &= False
-            elif v.min_value + v.step > v.max_value:
+            elif v.min_value + (v.step if v.step is not None else 0) > v.max_value:
                 self._add_message(
                     "Invalid step value! (Variable {var_no})".format(
                         var_no=v.variable_id
                     )
                 )
                 rslt &= False
-            if v.decimal_places < 0:
+            if v.decimal_places < -1:
                 self._add_message(
                     "Invalid number of decimal places! (Variable {var_no})".format(
                         var_no=v.variable_id

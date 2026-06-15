@@ -27,11 +27,16 @@ class BaseChromosomeMutationSelector(ABC):
             chromosome_mutation_rate_determinator: chromosome mutation rate determinator
         """
         super().__init__()
+        self.population = None
         self._chromosome_mutation_rate_determinator = (
             chromosome_mutation_rate_determinator
         )
         self.number_of_mutation_chromosomes = -1
         self._gene_mutation_selector = gene_mutation_selector
+
+    @abstractmethod
+    def _get_chromosomes_for_mutation(self) -> List[Chromosome]:
+        pass
 
     def mutate(self, population):
         """
@@ -46,11 +51,23 @@ class BaseChromosomeMutationSelector(ABC):
         self.number_of_mutation_chromosomes = self._chromosome_mutation_rate_determinator.get_number_of_mutation_chromosomes(
             self.population, max_number_of_mutated_chromosomes
         )
-        self._mutate_population()
+        chromosomes_for_mutation = self._get_chromosomes_for_mutation()
+        chromosomes_for_mutation = [c for c in chromosomes_for_mutation if not c.is_mutated]
+        self._mutate_population(chromosomes_for_mutation)
 
-    @abstractmethod
-    def _mutate_population(self):
-        pass
+    def _mutate_population(self, chromosomes_for_mutation:  List[Chromosome]):
+
+        for c in chromosomes_for_mutation:
+            number_of_attempts = 0
+            chromosomes_added = False
+            while (not chromosomes_added) and number_of_attempts < 10:
+                number_of_attempts += 1
+                self._gene_mutation_selector.mutate(
+                    c, self.population.options.number_of_mutation_genes
+                )
+                if (not self.population.options.ensure_unique_individuals) or (not self.population.contained_chromosome(c)):
+                    chromosomes_added = True
+        return len(chromosomes_for_mutation)
 
     def mutate_chromosome(self, c: Chromosome, number_of_mutated_chromosomes: int):
         self._gene_mutation_selector.mutate(c, number_of_mutated_chromosomes)

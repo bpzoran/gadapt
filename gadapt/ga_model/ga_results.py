@@ -18,6 +18,7 @@ class GAResults:
         self._messages: List[str] = []
         self._min_cost_per_generation: List[float] = []
         self._initial_population: Optional[Population] = None
+        self._min_cost = float("NaN")
 
     def __str__(self) -> str:
         return ga_strings.results_to_string(self)

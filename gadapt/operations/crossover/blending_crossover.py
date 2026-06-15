@@ -5,6 +5,8 @@ from gadapt.operations.crossover.base_crossover import BaseCrossover
 from gadapt.operations.chromosome_update.base_chromosome_updater import (
     BaseChromosomeUpdater,
 )
+from gadapt.operations.crossover.base_crossover_probability_determinator import BaseCrossoverProbabilityDeterminator
+from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import BaseGeneMutationSelector
 
 
 class BlendingCrossover(BaseCrossover):
@@ -15,8 +17,8 @@ class BlendingCrossover(BaseCrossover):
     corresponding values of the parental genes
     """
 
-    def __init__(self, chromosome_updater: BaseChromosomeUpdater):
-        super(BlendingCrossover, self).__init__(chromosome_updater)
+    def __init__(self, chromosome_updater: BaseChromosomeUpdater, mutator: BaseGeneMutationSelector, crossover_rate_determinator: BaseCrossoverProbabilityDeterminator):
+        super(BlendingCrossover, self).__init__(chromosome_updater, mutator, crossover_rate_determinator)
         self._current_gene_number = -1
 
     def _combine(self):
@@ -50,7 +52,5 @@ class BlendingCrossover(BaseCrossover):
         # --- Continuous case (no step defined) ---
         alpha = random.random()  # uniform in [0,1]
         val1 = alpha * val_father + (1 - alpha) * val_mother
-        # use a different alpha for second offspring
-        alpha = random.random()
-        val2 =alpha * val_mother + (1 - alpha) * val_father
+        val2 = alpha * val_mother + (1 - alpha) * val_father
         return val1, val2

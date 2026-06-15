@@ -18,7 +18,7 @@ class CrossDiversityGeneMutationRateDeterminator(RandomGeneMutationRateDetermina
         super().__init__()
 
     def _get_mutation_rate(self, genes) -> float:
-        avg_rsd = ga_utils.average([g.cross_diversity_coefficient for g in genes])
+        avg_rsd = ga_utils.average([g.columnar_diversity_coefficient for g in genes])
         if avg_rsd > 1:
             avg_rsd = 1
         if avg_rsd < 0:
@@ -28,8 +28,8 @@ class CrossDiversityGeneMutationRateDeterminator(RandomGeneMutationRateDetermina
     def _get_number_of_mutation_genes(self) -> int:
         genes = [g.gene for g in self.chromosome]
         if any(
-            g.cross_diversity_coefficient is None
-            or isnan(g.cross_diversity_coefficient)
+                g.columnar_diversity_coefficient is None
+                or isnan(g.columnar_diversity_coefficient)
             for g in genes
         ):
             gadapt_log_error("cross_diversity_coefficient not set!")
@@ -37,10 +37,11 @@ class CrossDiversityGeneMutationRateDeterminator(RandomGeneMutationRateDetermina
 
         mutation_rate = self._get_mutation_rate(genes)
         limit_number_of_mutation_genes = mutation_rate * float(
-            self.max_number_of_mutation_genes
+            len(genes)
         )
         limit_number_of_mutation_genes_rounded = round(limit_number_of_mutation_genes)
-        if limit_number_of_mutation_genes_rounded == 0:
-            limit_number_of_mutation_genes_rounded = 1
+        preferred_number_of_mutation_genes =  round(len(self.chromosome) / 5)
+        if limit_number_of_mutation_genes_rounded < preferred_number_of_mutation_genes:
+            limit_number_of_mutation_genes_rounded = max(preferred_number_of_mutation_genes, 1)
         self.max_number_of_mutation_genes = limit_number_of_mutation_genes_rounded
         return super()._get_number_of_mutation_genes()

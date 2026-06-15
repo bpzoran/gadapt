@@ -23,6 +23,7 @@ class Population:
 
             options (GAOptions): Genetic Algorithm Options
         """
+        self._seen_chromosomes = set()
         self._previous_min_cost = sys.float_info.min
         self._avg_cost = sys.float_info.min
         self._min_cost = sys.float_info.min
@@ -30,7 +31,6 @@ class Population:
             self._previous_avg_cost = sys.float_info.min
         if options.population_size < 4:
             raise Exception("Population size 4 must be higher than 3")
-        self.options = options
         self._set_init_values()
         self.last_chromosome_id = 1
         self._population_generation = 0
@@ -39,7 +39,12 @@ class Population:
         self.generate_initial_population()
         self.start_time = datetime.now()
         self.absolute_cost_diversity = float("NaN")
+        self.relative_cost_diversity_coefficient = float("NaN")
+        self.step_cost_diversity_coefficient = float("NaN")
+        self.stddev_cost_diversity_coefficient = float("NaN")
         self.absolute_cost_diversity_in_first_population = float("NaN")
+        self.relative_cost_diversity_in_first_population = float("NaN")
+        self.absolute_cost_diversity_in_borderline_population = float("NaN")
         self.timeout_expired = False
         self.min_cost_per_generation: List[float] = []
 
@@ -65,6 +70,13 @@ class Population:
             reverse (bool=False): is reversed
         """
         return sorted(self.chromosomes, key=key, reverse=reverse)
+
+    def get_step_cost_diversity_coefficient(self) -> float:
+        """Returns the current cost diversity coefficient of the population."""
+        return self.step_cost_diversity_coefficient
+
+    def get_relative_cost_diversity_coefficient(self) -> float:
+        return self.relative_cost_diversity_coefficient
 
     def append(self, c: Chromosome):
         self.chromosomes.append(c)
@@ -175,11 +187,28 @@ class Population:
         self.chromosomes.clear()
         self.add_chromosomes(chromosomes)
 
-    def add_chromosomes(self, chromosomes):
+    def add_not_contained_chromosomes(self, chromosomes) -> int:
         """
         Adds chromosomes to population
         Args:
             chromosomes (Tuple[Chromosome]): chromosomes to add
+        Returns:
+            int: number of chromosomes added to the population
+        """
+        cnt = 0
+        for c in chromosomes:
+            if not self.contained_chromosome(c):
+                self.add_chromosome(c)
+            cnt += 1
+        return cnt
+
+    def add_chromosomes(self, chromosomes) -> int:
+        """
+        Adds chromosomes to population
+        Args:
+            chromosomes (Tuple[Chromosome]): chromosomes to add
+        Returns:
+            int: number of chromosomes added to the population
         """
         for c in chromosomes:
             self.add_chromosome(c)
@@ -210,6 +239,17 @@ class Population:
                 a = Allele(g)
                 chromosome.append(a)
         self.append(chromosome)
+        #self._seen_chromosomes.add(chromosome)
+
+    def contained_chromosome(self, chromosome: Chromosome) -> bool:
+        """
+        Checks if the population has already contained a chromosome with the same gene values.
+        Args:
+            chromosome: Chromosome to check
+        Returns:
+            bool: True if the population ever contained a chromosome with the same gene values, False otherwise.
+        """
+        return chromosome in self._seen_chromosomes
 
     def clone(self) -> "Population":
         """Deep clone of the entire population (lists, chromosomes, alleles, etc.)."""
@@ -218,6 +258,32 @@ class Population:
     def copy(self) -> "Population":
         """Shallow copy (top-level object only; lists/objects are shared!)."""
         return _shallow_copy(self)
+
+    def calculate_step_cost_diversity_coefficient(self):
+        if self.absolute_cost_diversity_in_borderline_population == 0.0:
+            self.step_cost_diversity_coefficient = 1.0
+            return
+        step_cost_diversity_coefficient = float(
+            self.absolute_cost_diversity
+            / self.absolute_cost_diversity_in_borderline_population
+        )
+        if step_cost_diversity_coefficient > 1.0:
+            step_cost_diversity_coefficient = 1.0
+        self.step_cost_diversity_coefficient = step_cost_diversity_coefficient
+
+    def decrease_step(self):
+        step_decreased = False
+        for g in self.options.genes:
+            if g.step is not None and g.step > 0:
+                dec_places = g.decimal_places
+                dec_places += 1
+                new_step = round(g.step / 10, dec_places)
+                if new_step >= g.min_step:
+                    g._step = round(g.step / 10, dec_places)
+                    g._decimal_places = dec_places
+                    step_decreased = True
+        if step_decreased:
+            self.absolute_cost_diversity_in_borderline_population = self.absolute_cost_diversity
 
     def __deepcopy__(self, memo):
         # allocate without calling __init__
@@ -234,7 +300,9 @@ class Population:
         dup._population_generation = self._population_generation
         dup.start_time = _deepcopy(self.start_time, memo)
         dup.absolute_cost_diversity = self.absolute_cost_diversity
+        dup.step_cost_diversity_coefficient = self.step_cost_diversity_coefficient
         dup.absolute_cost_diversity_in_first_population = self.absolute_cost_diversity_in_first_population
+        dup.absolute_cost_diversity_in_borderline_population = self.absolute_cost_diversity_in_borderline_population
         dup.timeout_expired = self.timeout_expired
         dup.min_cost_per_generation = _deepcopy(self.min_cost_per_generation, memo)
 

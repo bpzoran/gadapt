@@ -18,25 +18,17 @@ class CostDiversityChromosomeMutationRateDeterminator(
     ) -> None:
         super().__init__()
 
-    def _get_cost_diversity_coefficient(self):
-        cost_diversity_coefficient = float(
-            self.population.absolute_cost_diversity
-            / self.population.absolute_cost_diversity_in_first_population
-        )
-        if cost_diversity_coefficient > 1.0:
-            cost_diversity_coefficient = 1.0
-        return cost_diversity_coefficient
 
     def _get_mutation_rate(self) -> float:
         if (
-            self.population.absolute_cost_diversity_in_first_population is None
-            or math.isnan(self.population.absolute_cost_diversity_in_first_population)
+            self.population.absolute_cost_diversity_in_borderline_population is None
+            or math.isnan(self.population.absolute_cost_diversity_in_borderline_population)
             or self.population.absolute_cost_diversity is None
             or math.isnan(self.population.absolute_cost_diversity)
         ):
             gadapt_log_error("absolute_cost_diversity not set!")
             return 1.0
-        return 1.0 - self._get_cost_diversity_coefficient()
+        return 1.0 - self.population.get_relative_cost_diversity_coefficient()
 
     def _get_number_of_mutation_chromosomes(self) -> int:
 

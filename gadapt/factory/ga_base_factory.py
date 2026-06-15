@@ -32,6 +32,7 @@ class BaseGAFactory(ABC):
         self._ga = None
         self._options = None
         self.gene_updater = None
+        self.chromosome_updater = None
         self.cost_finder: Optional[BaseCostFinder] = None
         self.population_immigrator: Optional[BasePopulationImmigrator] = None
         self.chromosome_immigrator: Optional[BaseChromosomeImmigrator] = None
@@ -44,9 +45,9 @@ class BaseGAFactory(ABC):
         self.exit_checker: Optional[BaseExitChecker] = None
         self.crossover: Optional[BaseCrossover] = None
 
-    def initialize_factory(self, ga):
+    def initialize_factory(self, ga, options: GAOptions):
         self._ga = ga
-        self._options = GAOptions(ga)
+        self._options = options
 
     def get_cost_finder(self) -> BaseCostFinder:
         """
@@ -119,6 +120,14 @@ class BaseGAFactory(ABC):
         if self.gene_updater is None:
             self.gene_updater = self._get_gene_updater()
         return self.gene_updater
+
+    def get_chromosome_updater(self):
+        """
+        chromosome Updater Instance
+        """
+        if self.chromosome_updater is None:
+            self.chromosome_updater = self._get_chromosome_updater()
+        return self.chromosome_updater
 
     def get_population_updater(self):
         """
@@ -196,6 +205,13 @@ class BaseGAFactory(ABC):
     def _get_gene_updater(self):
         """
         Gene Updater Instance
+        """
+        pass
+
+    @abstractmethod
+    def _get_chromosome_updater(self):
+        """
+        Chromosome Updater Instance
         """
         pass
 

@@ -11,4 +11,7 @@ class AvgCostExitChecker(BaseExitChecker):
     def _is_exit(self):
         if self.population is None:
             raise Exception("population must not be null")
-        return self.population.avg_cost >= self.population.previous_avg_cost
+        return self._avg_step_stuck() or self._number_of_generations_stuck()
+
+    def _should_decrease_step(self):
+        return self._min_step_stuck()

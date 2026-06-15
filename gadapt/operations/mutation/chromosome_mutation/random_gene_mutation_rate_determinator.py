@@ -16,4 +16,6 @@ class RandomGeneMutationRateDeterminator(BaseGeneMutationRateDeterminator):
         super().__init__()
 
     def _get_number_of_mutation_genes(self) -> int:
+        if self.max_number_of_mutation_genes <= 1:
+            return 1
         return random.randint(1, self.max_number_of_mutation_genes)

@@ -1,8 +1,14 @@
 import datetime
 import logging
 import os
+from logging.handlers import RotatingFileHandler
 
 from gadapt.utils.TimeStampFormatter import TimestampFormatter
+
+# Maximum log file size in bytes (default: 5 MB)
+MAX_LOG_FILE_SIZE = 20 * 1024 * 1024
+# Number of backup log files to keep
+BACKUP_COUNT = 5
 
 
 def init_logging(is_logging: bool):
@@ -24,7 +30,11 @@ def init_logging(is_logging: bool):
         now.strftime("%Y_%m_%d_%H_%M_%S_") + f"{now.microsecond // 1000:03d}"
     )
     logpath = os.path.join(path, f"gadapt_log_{formatted_date_time}.log")
-    handler = logging.FileHandler(logpath)
+    handler = RotatingFileHandler(
+        logpath,
+        maxBytes=MAX_LOG_FILE_SIZE,
+        backupCount=BACKUP_COUNT
+    )
     handler.setFormatter(
         TimestampFormatter("%(asctime)s - %(levelname)s - %(message)s")
     )

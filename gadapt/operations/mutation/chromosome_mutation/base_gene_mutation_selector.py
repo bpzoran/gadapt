@@ -33,7 +33,10 @@ class BaseGeneMutationSelector(ABC):
             number_of_mutation_genes: Number of mutation genes
         """
         self.chromosome = c
-        self.number_of_mutation_genes = number_of_mutation_genes
+        if number_of_mutation_genes > len(c):
+            self.number_of_mutation_genes = len(c)
+        else:
+            self.number_of_mutation_genes = number_of_mutation_genes
         self._before_mutated()
         self._mutate_chromosome()
         self._chromosome_mutated()
@@ -54,6 +57,8 @@ class BaseGeneMutationSelector(ABC):
         if self.chromosome.first_mutant_generation == 0:
             self.chromosome.first_mutant_generation += 1
         self.chromosome.last_mutant_generation = 1
+        self.chromosome.set_chromosome_string_none()
+        self.chromosome.reset_hash_cache()
 
     def _before_mutated(self):
         self.chromosome.mutated_variables_id_list.clear()

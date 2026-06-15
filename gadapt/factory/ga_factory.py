@@ -5,6 +5,14 @@ from gadapt.factory.ga_base_factory import BaseGAFactory
 from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
 from gadapt.operations.cost_finding.elitism_cost_finder import ElitismCostFinder
 from gadapt.operations.crossover.base_crossover import BaseCrossover
+from gadapt.operations.crossover.base_crossover_probability_determinator import BaseCrossoverProbabilityDeterminator
+from gadapt.operations.crossover.columnar_diversity_crossover_probability_determinator import \
+    ColumnarDiversityCrossoverProbabilityDeterminator
+from gadapt.operations.crossover.composed_crossover_probability_determinator import \
+    ComposedCrossoverProbabilityDeterminator
+from gadapt.operations.crossover.cost_diversity_crossover_probability_determinator import \
+    CostDiversityCrossoverProbabilityDeterminator
+from gadapt.operations.crossover.fixed_crossover_probability_determinator import FixedCrossoverProbabilityDeterminator
 from gadapt.operations.exit_check.avg_cost_exit_checker import AvgCostExitChecker
 from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
 from gadapt.operations.exit_check.min_cost_exit_checker import MinCostExitChecker
@@ -51,6 +59,8 @@ from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneM
 from gadapt.operations.mutation.gene_mutation.extreme_pointed_gene_mutator import (
     ExtremePointedGeneMutator,
 )
+from gadapt.operations.mutation.gene_mutation.normal_distribution_cost_diversity_gene_mutator import \
+    NormalDistributionCostDiversityGeneMutator
 from gadapt.operations.mutation.gene_mutation.normal_distribution_gene_mutator import (
     NormalDistributionGeneMutator,
 )
@@ -72,8 +82,10 @@ from gadapt.operations.mutation.population_mutation.cost_diversity_chromosome_mu
 from gadapt.operations.mutation.population_mutation.cross_diversity_chromosome_mutation_rate_determinator import (
     CrossDiversityChromosomeMutationRateDeterminator,
 )
-from gadapt.operations.mutation.population_mutation.parent_diversity_chromosome_mutation_selector import (
-    ParentDiversityChromosomeMutationSelector,
+from gadapt.operations.mutation.population_mutation.parent_cost_diversity_chromosome_mutation_selector import \
+    ParentCostDiversityChromosomeMutationSelector
+from gadapt.operations.mutation.population_mutation.parent_structural_diversity_chromosome_mutation_selector import (
+    ParentStructuralDiversityChromosomeMutationSelector,
 )
 from gadapt.operations.mutation.population_mutation.random_chromosome_mutation_rate_determinator import (
     RandomChromosomeMutationRateDeterminator,
@@ -96,7 +108,7 @@ from gadapt.operations.sampling.random_sampling import RandomSampling
 from gadapt.operations.sampling.roulette_wheel_sampling import RouletteWheelSampling
 from gadapt.operations.sampling.tournament_sampling import TournamentSampling
 from gadapt.operations.gene_update.cross_diversity_gene_updater import (
-    CrossDiversityGeneUpdater,
+    ColumnarDiversityGeneUpdater,
 )
 from gadapt.operations.crossover.blending_crossover import BlendingCrossover
 from gadapt.operations.crossover.uniform_crossover import UniformCrossover
@@ -161,6 +173,9 @@ class GAFactory(BaseGAFactory):
         """
         return self._get_gene_mutation_selector_combined()
 
+    def _get_crossover_probability_determinator(self) -> BaseCrossoverProbabilityDeterminator:
+        return self._get_crossover_probability_determinator_combined()
+
     def _get_gene_mutator_combined(self) -> BaseGeneMutator:
         if self._ga is None:
             raise Exception("_ga object must not be None!")
@@ -174,7 +189,9 @@ class GAFactory(BaseGAFactory):
         if definitions.EXTREME_POINTED in mutator_strings:
             gene_mutators.append(ExtremePointedGeneMutator())
         if definitions.CROSS_DIVERSITY in mutator_strings:
-            gene_mutators.append(NormalDistributionCrossDiversityGeneMutator())
+            gene_mutators.append(NormalDistributionCrossDiversityGeneMutator(self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev))
+        if definitions.COST_DIVERSITY in mutator_strings:
+            gene_mutators.append(NormalDistributionCostDiversityGeneMutator(self._options.get_cost_diversity_coefficient_function, self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev))
         elif definitions.NORMAL_DISTRIBUTION in mutator_strings:
             gene_mutators.append(NormalDistributionGeneMutator())
         if len(gene_mutators) == 0:
@@ -309,7 +326,16 @@ class GAFactory(BaseGAFactory):
             )
         if definitions.PARENT_DIVERSITY in mutator_strings:
             chromosome_mutation_selectors.append(
-                ParentDiversityChromosomeMutationSelector(
+                ParentStructuralDiversityChromosomeMutationSelector(
+                    helper_chromosome_mutation_rate_determinator,
+                    self._get_gene_mutation_selector(),
+                    self._get_sampling_method(
+                        self._ga.parent_diversity_mutation_chromosome_sampling
+                    ),
+                )
+            )
+            chromosome_mutation_selectors.append(
+                ParentCostDiversityChromosomeMutationSelector(
                     helper_chromosome_mutation_rate_determinator,
                     self._get_gene_mutation_selector(),
                     self._get_sampling_method(
@@ -319,7 +345,7 @@ class GAFactory(BaseGAFactory):
             )
         if len(chromosome_mutation_selectors) == 0:
             chromosome_mutation_selectors.append(
-                ParentDiversityChromosomeMutationSelector(
+                ParentStructuralDiversityChromosomeMutationSelector(
                     helper_chromosome_mutation_rate_determinator,
                     self._get_gene_mutation_selector(),
                     self._get_sampling_method(
@@ -392,6 +418,28 @@ class GAFactory(BaseGAFactory):
             main_gene_mutation_rate_determinator,
             helper_gene_mutation_rate_determinator,
         )
+
+    def _get_crossover_probability_determinator_combined(self) -> BaseCrossoverProbabilityDeterminator:
+        if self._ga is None:
+            raise Exception("_ga object must not be None!")
+        crossover_strings = [
+            ms.strip()
+            for ms in self._ga.crossover.split(definitions.PARAM_SEPARATOR)
+        ]
+        crossover_probability_determinators: List[
+            BaseCrossoverProbabilityDeterminator
+        ] = []
+
+        crossover_probability_determinator = ComposedCrossoverProbabilityDeterminator()
+        if definitions.COST_DIVERSITY in crossover_strings:
+            crossover_probability_determinator.append(CostDiversityCrossoverProbabilityDeterminator())
+        if definitions.CROSS_DIVERSITY in crossover_strings:
+            crossover_probability_determinator.append(ColumnarDiversityCrossoverProbabilityDeterminator())
+        if definitions.FIXED in crossover_strings:
+            crossover_probability_determinator.append(FixedCrossoverProbabilityDeterminator())
+        if len(crossover_probability_determinator) == 0:
+            crossover_probability_determinators.append(FixedCrossoverProbabilityDeterminator())
+        return crossover_probability_determinator
 
     def _get_gene_mutation_selector_combined(self) -> BaseGeneMutationSelector:
         """
@@ -508,12 +556,12 @@ class GAFactory(BaseGAFactory):
         if self._ga is None:
             raise Exception("ga object must not be None!")
         if self._ga.exit_check == definitions.AVG_COST:
-            return AvgCostExitChecker(self._ga.max_attempt_no)
+            return AvgCostExitChecker(self._ga.max_attempt_no, self._ga.max_attempt_no_for_step_decrease, self._ga.number_of_generations, self._ga.exit_function)
         if self._ga.exit_check == definitions.MIN_COST:
-            return MinCostExitChecker(self._ga.max_attempt_no)
+            return MinCostExitChecker(self._ga.max_attempt_no, self._ga.max_attempt_no_for_step_decrease, self._ga.number_of_generations, self._ga.exit_function)
         if self._ga.exit_check == definitions.GENERATIONS:
-            return NumberOfGenerationsExitChecker(self._ga.number_of_generations)
-        return RequestedCostExitChecker(self._ga.requested_cost)
+            return NumberOfGenerationsExitChecker(self._ga.number_of_generations, self._ga.max_attempt_no_for_step_decrease, self._ga.exit_function)
+        return RequestedCostExitChecker(self._ga.requested_cost, self._ga.max_attempt_no_for_step_decrease, self._ga.number_of_generations, self._ga.exit_function)
 
     def _get_crossover(self) -> BaseCrossover:
         """
@@ -522,12 +570,17 @@ class GAFactory(BaseGAFactory):
         if self._ga is None:
             raise Exception("ga object must not be None!")
         chromosome_updater = self.get_chromosome_updater()
-
-        if self._ga.crossover == definitions.BLENDING:
-            return BlendingCrossover(chromosome_updater)
+        chromosome_mutation_selector = self._get_gene_mutation_selector()
+        crossover_probability_determinator = self._get_crossover_probability_determinator()
+        crossover_strings = [
+            ms.strip()
+            for ms in self._ga.crossover.split(definitions.PARAM_SEPARATOR)
+        ]
+        if definitions.BLENDING in crossover_strings:
+            return BlendingCrossover(chromosome_updater, chromosome_mutation_selector, crossover_probability_determinator)
         if self._ga.crossover == definitions.UNIFORM:
-            return UniformCrossover(chromosome_updater)
-        return BlendingCrossover(chromosome_updater)
+            return UniformCrossover(chromosome_updater, chromosome_mutation_selector, crossover_probability_determinator)
+        return BlendingCrossover(chromosome_updater, chromosome_mutation_selector, crossover_probability_determinator)
 
     def _get_gene_updater(self):
         """
@@ -551,8 +604,11 @@ class GAFactory(BaseGAFactory):
             + gene_mutator_strings
         )
         if definitions.CROSS_DIVERSITY in all_mutator_strings:
-            return CrossDiversityGeneUpdater()
+            return ColumnarDiversityGeneUpdater()
         return BaseGeneUpdater()
+
+    def _get_chromosome_updater(self):
+        return ParentDiversityChromosomeUpdater()
 
     def get_chromosome_updater(self):
         population_mutator_strings = [
