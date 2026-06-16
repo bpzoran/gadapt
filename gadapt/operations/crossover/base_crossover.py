@@ -50,10 +50,15 @@ class BaseCrossover(ABC):
                 chromosomes_added = True
         if number_of_added_chromosomes < 2:
             new_offsprings = self._mate_pair(
-                chromosome1, chromosome2, population.population_generation
+                chromosome1, chromosome2, population
             )
             for i in range(number_of_added_chromosomes, 2):
                 population.add_chromosome(new_offsprings[i])
+
+    def _mate_pair_once(self, population, chromosome1, chromosome2 ) -> None:
+        population.add_chromosomes(list(self._mate_pair(
+            chromosome1, chromosome2, population
+        )))
 
     def mate(self, chromosome_pairs: List[Tuple[Chromosome, Chromosome]], population):
         """
@@ -67,7 +72,7 @@ class BaseCrossover(ABC):
             if population.options.ensure_unique_individuals:
                 self._mate_pair_until_added(population, chromosome1, chromosome2)
             else:
-                self._mate_pair(chromosome1, chromosome2, population)
+                self._mate_pair_once(population, chromosome1, chromosome2)
 
         current_len = len(population)
         chromosome_surplus = current_len - population.options.population_size
