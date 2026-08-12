@@ -20,4 +20,8 @@ class NumberOfGenerationsExitChecker(BaseExitChecker):
         return self._number_of_generations_stuck()
 
     def _should_decrease_step(self):
+        for g in self.population.options.genes:
+            if g.min_step_target is not None:
+                continue
+            g.min_step_target = 100000000
         return self._min_step_stuck()

@@ -1,8 +1,6 @@
 """
 Chromosome
 """
-import sys
-import traceback
 from typing import List
 
 import gadapt.adapters.string_operation.ga_strings as ga_strings

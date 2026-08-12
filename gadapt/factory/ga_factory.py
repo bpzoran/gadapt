@@ -426,9 +426,6 @@ class GAFactory(BaseGAFactory):
             ms.strip()
             for ms in self._ga.crossover.split(definitions.PARAM_SEPARATOR)
         ]
-        crossover_probability_determinators: List[
-            BaseCrossoverProbabilityDeterminator
-        ] = []
 
         crossover_probability_determinator = ComposedCrossoverProbabilityDeterminator()
         if definitions.COST_DIVERSITY in crossover_strings:
@@ -438,7 +435,7 @@ class GAFactory(BaseGAFactory):
         if definitions.FIXED in crossover_strings:
             crossover_probability_determinator.append(FixedCrossoverProbabilityDeterminator())
         if len(crossover_probability_determinator) == 0:
-            crossover_probability_determinators.append(FixedCrossoverProbabilityDeterminator())
+            crossover_probability_determinator.append(FixedCrossoverProbabilityDeterminator())
         return crossover_probability_determinator
 
     def _get_gene_mutation_selector_combined(self) -> BaseGeneMutationSelector:

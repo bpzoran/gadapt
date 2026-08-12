@@ -2,7 +2,6 @@
 Gene
 """
 import math
-import random
 import sys
 
 import numpy
@@ -31,6 +30,7 @@ class Gene:
         self._step = None
         self._initial_step = None
         self._min_step = None
+        self._min_step_target = 1000000000000000000000.0
 
     def __eq__(self, other):
         if not isinstance(other, Gene):
@@ -96,6 +96,24 @@ class Gene:
             current = 10.0 ** exp
         return current
 
+    def _calculate_min_step(self):
+        max_min_diff = self.max_value - self.min_value
+        target = max_min_diff / self._min_step_target
+        # Find the power of 10 closest to target
+        # e.g. target < 1: 0.1, 0.01, 0.001, ...
+        #      target >= 1: 1, 10, 100, 1000, ...
+        exponent = round(math.log10(target))
+        candidate = 10 ** exponent
+        # Check neighbours to guarantee the closest
+        candidates = [10 ** (exponent - 1), candidate, 10 ** (exponent + 1)]
+        best = min(candidates, key=lambda c: abs(c - target))
+        if best > 1:
+            return 1
+        if best != 0:
+            exp = round(math.log10(abs(best)))
+            best = 10.0 ** exp
+        return best
+
     def _set_step(self, value):
         if self._step is not None:
             return
@@ -128,6 +146,17 @@ class Gene:
         else:
             self._max_decimal_places = self._get_decimal_places(value)
         self._min_step = value
+
+    @property
+    def min_step_target(self) -> float:
+        """
+        Optimization min_step_target
+        """
+        return self._min_step_target
+
+    @min_step_target.setter
+    def min_step_target(self, value: float):
+        self._min_step_target = value
 
     @property
     def initial_step(self) -> float:

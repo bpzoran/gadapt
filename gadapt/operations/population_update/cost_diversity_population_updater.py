@@ -21,8 +21,6 @@ class CostDiversityPopulationUpdater(BasePopulationUpdater):
             return ga_utils.average_difference(allocated_values)
         return float("NaN")
 
-    import math
-
     def _calculate_relative_cost_diversity(self):
         # 1. Extract valid cost values
         allocated_values = [

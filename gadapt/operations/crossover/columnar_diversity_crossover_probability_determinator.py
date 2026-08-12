@@ -1,4 +1,3 @@
-from abc import ABC
 from gadapt.operations.crossover.base_crossover_probability_determinator import BaseCrossoverProbabilityDeterminator
 from gadapt.utils import ga_utils
 
