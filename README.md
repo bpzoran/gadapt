@@ -34,6 +34,8 @@ To install **GAdapt**, use **pip** with the following command:
 pip install gadapt
 ```
 
+GAdapt requires Python 3.10 or newer. [NumPy](https://numpy.org/) is installed automatically as a dependency.
+
 ## Releases
 The latest releases of GAdapt can be found at the PyPI repository: [GAdapt on PyPI](https://pypi.org/project/gadapt/)
 
@@ -106,7 +108,7 @@ Passing parameters through the class properties:
 ```python
 ga = GA()
 ga.cost_function = trig_func
-population_size=32
+ga.population_size=32
 ga.population_mutation="cost_diversity,parent_diversity"
 ga.number_of_mutation_chromosomes=6
 ga.number_of_mutation_genes=2
@@ -127,9 +129,13 @@ ga.logging=True
 ga.timeout=3600
 ```
 ### Parameters Description
-**cost_function**=*None* - Custom function for the cost calculation (fitness). The optimisation goal is minimising the output of the cost function. *cost_function* must be the function with one argument - a dictionary of values, where the key is an index (the ordinal of adding parameters) and the key is the parameter's value to be optimised. When adding parameters, there should be as many parameters as the function uses. The *cost_function* is the only mandatory parameter.
+**cost_function**=*None* - Custom function for the cost calculation (fitness). The optimisation goal is minimising the output of the cost function. *cost_function* must be the function with one argument - a list of values, where the index is the ordinal of adding parameters and the item is the parameter's value to be optimised. When adding parameters, there should be as many parameters as the function uses. The *cost_function* is the only mandatory parameter.
 
 **population_size**=*32* - Number of chromosomes in the population.
+
+**keep_elitism_percentage**=*50* - The percentage of the best chromosomes (by cost value) that are kept in the population from one generation to the next. The remaining chromosomes are replaced by the offspring of the kept ones. For example, with *population_size* of 32 and *keep_elitism_percentage* of 50, the 16 best chromosomes are kept and 16 new ones are created in each generation.
+
+**number_of_crossover_parents**=*-1* - The number of chromosomes in the mating pool, i.e. the number of parents selected for crossover in each generation. If its value is lower than 2, all kept chromosomes (see *keep_elitism_percentage*) are used as parents.
 
 **exit_check**=*"avg_cost"* - A criteria for the exit for the genetic algorithm.  
 Supported values:
@@ -144,7 +150,9 @@ Supported values:
 
 **number_of_generations**=*200* - This parameter only takes place when exit_check has value “generations”. It determines the number of generations after which the genetic algorithm exits
 
-**timeout**=*120* - A number of seconds after which the genetic algorithm optimisation will exit, regardless of whether *exit_check* criteria is reached.
+**timeout**=*600* - A number of seconds after which the genetic algorithm optimisation will exit, regardless of whether *exit_check* criteria is reached. When the timeout expires, *messages* in the results contain a warning.
+
+**exit_function**=*None* - A function without arguments that is called in each generation. If it returns True, the genetic algorithm exits, regardless of the *exit_check* criteria. It can be used, for example, to stop the optimisation from the outside.
 
 **parent_selection**=*"roulette_wheel"* - The algorithm for parent selection.  
 Supported values:
@@ -153,10 +161,21 @@ Supported values:
 - *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and pairs the chromosomes two at a time until the top kept chromosomes are selected for mating. Thus, the algorithm pairs odd rows with even rows.  
 - *"random"* - Random selection algorithm uses a uniform random number generator to select chromosomes.  
 
-**crossover**=*"blending"* - The algorithm for parent selection. If the Parent Diversity mutation is used, blending crossover will be used, of the choice of this parameter.
-Supported values:
+**crossover**=*"blending"* - The crossover algorithm, optionally followed by a method for determining the crossover probability, separated by a comma.  
+Supported crossover algorithms:
 - *"blending"* - Blending crossover combines gene values from the two parents into new variable values in offsprings. One value of the offspring variable comes from a combination of the two corresponding values of the parental genes  
 - *"uniform"* - Uniform crossover combines chromosomes in a uniform way.
+
+Supported methods for determining the crossover probability (the probability that the values of a gene are crossed between the two parents):
+- *"fixed"* - The probability is defined by the *crossover_probability* parameter. This is used when no method is specified.  
+- *"cost_diversity"* - The probability is adaptive. It lies between *crossover_min_probability* and *crossover_max_probability*, and it is higher when the diversity of costs in the population is higher.  
+- *"cross_diversity"* - The probability is adaptive. It lies between *crossover_min_probability* and *crossover_max_probability*, and it is higher when the diversity of gene values in the population is higher.  
+
+For example, *"blending,cost_diversity"* means that blending crossover is used, with the probability determined by the cost diversity. If more methods are specified, one of them is randomly chosen for each pair of parents.
+
+**crossover_probability**=*0.5* - The probability for crossing the values of a gene between the two parents. It applies when the probability is determined by the *"fixed"* method (the default).
+
+**crossover_min_probability**=*0.5* and **crossover_max_probability**=*1.0* - The lower and the upper bound for the adaptive crossover probability. They apply when the probability is determined by the *"cost_diversity"* or the *"cross_diversity"* method.
     
 **percentage_of_mutation_chromosomes**=*50.0* - The percentage of mutated chromosomes in the population. This value is applied to the *population_size* value and rounded to an integer value, giving the number of mutation chromosomes. For example, if *population_size* has a value of 32, and *percentage_of_mutation_chromosomes* has a value of 10, the number of mutation chromosomes will be 3. The calculated value is an upper bound - the actual number of mutated chromosomes can vary from 1 to the calculated value. *percentage_of_mutation_chromosomes* only applies if *number_of_mutation_chromosomes* does not have a valid integer value equal to or higher than 0.
 
@@ -195,7 +214,10 @@ Supported values:
 Supported values:
 - *"normal_distribution"* - assigns normally distributed random number to the variable selected for mutation
 - *"cross_diversity"* - assigns normally distributed random number to the variable selected for mutation, with standard deviation based on the cross-diversity coefficient
+- *"cost_diversity"* - assigns normally distributed random number to the variable selected for mutation, with standard deviation based on the diversity of costs in the population. Higher cost diversity means a higher standard deviation.
 - *"random"* - Random values are assigned to genes
+
+**normal_distribution_mutation_min_std_dev**=*0.001* and **normal_distribution_mutation_max_std_dev**=*0.6* - The lower and the upper bound of the standard deviation of normally distributed mutated values. They apply when *gene_mutation* contains *"cross_diversity"* or *"cost_diversity"*. The values are relative to the range of the variable (between 0 and 1), so 0.6 means 60% of the difference between the maximal and the minimal value of the variable. The maximum must be higher than the minimum. Otherwise, the default values are used.
 
 **cross_diversity_mutation_gene_sampling**=*"roulette_wheel"* - the selection algorithm for mutating chromosomes when *chromosome_mutation* has value *"cross_diversity"*. It only applies when *chromosome_mutation* has value *"cross_diversity"* . It determines the way how genes are to be selected based on the cross-diversity.  
 Supported values:
@@ -206,10 +228,12 @@ Supported values:
     
 **immigration_number**=*0* - Refers to the "Random Immigrants" concepts. This strategy introduces a certain number of individuals into the population during the evolution process. These new individuals are generated randomly and injected into the population.
 
+**ensure_unique_individuals**=*None* - If this parameter has a True value, the genetic algorithm ensures that no two individuals have the same gene values: offspring and mutated chromosomes that repeat values already seen during the optimisation are regenerated, so the cost function is not evaluated twice for the same values. Duplicates are only likely when the variables take values from a grid defined by the step, so the default (*None*) means *True* when all variables have a step, and *False* when any variable is continuous (added without a step). Set it explicitly to *True* or *False* to override this. Ensuring uniqueness adds some computation per generation, especially late in the optimisation, which is usually negligible compared to the cost function execution time.
+
 **logging**=*False* - If this parameter has a True value, the log file will be created in the current working directory. The log file contains the flow of genetic algorithm execution, along with values of chromosomes, genes and cost functions in each generation
 
 ### Adding Variables
-Variables to be optimized can be added by calling the *add* method of the *GA* object. Parameters of this method are the minimum value, the maximum value, and the step. The minimum and maximum value determine a range of possible variable values. The *step* parameter specifies the step that will be used in changing the variables values during the optimization.
+Variables to be optimized can be added by calling the *add* method of the *GA* object. Parameters of this method are the minimum value, the maximum value, and the step. The minimum and maximum value determine a range of possible variable values. The *step* parameter specifies the step that will be used in changing the variables values during the optimization. The step is optional: a variable added without a step is continuous, and can take any value in the range.
 
 For example:
 ```python
@@ -224,7 +248,7 @@ def some_func(args):
 ```
 and instantiation of the genetic algorithm object:
 ```python
-ga = GA(cost_function=trig_func)
+ga = GA(cost_function=some_func)
 ```
 , adding variables may look as it follows:
 ```python
@@ -236,7 +260,7 @@ ga.add(-5, 5, 0.1) # Refers to args[1]
 Genetic algorithm optimization executes by calling *execute* method, without parameters. This method returns the object of type *GAResults*, which contain following properties:
 - **success**  - Indicates if genetic algorithm optimisation executed successfully.
 - **min_cost** - The minimal cost for optimized variables
-- **number_of_iterations** - The number of iterations in which the optimization reached the minimal cost
+- **number_of_iterations** - The number of generations executed before the optimisation exited
 - **result_values** - The dictionary that contains variables' optimized values. The key of this dictionary is the sequence number of variable adding, and also the argument index in the cost function. The value of this dictionary is the optimized value for the variable.
 - **messages** - Additional messages of the optimizations. This is a tuple structure where first value is a message level ("INFO", "WARNING" or "ERROR"), and the second value is the message text.
 
@@ -298,7 +322,9 @@ Parameter values:
 ```
 
 ## GA Customisation
-GAdapt follows clean architecture and SOLID principles, allowing easy customization. Create new implementations of abstract classes and pass them to the genetic algorithm through the factory object.
+GAdapt follows clean architecture and SOLID principles, allowing easy customization. Create new implementations of abstract classes and pass them to the genetic algorithm through a factory object.
+
+The factory creates all objects used by the genetic algorithm (selectors, mutators, crossover, exit checker, etc.), based on the parameters of the *GA* object. To replace one of them, subclass *GAFactory* and override the corresponding *_get_...* method. The factory is initialized by the *GA* object when *execute* is called, so objects that depend on the *GA* parameters should be created inside the overridden method.
 
 For example, customizing the chromosome mutation selector:
 
@@ -306,7 +332,7 @@ For example, customizing the chromosome mutation selector:
 import math
 from gadapt.factory.ga_factory import GAFactory
 from gadapt.ga import GA
-from operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
+from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
 
 
 class BottomMutationSelector(BaseChromosomeMutationSelector):
@@ -315,28 +341,24 @@ class BottomMutationSelector(BaseChromosomeMutationSelector):
     existing unallocated chromosomes sorted by the cost function value
     """
 
-    def _mutate_population(self):
-        if self.population is None:
-            raise Exception("population must not be None")
+    def _get_chromosomes_for_mutation(self):
         unallocated_chromosomes = self._get_unallocated_chromosomes(
-            lambda chrom: (self.population.options.cost_function([g.variable_value for g in chrom]))
+            lambda chrom: self.population.options.cost_function([g.variable_value for g in chrom])
         )
-        chromosomes_for_mutation = unallocated_chromosomes[
-                                   len(unallocated_chromosomes) - self.number_of_mutation_chromosomes:
-                                   ]
-        for c in chromosomes_for_mutation:
-            self._gene_mutation_selector.mutate(c, self.population.options.number_of_mutation_genes)
+        return unallocated_chromosomes[len(unallocated_chromosomes) - self.number_of_mutation_chromosomes:]
+
+
+class BottomMutationFactory(GAFactory):
+    def _get_chromosome_mutation_selector(self):
+        rate_determinator, _ = self._get_chromosome_mutation_rate_determinators()
+        return BottomMutationSelector(rate_determinator, self.get_gene_mutation_selector())
 
 
 def some_func(args):
     return math.sqrt(abs(args[0])) + math.pow(args[1], 2)
 
 
-custom_factory = GAFactory()
-custom_factory.chromosome_mutation_selector = (
-    BottomMutationSelector(custom_factory.chromosome_mutation_rate_determinator,
-                           custom_factory.get_gene_mutation_selector()))
-ga = GA(cost_function=some_func, factory=custom_factory)
+ga = GA(cost_function=some_func, factory=BottomMutationFactory())
 ga.add(-25, 25, 1)
 ga.add(-5, 5, 0.1)
 

@@ -575,7 +575,7 @@ class GAFactory(BaseGAFactory):
         ]
         if definitions.BLENDING in crossover_strings:
             return BlendingCrossover(chromosome_updater, chromosome_mutation_selector, crossover_probability_determinator)
-        if self._ga.crossover == definitions.UNIFORM:
+        if definitions.UNIFORM in crossover_strings:
             return UniformCrossover(chromosome_updater, chromosome_mutation_selector, crossover_probability_determinator)
         return BlendingCrossover(chromosome_updater, chromosome_mutation_selector, crossover_probability_determinator)
 
