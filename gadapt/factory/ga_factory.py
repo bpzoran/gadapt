@@ -553,12 +553,12 @@ class GAFactory(BaseGAFactory):
         if self._ga is None:
             raise Exception("ga object must not be None!")
         if self._ga.exit_check == definitions.AVG_COST:
-            return AvgCostExitChecker(self._ga.max_attempt_no, self._ga.max_attempt_no_for_step_decrease, self._ga.number_of_generations, self._ga.exit_function)
+            return AvgCostExitChecker(self._ga.max_attempt_no, self._ga.number_of_generations, self._ga.exit_function)
         if self._ga.exit_check == definitions.MIN_COST:
-            return MinCostExitChecker(self._ga.max_attempt_no, self._ga.max_attempt_no_for_step_decrease, self._ga.number_of_generations, self._ga.exit_function)
+            return MinCostExitChecker(self._ga.max_attempt_no, self._ga.number_of_generations, self._ga.exit_function)
         if self._ga.exit_check == definitions.GENERATIONS:
-            return NumberOfGenerationsExitChecker(self._ga.number_of_generations, self._ga.max_attempt_no_for_step_decrease, self._ga.exit_function)
-        return RequestedCostExitChecker(self._ga.requested_cost, self._ga.max_attempt_no_for_step_decrease, self._ga.number_of_generations, self._ga.exit_function)
+            return NumberOfGenerationsExitChecker(self._ga.number_of_generations, self._ga.exit_function)
+        return RequestedCostExitChecker(self._ga.requested_cost, self._ga.number_of_generations, self._ga.exit_function)
 
     def _get_crossover(self) -> BaseCrossover:
         """

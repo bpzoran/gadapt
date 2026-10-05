@@ -21,16 +21,11 @@ class Gene:
         """
         self._max_value = sys.float_info.min
         self._decimal_places = -1
-        self._max_decimal_places = -1
-        self._initial_decimal_places = -1
         self._stacked = False
         self.variable_id = id
         self._standard_deviation = definitions.FLOAT_NAN
         self._initial_st_dev = -1.0
         self._step = None
-        self._initial_step = None
-        self._min_step = None
-        self._min_step_target = 1000000000000000000000.0
 
     def __eq__(self, other):
         if not isinstance(other, Gene):
@@ -80,87 +75,11 @@ class Gene:
         """
         return self._step
 
-    def _calculate_initial_step(self, step_value):
-        max_min_diff = self.max_value - self.min_value
-        max_min_diff_percent = max_min_diff / 100.0
-        current = step_value
-        while current < max_min_diff_percent:
-            current = current * 10.0
-        # Now current >= max_min_diff_percent; check if previous value was closer
-        previous = current / 10.0
-        if abs(previous - max_min_diff_percent) < abs(current - max_min_diff_percent):
-            current = previous
-        # Round to closest clean decimal, e.g. 0.00999999998 -> 0.01
-        if current != 0:
-            exp = round(math.log10(abs(current)))
-            current = 10.0 ** exp
-        return current
-
-    def _calculate_min_step(self):
-        max_min_diff = self.max_value - self.min_value
-        target = max_min_diff / self._min_step_target
-        # Find the power of 10 closest to target
-        # e.g. target < 1: 0.1, 0.01, 0.001, ...
-        #      target >= 1: 1, 10, 100, 1000, ...
-        exponent = round(math.log10(target))
-        candidate = 10 ** exponent
-        # Check neighbours to guarantee the closest
-        candidates = [10 ** (exponent - 1), candidate, 10 ** (exponent + 1)]
-        best = min(candidates, key=lambda c: abs(c - target))
-        if best > 1:
-            return 1
-        if best != 0:
-            exp = round(math.log10(abs(best)))
-            best = 10.0 ** exp
-        return best
-
-    def _set_step(self, value):
-        if self._step is not None:
-            return
-        if value is None:
-            self._step = value
-            return
-        # if value is None:
-        #     value = self._calculate_min_step()
-        self._initial_step = self._calculate_initial_step(value)
-        self._initial_decimal_places = self._get_decimal_places(self._initial_step)
-        self.min_step = value
-        self._step = self._initial_step
-        self._decimal_places = self._initial_decimal_places
-
     @step.setter
     def step(self, value: float):
-        self._set_step(value)
-
-    @property
-    def min_step(self) -> float:
-        """
-        Optimization min_step
-        """
-        return self._min_step
-
-    @min_step.setter
-    def min_step(self, value: float):
-        if value is None:
-            self._max_decimal_places = 0
-        else:
-            self._max_decimal_places = self._get_decimal_places(value)
-        self._min_step = value
-
-    @property
-    def min_step_target(self) -> float:
-        """
-        Optimization min_step_target
-        """
-        return self._min_step_target
-
-    @min_step_target.setter
-    def min_step_target(self, value: float):
-        self._min_step_target = value
-
-    @property
-    def initial_step(self) -> float:
-        return self._initial_step
+        self._step = value
+        if value is not None:
+            self._decimal_places = self._get_decimal_places(value)
 
     def _get_decimal_places(self, num):
         num_str = str(num)
@@ -179,10 +98,6 @@ class Gene:
         Number of decimal places of the gene value
         """
         return self._decimal_places
-
-    @property
-    def max_decimal_places(self) -> int:
-        return self._max_decimal_places
 
     @property
     def stacked(self) -> bool:

@@ -28,7 +28,6 @@ class GAOptions:
         self._max_attempt_no = ga.max_attempt_no
         self._requested_cost = ga.requested_cost
         self._ensure_unique_individuals = ga.ensure_unique_individuals
-        self._decrease_step_automatically = ga.decrease_step_automatically
         self._normal_distribution_mutation_min_std_dev = ga.normal_distribution_mutation_min_std_dev
         self._normal_distribution_mutation_max_std_dev = ga.normal_distribution_mutation_max_std_dev
         self._logging = ga.logging
@@ -103,14 +102,6 @@ class GAOptions:
     @ensure_unique_individuals.setter
     def ensure_unique_individuals(self, value: bool):
         self._ensure_unique_individuals = value
-
-    @property
-    def decrease_step_automatically(self) -> bool:
-        return self._decrease_step_automatically
-
-    @decrease_step_automatically.setter
-    def decrease_step_automatically(self, value: bool):
-        self._decrease_step_automatically = value
 
     @property
     def normal_distribution_mutation_min_std_dev(self) -> float:

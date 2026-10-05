@@ -33,7 +33,6 @@ class GA:
         requested_cost=sys.float_info.max,
         number_of_generations=-1,
         max_attempt_no=2,
-        max_attempt_no_for_step_decrease = None,
         parent_selection=definitions.ROULETTE_WHEEL,
         crossover=definitions.BLENDING,
         population_mutation="{0}{1}{2}{3}{4}".format(
@@ -57,7 +56,6 @@ class GA:
         crossover_max_probability=1.0,
         immigration_number=0,
         ensure_unique_individuals: bool = True,
-        decrease_step_automatically: bool = False,
         normal_distribution_mutation_max_std_dev: float = 0.6,
         normal_distribution_mutation_min_std_dev: float = 0.001,
         logging=False,
@@ -179,7 +177,6 @@ class GA:
                 “cross_diversity” . It determines the way how genes
                 are to be selected based on the cross-diversity.
             ensure_unique_individuals: If this parameter has a True value, the genetic algorithm will ensure that all individuals in the population are unique. This means that no two individuals will have the same set of genes, promoting diversity within the population and potentially leading to better optimization results.
-            decrease_step_automatically: If this parameter has a True value, the genetic algorithm will automatically decrease the step size for gene mutation when it detects that the optimization process is stuck in a local minimum. This adaptive step size adjustment can help the algorithm escape local minima and explore the solution space more effectively.
             immigration_number: Refers to the “Random Immigrants”
             concepts. This strategy introduces a certain number of
             individuals into the population during the evolution process.
@@ -207,7 +204,6 @@ class GA:
         self.requested_cost = requested_cost
         self.number_of_generations = number_of_generations
         self.max_attempt_no = max_attempt_no
-        self._max_attempt_no_for_step_decrease = max_attempt_no_for_step_decrease
         self.parent_selection = parent_selection
         self.crossover = crossover
         self.population_mutation = population_mutation
@@ -231,7 +227,6 @@ class GA:
             parent_diversity_mutation_chromosome_sampling
         )
         self.ensure_unique_individuals = ensure_unique_individuals
-        self.decrease_step_automatically = decrease_step_automatically
         self.normal_distribution_mutation_max_std_dev = normal_distribution_mutation_max_std_dev
         self.normal_distribution_mutation_min_std_dev = normal_distribution_mutation_min_std_dev
         self.timeout = timeout
@@ -638,14 +633,6 @@ class GA:
         self._max_attempt_no = ga_utils.try_get_int(value)
 
     @property
-    def max_attempt_no_for_step_decrease(self) -> int:
-        return self._max_attempt_no_for_step_decrease
-
-    @max_attempt_no_for_step_decrease.setter
-    def max_attempt_no_for_step_decrease(self, value: int):
-        self._max_attempt_no_for_step_decrease = ga_utils.try_get_int(value)
-
-    @property
     def exit_check(self) -> str:
         """
         A criteria for the exit for the genetic algorithm.
@@ -766,14 +753,6 @@ class GA:
     @ensure_unique_individuals.setter
     def ensure_unique_individuals(self, value: bool):
         self._ensure_unique_individuals = ga_utils.try_get_bool(value)
-
-    @property
-    def decrease_step_automatically(self) -> bool:
-        return self._decrease_step_automatically
-
-    @decrease_step_automatically.setter
-    def decrease_step_automatically(self, value: bool):
-        self._decrease_step_automatically = ga_utils.try_get_bool(value)
 
     @property
     def normal_distribution_mutation_max_std_dev(self) -> float:

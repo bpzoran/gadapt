@@ -9,10 +9,8 @@ class RequestedCostExitChecker(BaseExitChecker):
     The GA exits when the minimum cost reaches a defined value.
     """
 
-    def __init__(self, requested_cost: float, max_attempt_no_for_step_decrease: int | None, number_of_generations: int = -1, exit_function: Callable = None) -> None:
-        if max_attempt_no_for_step_decrease is None:
-            max_attempt_no_for_step_decrease = 3
-        super().__init__(1, max_attempt_no_for_step_decrease, -1, exit_function)
+    def __init__(self, requested_cost: float, number_of_generations: int = -1, exit_function: Callable = None) -> None:
+        super().__init__(1, -1, exit_function)
         self.requested_cost = requested_cost
         self.number_of_generations = number_of_generations
 
@@ -20,10 +18,3 @@ class RequestedCostExitChecker(BaseExitChecker):
         if self.population.min_cost <= self.requested_cost:
             return True
         return False
-
-    def _should_decrease_step(self):
-        for g in self.population.options.genes:
-            if g.min_step_target is not None:
-                continue
-            g.min_step_target = 100000000
-        return self._min_step_stuck()

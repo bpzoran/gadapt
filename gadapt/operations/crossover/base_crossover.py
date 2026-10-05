@@ -15,6 +15,11 @@ from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector 
 class BaseCrossover(ABC):
     """Base Crossover Class"""
 
+    # Attempts to produce offspring that are not already seen, when ensuring unique individuals
+    MAX_UNIQUE_ATTEMPTS = 15
+    # After this many failed attempts, the offspring are mutated to escape duplicates
+    MUTATE_AFTER_ATTEMPT = 5
+
     def __init__(self, chromosome_updater: BaseChromosomeUpdater, mutator: BaseGeneMutationSelector, crossover_rate_determinator: BaseCrossoverProbabilityDeterminator):
         self._current_gene_number = -1
         self._chromosome_updater = chromosome_updater
@@ -27,7 +32,7 @@ class BaseCrossover(ABC):
 
         new_offsprings = []
         number_of_attempts = 0
-        while (not chromosomes_added) and number_of_attempts < 15:
+        while (not chromosomes_added) and number_of_attempts < self.MAX_UNIQUE_ATTEMPTS:
             number_of_attempts += 1
             offsprings_to_add = []
             if len(new_offsprings) == 0:
@@ -41,9 +46,9 @@ class BaseCrossover(ABC):
                 offsprings_to_add.append(new_offsprings.pop())
             else:
                 return
-            if number_of_attempts > 5:
+            if number_of_attempts > self.MUTATE_AFTER_ATTEMPT:
                 for c in offsprings_to_add:
-                    self._mutator.mutate(c, number_of_attempts - 5)
+                    self._mutator.mutate(c, number_of_attempts - self.MUTATE_AFTER_ATTEMPT)
             number_of_added_chromosomes += population.add_not_contained_chromosomes(offsprings_to_add)
             offsprings_to_add.clear()
             if number_of_added_chromosomes >= 2:
@@ -69,6 +74,8 @@ class BaseCrossover(ABC):
             population: Population
         """
         for chromosome1, chromosome2 in chromosome_pairs:
+            if len(population) >= population.options.population_size:
+                break
             if population.options.ensure_unique_individuals:
                 self._mate_pair_until_added(population, chromosome1, chromosome2)
             else:
@@ -80,12 +87,16 @@ class BaseCrossover(ABC):
             sorted_by_cost_value = sorted(
                 population, key=lambda chrom: chrom.cost_value, reverse=True
             )
-            i = 0
+            ids_to_remove = set()
             for c in sorted_by_cost_value:
-                if i >= chromosome_surplus:
+                if len(ids_to_remove) >= chromosome_surplus:
                     break
                 if not math.isnan(c.cost_value):
-                    population.chromosomes.remove(c)
+                    ids_to_remove.add(id(c))
+            # remove by identity - equal chromosomes must not be removed instead
+            population.chromosomes[:] = [
+                c for c in population.chromosomes if id(c) not in ids_to_remove
+            ]
 
     def _mate_pair(
         self, mother: Chromosome, father: Chromosome, population

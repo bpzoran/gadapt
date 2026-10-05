@@ -67,6 +67,7 @@ class BaseChromosomeMutationSelector(ABC):
                 )
                 if (not self.population.options.ensure_unique_individuals) or (not self.population.contained_chromosome(c)):
                     chromosomes_added = True
+            self.population.register_chromosome(c)
         return len(chromosomes_for_mutation)
 
     def mutate_chromosome(self, c: Chromosome, number_of_mutated_chromosomes: int):

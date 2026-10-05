@@ -68,7 +68,7 @@ class Chromosome(RankingModel):
         if len(self._alleles) != len(other._alleles):
             return False
         # Comparing tuples is very fast in Python
-        return self._get_values_tuple() == other._get_values_tuple()
+        return self.get_values_tuple() == other.get_values_tuple()
 
     def __hash__(self):
         if self._hash_cache is None:
@@ -78,12 +78,11 @@ class Chromosome(RankingModel):
     def reset_hash_cache(self):
         self._hash_cache = None
 
-    def _get_values_tuple(self) -> tuple:
+    def get_values_tuple(self) -> tuple:
         """
-        Helper to extract variable values into a hashable tuple.
+        Extracts variable values into a hashable tuple.
         """
         return tuple(gene.variable_value for gene in self._alleles)
-
 
 
     def _get_sorted(self, key: None = None, reverse: bool = False):

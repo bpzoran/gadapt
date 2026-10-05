@@ -132,11 +132,7 @@ class CostDiversityPopulationUpdater(BasePopulationUpdater):
         self.population.relative_cost_diversity_coefficient = (
             self.calculate_coefficient_of_population_diversity()
         )
-        self.population.calculate_step_cost_diversity_coefficient()
         if math.isnan(self.population.absolute_cost_diversity_in_first_population):
             self.population.absolute_cost_diversity_in_first_population = (
-                self.population.absolute_cost_diversity
-            )
-            self.population.absolute_cost_diversity_in_borderline_population = (
                 self.population.absolute_cost_diversity
             )

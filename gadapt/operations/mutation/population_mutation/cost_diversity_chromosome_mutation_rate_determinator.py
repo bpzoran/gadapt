@@ -21,8 +21,8 @@ class CostDiversityChromosomeMutationRateDeterminator(
 
     def _get_mutation_rate(self) -> float:
         if (
-            self.population.absolute_cost_diversity_in_borderline_population is None
-            or math.isnan(self.population.absolute_cost_diversity_in_borderline_population)
+            self.population.absolute_cost_diversity_in_first_population is None
+            or math.isnan(self.population.absolute_cost_diversity_in_first_population)
             or self.population.absolute_cost_diversity is None
             or math.isnan(self.population.absolute_cost_diversity)
         ):
