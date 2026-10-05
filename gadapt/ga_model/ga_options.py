@@ -27,7 +27,13 @@ class GAOptions:
         self._set_number_of_mutation_chromosomes(ga)
         self._max_attempt_no = ga.max_attempt_no
         self._requested_cost = ga.requested_cost
-        self._ensure_unique_individuals = ga.ensure_unique_individuals
+        if ga.ensure_unique_individuals is None:
+            # grid values are likely to repeat, continuous values practically never
+            self._ensure_unique_individuals = len(ga._genes) > 0 and all(
+                g.is_discrete for g in ga._genes
+            )
+        else:
+            self._ensure_unique_individuals = ga.ensure_unique_individuals
         self._normal_distribution_mutation_min_std_dev = ga.normal_distribution_mutation_min_std_dev
         self._normal_distribution_mutation_max_std_dev = ga.normal_distribution_mutation_max_std_dev
         self._logging = ga.logging

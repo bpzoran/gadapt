@@ -81,6 +81,16 @@ class Gene:
         if value is not None:
             self._decimal_places = self._get_decimal_places(value)
 
+    @property
+    def is_discrete(self) -> bool:
+        """
+        Indicates if gene values are taken from a grid defined by the step.
+        A missing step, or one that is too small relative to the range, means continuous values.
+        """
+        if self.step is None or math.isnan(self.step) or self.step <= 0:
+            return False
+        return (self.max_value - self.min_value) / self.step <= 1e9
+
     def _get_decimal_places(self, num):
         num_str = str(num)
         if "e-" in num_str:

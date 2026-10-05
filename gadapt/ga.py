@@ -55,7 +55,7 @@ class GA:
         crossover_min_probability=0.5,
         crossover_max_probability=1.0,
         immigration_number=0,
-        ensure_unique_individuals: bool = True,
+        ensure_unique_individuals: Optional[bool] = None,
         normal_distribution_mutation_max_std_dev: float = 0.6,
         normal_distribution_mutation_min_std_dev: float = 0.001,
         logging=False,
@@ -177,6 +177,7 @@ class GA:
                 “cross_diversity” . It determines the way how genes
                 are to be selected based on the cross-diversity.
             ensure_unique_individuals: If this parameter has a True value, the genetic algorithm will ensure that all individuals in the population are unique. This means that no two individuals will have the same set of genes, promoting diversity within the population and potentially leading to better optimization results.
+                If it is None (default), uniqueness is ensured when all variables have a step (values are taken from a grid, so duplicates are likely), and it is not ensured when any variable is continuous (no step), since identical individuals are then practically impossible.
             immigration_number: Refers to the “Random Immigrants”
             concepts. This strategy introduces a certain number of
             individuals into the population during the evolution process.
@@ -747,11 +748,11 @@ class GA:
         self._requested_cost = ga_utils.try_get_float(value)
 
     @property
-    def ensure_unique_individuals(self) -> bool:
+    def ensure_unique_individuals(self) -> Optional[bool]:
         return self._ensure_unique_individuals
 
     @ensure_unique_individuals.setter
-    def ensure_unique_individuals(self, value: bool):
+    def ensure_unique_individuals(self, value: Optional[bool]):
         self._ensure_unique_individuals = ga_utils.try_get_bool(value)
 
     @property
