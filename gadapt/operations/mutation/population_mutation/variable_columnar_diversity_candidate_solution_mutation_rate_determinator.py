@@ -4,11 +4,11 @@ from gadapt.operations.mutation.population_mutation.base_candidate_solution_muta
 )
 
 
-class CrossDiversityCandidateSolutionMutationRateDeterminator(
+class VariableColumnarDiversityCandidateSolutionMutationRateDeterminator(
     BaseCandidateSolutionMutationRateDeterminator
 ):
     """
-    Determining the number of candidate solutions to be mutated in a population based on the cross-diversity coefficient of the decision variables.
+    Determining the number of candidate solutions to be mutated in a population based on the variable-columnar-diversity coefficient of the decision variables.
     """
 
     def __init__(

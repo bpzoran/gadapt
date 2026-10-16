@@ -10,9 +10,9 @@ from gadapt.operations.sampling.base_sampling import BaseSampling
 from gadapt.operations.mutation.decision_variable_mutation.base_decision_variable_mutator import BaseDecisionVariableMutator
 
 
-class CrossDiversityDecisionVariableMutationSelector(RandomDecisionVariableMutationSelector):
+class VariableColumnarDiversityDecisionVariableMutationSelector(RandomDecisionVariableMutationSelector):
     """
-    Selects and mutates a candidate solution based on the cross diversity of decision variables in the population.
+    Selects and mutates a candidate solution based on the variable columnar diversity of decision variables in the population.
     """
 
     def __init__(

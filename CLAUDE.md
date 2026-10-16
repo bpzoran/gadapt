@@ -46,5 +46,6 @@ Pure Python, no compiled code. `README.md` is also the PyPI long description.
   a docstring entry, and an entry in the README "Parameters Description". Keep README code blocks runnable.
 - Renaming a `GA` parameter: add the old name to `DEPRECATED_PARAMETER_NAMES` in `ga.py` (it gives the constructor kwarg and a
   warning property alias automatically) and to the README "Previous Parameter Names" table.
+  Renaming an option value (a token like `"cost_diversity"`): add it to `DEPRECATED_OPTION_VALUES`.
 - Known typo kept in sync with the README: "Calculation not succesful" (`ga_strings.py`).
 - Don't commit, push or bump the version unless asked.

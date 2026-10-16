@@ -7,9 +7,9 @@ from gadapt.operations.mutation.candidate_solution_mutation.random_decision_vari
 )
 
 
-class CrossDiversityDecisionVariableMutationRateDeterminator(RandomDecisionVariableMutationRateDeterminator):
+class VariableColumnarDiversityDecisionVariableMutationRateDeterminator(RandomDecisionVariableMutationRateDeterminator):
     """
-    Determines the number of mutation decision variables in a candidate solution based on the cross diversity coefficient of the decision variable.
+    Determines the number of mutation decision variables in a candidate solution based on the variable columnar diversity coefficient of the decision variable.
     """
 
     def __init__(
@@ -32,7 +32,7 @@ class CrossDiversityDecisionVariableMutationRateDeterminator(RandomDecisionVaria
                 or isnan(g.columnar_diversity_coefficient)
             for g in decision_variables
         ):
-            gadapt_log_error("cross_diversity_coefficient not set!")
+            gadapt_log_error("variable_columnar_diversity_coefficient not set!")
             return super()._get_number_of_mutation_decision_variables()
 
         mutation_rate = self._get_mutation_rate(decision_variables)

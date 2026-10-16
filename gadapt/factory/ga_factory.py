@@ -40,11 +40,11 @@ from gadapt.operations.mutation.candidate_solution_mutation.composed_decision_va
 from gadapt.operations.mutation.candidate_solution_mutation.composed_decision_variable_mutation_selector import (
     ComposedDecisionVariableMutationSelector,
 )
-from gadapt.operations.mutation.candidate_solution_mutation.cross_diversity_decision_variable_mutation_rate_determinator import (
-    CrossDiversityDecisionVariableMutationRateDeterminator,
+from gadapt.operations.mutation.candidate_solution_mutation.variable_columnar_diversity_decision_variable_mutation_rate_determinator import (
+    VariableColumnarDiversityDecisionVariableMutationRateDeterminator,
 )
-from gadapt.operations.mutation.candidate_solution_mutation.cross_diversity_decision_variable_mutation_selector import (
-    CrossDiversityDecisionVariableMutationSelector,
+from gadapt.operations.mutation.candidate_solution_mutation.variable_columnar_diversity_decision_variable_mutation_selector import (
+    VariableColumnarDiversityDecisionVariableMutationSelector,
 )
 from gadapt.operations.mutation.candidate_solution_mutation.random_decision_variable_mutation_rate_determinator import (
     RandomDecisionVariableMutationRateDeterminator,
@@ -79,8 +79,8 @@ from gadapt.operations.mutation.population_mutation.composed_candidate_solution_
 from gadapt.operations.mutation.population_mutation.cost_diversity_candidate_solution_mutation_rate_determinator import (
     CostDiversityCandidateSolutionMutationRateDeterminator,
 )
-from gadapt.operations.mutation.population_mutation.cross_diversity_candidate_solution_mutation_rate_determinator import (
-    CrossDiversityCandidateSolutionMutationRateDeterminator,
+from gadapt.operations.mutation.population_mutation.variable_columnar_diversity_candidate_solution_mutation_rate_determinator import (
+    VariableColumnarDiversityCandidateSolutionMutationRateDeterminator,
 )
 from gadapt.operations.mutation.population_mutation.parent_cost_diversity_candidate_solution_mutation_selector import \
     ParentCostDiversityCandidateSolutionMutationSelector
@@ -107,7 +107,7 @@ from gadapt.operations.sampling.from_top_to_bottom_sampling import (
 from gadapt.operations.sampling.random_sampling import RandomSampling
 from gadapt.operations.sampling.roulette_wheel_sampling import RouletteWheelSampling
 from gadapt.operations.sampling.tournament_sampling import TournamentSampling
-from gadapt.operations.decision_variable_update.cross_diversity_decision_variable_updater import (
+from gadapt.operations.decision_variable_update.variable_columnar_diversity_decision_variable_updater import (
     ColumnarDiversityDecisionVariableUpdater,
 )
 from gadapt.operations.crossover.blending_crossover import BlendingCrossover
@@ -118,8 +118,8 @@ from gadapt.operations.exit_check.number_of_generations_exit_checker import (
 from gadapt.operations.mutation.decision_variable_mutation.composed_decision_variable_mutator import (
     ComposedDecisionVariableMutator,
 )
-from gadapt.operations.mutation.decision_variable_mutation.normal_distribution_cross_diversity_decision_variable_mutator import (
-    NormalDistributionCrossDiversityDecisionVariableMutator,
+from gadapt.operations.mutation.decision_variable_mutation.normal_distribution_variable_columnar_diversity_decision_variable_mutator import (
+    NormalDistributionVariableColumnarDiversityDecisionVariableMutator,
 )
 from gadapt.operations.mutation.population_mutation.base_candidate_solution_mutation_rate_determinator import (
     BaseCandidateSolutionMutationRateDeterminator,
@@ -188,8 +188,8 @@ class GAFactory(BaseGAFactory):
             decision_variable_mutators.append(RandomDecisionVariableMutator())
         if definitions.EXTREME_POINTED in mutator_strings:
             decision_variable_mutators.append(ExtremePointedDecisionVariableMutator())
-        if definitions.CROSS_DIVERSITY in mutator_strings:
-            decision_variable_mutators.append(NormalDistributionCrossDiversityDecisionVariableMutator(self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev))
+        if definitions.VARIABLE_COLUMNAR_DIVERSITY in mutator_strings:
+            decision_variable_mutators.append(NormalDistributionVariableColumnarDiversityDecisionVariableMutator(self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev))
         if definitions.COST_DIVERSITY in mutator_strings:
             decision_variable_mutators.append(NormalDistributionCostDiversityDecisionVariableMutator(self._options.get_cost_diversity_coefficient_function, self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev))
         elif definitions.NORMAL_DISTRIBUTION in mutator_strings:
@@ -262,9 +262,9 @@ class GAFactory(BaseGAFactory):
             candidate_solution_mutation_rate_determinators.append(
                 StrictCandidateSolutionMutationRateDeterminator()
             )
-        if definitions.CROSS_DIVERSITY in mutator_strings:
+        if definitions.VARIABLE_COLUMNAR_DIVERSITY in mutator_strings:
             candidate_solution_mutation_rate_determinators.append(
-                CrossDiversityCandidateSolutionMutationRateDeterminator()
+                VariableColumnarDiversityCandidateSolutionMutationRateDeterminator()
             )
         if definitions.COST_DIVERSITY in mutator_strings:
             candidate_solution_mutation_rate_determinators.append(
@@ -384,16 +384,16 @@ class GAFactory(BaseGAFactory):
             decision_variable_mutation_rate_determinators.append(
                 StrictDecisionVariableMutationRateDeterminator()
             )
-        if definitions.CROSS_DIVERSITY in mutator_strings:
+        if definitions.VARIABLE_COLUMNAR_DIVERSITY in mutator_strings:
             decision_variable_mutation_rate_determinators.append(
-                CrossDiversityDecisionVariableMutationRateDeterminator()
+                VariableColumnarDiversityDecisionVariableMutationRateDeterminator()
             )
         if len(decision_variable_mutation_rate_determinators) == 0:
             decision_variable_mutation_rate_determinators.append(
                 RandomDecisionVariableMutationRateDeterminator()
             )
             decision_variable_mutation_rate_determinators.append(
-                CrossDiversityDecisionVariableMutationRateDeterminator()
+                VariableColumnarDiversityDecisionVariableMutationRateDeterminator()
             )
         if len(decision_variable_mutation_rate_determinators) == 1:
             main_decision_variable_mutation_rate_determinator = decision_variable_mutation_rate_determinators[0]
@@ -430,7 +430,7 @@ class GAFactory(BaseGAFactory):
         crossover_probability_determinator = ComposedCrossoverProbabilityDeterminator()
         if definitions.COST_DIVERSITY in crossover_strings:
             crossover_probability_determinator.append(CostDiversityCrossoverProbabilityDeterminator())
-        if definitions.CROSS_DIVERSITY in crossover_strings:
+        if definitions.VARIABLE_COLUMNAR_DIVERSITY in crossover_strings:
             crossover_probability_determinator.append(ColumnarDiversityCrossoverProbabilityDeterminator())
         if definitions.FIXED in crossover_strings:
             crossover_probability_determinator.append(FixedCrossoverProbabilityDeterminator())
@@ -459,23 +459,23 @@ class GAFactory(BaseGAFactory):
                     helper_decision_variable_mutation_rate_determinator, self.get_decision_variable_mutator()
                 ),
             )
-        if definitions.CROSS_DIVERSITY in mutator_strings:
+        if definitions.VARIABLE_COLUMNAR_DIVERSITY in mutator_strings:
             decision_variable_mutation_selectors.append(
-                CrossDiversityDecisionVariableMutationSelector(
+                VariableColumnarDiversityDecisionVariableMutationSelector(
                     helper_decision_variable_mutation_rate_determinator,
                     self.get_decision_variable_mutator(),
                     self._get_sampling_method(
-                        self._ga.cross_diversity_mutation_decision_variable_sampling
+                        self._ga.variable_columnar_diversity_mutation_decision_variable_sampling
                     ),
                 )
             )
         if len(decision_variable_mutation_selectors) == 0:
             decision_variable_mutation_selectors.append(
-                CrossDiversityDecisionVariableMutationSelector(
+                VariableColumnarDiversityDecisionVariableMutationSelector(
                     helper_decision_variable_mutation_rate_determinator,
                     self.get_decision_variable_mutator(),
                     self._get_sampling_method(
-                        self._ga.cross_diversity_mutation_decision_variable_sampling
+                        self._ga.variable_columnar_diversity_mutation_decision_variable_sampling
                     ),
                 )
             )
@@ -497,11 +497,11 @@ class GAFactory(BaseGAFactory):
     ):
         if not decision_variable_mutation_selectors:
             decision_variable_mutation_selectors.append(
-                CrossDiversityDecisionVariableMutationSelector(
+                VariableColumnarDiversityDecisionVariableMutationSelector(
                     helper_decision_variable_mutation_rate_determinator,
                     self.get_decision_variable_mutator(),
                     self._get_sampling_method(
-                        self._ga.cross_diversity_mutation_decision_variable_sampling
+                        self._ga.variable_columnar_diversity_mutation_decision_variable_sampling
                     ),
                 )
             )
@@ -600,7 +600,7 @@ class GAFactory(BaseGAFactory):
             + candidate_solution_mutator_strings
             + decision_variable_mutator_strings
         )
-        if definitions.CROSS_DIVERSITY in all_mutator_strings:
+        if definitions.VARIABLE_COLUMNAR_DIVERSITY in all_mutator_strings:
             return ColumnarDiversityDecisionVariableUpdater()
         return BaseDecisionVariableUpdater()
 

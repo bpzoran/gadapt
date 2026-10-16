@@ -12,7 +12,7 @@ from gadapt.operations.mutation.decision_variable_mutation.normal_distribution_d
 class NormalDistributionCostDiversityDecisionVariableMutator(NormalDistributionDecisionVariableMutator):
     """
     Generates random or normally distributed values. Calculates standard deviation based on
-    the cross-diversity coefficient
+    the variable-columnar-diversity coefficient
     """
 
     def __init__(self, get_cost_diversity_function: Callable,  min_std_dev: float = 0.001, max_std_dev: float = 0.6):

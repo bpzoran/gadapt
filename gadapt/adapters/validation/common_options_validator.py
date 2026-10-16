@@ -268,19 +268,19 @@ class CommonOptionsValidator(BaseOptionsValidator):
             self._add_message("Max Attempt No must be type an int between 1 and 65536!")
             rslt &= False
         if (
-            self.options.candidate_solution_mutation == definitions.CROSS_DIVERSITY
-            or definitions.CROSS_DIVERSITY in self.options.candidate_solution_mutation
+            self.options.candidate_solution_mutation == definitions.VARIABLE_COLUMNAR_DIVERSITY
+            or definitions.VARIABLE_COLUMNAR_DIVERSITY in self.options.candidate_solution_mutation
         ):
-            if self.options.cross_diversity_mutation_decision_variable_sampling is None:
+            if self.options.variable_columnar_diversity_mutation_decision_variable_sampling is None:
                 self._add_message(
-                    "Cross Diversity Mutation Decision Variable Sampling must not be None!"
+                    "Variable Columnar Diversity Mutation Decision Variable Sampling must not be None!"
                 )
                 rslt &= False
             elif not isinstance(
-                self.options.cross_diversity_mutation_decision_variable_sampling, str
+                self.options.variable_columnar_diversity_mutation_decision_variable_sampling, str
             ):
                 self._add_message(
-                    "Cross Diversity Mutation Decision Variable Sampling must be type str!"
+                    "Variable Columnar Diversity Mutation Decision Variable Sampling must be type str!"
                 )
                 rslt &= False
         if self.options.candidate_solution_mutation is None:
@@ -333,24 +333,24 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 )
             )
             rslt &= False
-        if self.options.candidate_solution_mutation == definitions.CROSS_DIVERSITY:
-            if self.options.cross_diversity_mutation_decision_variable_sampling is None:
+        if self.options.candidate_solution_mutation == definitions.VARIABLE_COLUMNAR_DIVERSITY:
+            if self.options.variable_columnar_diversity_mutation_decision_variable_sampling is None:
                 self._add_message(
-                    "Cross Diversity Mutation Decision Variable Selection must not be None!"
+                    "Variable Columnar Diversity Mutation Decision Variable Selection must not be None!"
                 )
                 rslt &= False
             elif not isinstance(
-                self.options.cross_diversity_mutation_decision_variable_sampling, str
+                self.options.variable_columnar_diversity_mutation_decision_variable_sampling, str
             ):
                 self._add_message(
-                    "Cross Diversity Mutation Decision Variable Selection must be type str!"
+                    "Variable Columnar Diversity Mutation Decision Variable Selection must be type str!"
                 )
                 rslt &= False
             elif not self._validate_selection(
-                self.options.cross_diversity_mutation_decision_variable_sampling,
-                "Cross Diversity Mutation Decision Variable Selection",
+                self.options.variable_columnar_diversity_mutation_decision_variable_sampling,
+                "Variable Columnar Diversity Mutation Decision Variable Selection",
                 self.options.number_of_mutation_decision_variables,
-                "Group Size for Cross Diversity Mutation Decision Variable Selection must be below\
+                "Group Size for Variable Columnar Diversity Mutation Decision Variable Selection must be below\
                     or equal than the number of mutation decision variables!",
             ):
                 rslt &= False

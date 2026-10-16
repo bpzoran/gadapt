@@ -18,9 +18,10 @@ from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.ga_results import GAResults
 import copy
 
-# Parameter names used before allele/gene/chromosome were renamed to
-# variable value/decision variable/candidate solution. They are still accepted
-# by the GA constructor and as GA properties, but emit a DeprecationWarning.
+# Parameter names used before allele/gene/chromosome/cross diversity were renamed to
+# variable value/decision variable/candidate solution/variable columnar diversity.
+# They are still accepted by the GA constructor and as GA properties, but emit a
+# DeprecationWarning.
 DEPRECATED_PARAMETER_NAMES = {
     "number_of_mutation_chromosomes": "number_of_mutation_candidate_solutions",
     "percentage_of_mutation_chromosomes": "percentage_of_mutation_candidate_solutions",
@@ -29,17 +30,46 @@ DEPRECATED_PARAMETER_NAMES = {
     "gene_mutation": "decision_variable_mutation",
     "number_of_mutation_genes": "number_of_mutation_decision_variables",
     "percentage_of_mutation_genes": "percentage_of_mutation_decision_variables",
-    "cross_diversity_mutation_gene_sampling": "cross_diversity_mutation_decision_variable_sampling",
+    "cross_diversity_mutation_gene_sampling": "variable_columnar_diversity_mutation_decision_variable_sampling",
+    "cross_diversity_mutation_decision_variable_sampling": "variable_columnar_diversity_mutation_decision_variable_sampling",
+}
+
+# Option values (the comma-separated tokens of population_mutation,
+# candidate_solution_mutation, decision_variable_mutation and crossover) that were
+# renamed. They are still accepted, but replaced by the new value with a DeprecationWarning.
+DEPRECATED_OPTION_VALUES = {
+    "cross_diversity": definitions.VARIABLE_COLUMNAR_DIVERSITY,
 }
 
 
+def _warn_deprecated(message: str) -> None:
+    # Point the warning at the first frame outside this module (the user's code),
+    # whether it was reached through the constructor, a setter or an alias property.
+    level, frame = 2, sys._getframe(1)
+    while frame is not None and frame.f_globals.get("__name__") == __name__:
+        frame, level = frame.f_back, level + 1
+    warnings.warn(message, DeprecationWarning, stacklevel=level)
+
+
 def _warn_deprecated_name(old_name: str) -> None:
-    # stacklevel=3: this helper -> GA.__init__ or the alias property -> the user's code
-    warnings.warn(
-        f"'{old_name}' is deprecated, use '{DEPRECATED_PARAMETER_NAMES[old_name]}' instead",
-        DeprecationWarning,
-        stacklevel=3,
-    )
+    _warn_deprecated(f"'{old_name}' is deprecated, use '{DEPRECATED_PARAMETER_NAMES[old_name]}' instead")
+
+
+def _migrate_deprecated_values(value, parameter_name: str):
+    """
+    Replaces deprecated tokens in a comma-separated option string with their current names.
+    """
+    if not isinstance(value, str):
+        return value
+    tokens = value.split(definitions.PARAM_SEPARATOR)
+    for i, token in enumerate(tokens):
+        new_token = DEPRECATED_OPTION_VALUES.get(token)
+        if new_token is not None:
+            _warn_deprecated(
+                f"The value '{token}' of '{parameter_name}' is deprecated, use '{new_token}' instead"
+            )
+            tokens[i] = new_token
+    return definitions.PARAM_SEPARATOR.join(tokens)
 
 
 class GA:
@@ -63,7 +93,7 @@ class GA:
         population_mutation="{0}{1}{2}{3}{4}".format(
             definitions.COST_DIVERSITY,
             definitions.PARAM_SEPARATOR,
-            definitions.CROSS_DIVERSITY,
+            definitions.VARIABLE_COLUMNAR_DIVERSITY,
             definitions.PARAM_SEPARATOR,
             definitions.PARENT_DIVERSITY,
         ),
@@ -71,11 +101,11 @@ class GA:
         percentage_of_mutation_candidate_solutions=50.0,
         parent_diversity_mutation_candidate_solution_sampling=definitions.ROULETTE_WHEEL,
         must_mutate_for_same_parents=True,
-        candidate_solution_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
-        decision_variable_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
+        candidate_solution_mutation=f"{definitions.VARIABLE_COLUMNAR_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
+        decision_variable_mutation=f"{definitions.VARIABLE_COLUMNAR_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
         number_of_mutation_decision_variables=-1,
         percentage_of_mutation_decision_variables=20.0,
-        cross_diversity_mutation_decision_variable_sampling=definitions.ROULETTE_WHEEL,
+        variable_columnar_diversity_mutation_decision_variable_sampling=definitions.ROULETTE_WHEEL,
         crossover_probability=0.5,
         crossover_min_probability=0.5,
         crossover_max_probability=1.0,
@@ -197,11 +227,11 @@ class GA:
                 number_of_mutation_decision_variables does not have a valid
                 integer value equal to or higher than 0.
 
-            cross_diversity_mutation_decision_variable_sampling: The sampling algorithm for
-            mutating candidate solutions when candidate_solution_mutation has value “cross_diversity”.
+            variable_columnar_diversity_mutation_decision_variable_sampling: The sampling algorithm for
+            mutating candidate solutions when candidate_solution_mutation has value “variable_columnar_diversity”.
                 It only applies when candidate_solution_mutation has value
-                “cross_diversity” . It determines the way how decision variables
-                are to be selected based on the cross-diversity.
+                “variable_columnar_diversity” . It determines the way how decision variables
+                are to be selected based on the variable-columnar-diversity.
             ensure_unique_individuals: If this parameter has a True value, the genetic algorithm will ensure that all individuals in the population are unique. This means that no two individuals will have the same set of decision variables, promoting diversity within the population and potentially leading to better optimization results.
                 If it is None (default), uniqueness is ensured when all variables have a step (values are taken from a grid, so duplicates are likely), and it is not ensured when any variable is continuous (no step), since identical individuals are then practically impossible.
             immigration_number: Refers to the “Random Immigrants”
@@ -259,8 +289,8 @@ class GA:
         self.crossover_max_probability = crossover_max_probability
         self.logging = logging
         self._decision_variables: List[DecisionVariable] = []
-        self.cross_diversity_mutation_decision_variable_sampling = (
-            cross_diversity_mutation_decision_variable_sampling
+        self.variable_columnar_diversity_mutation_decision_variable_sampling = (
+            variable_columnar_diversity_mutation_decision_variable_sampling
         )
         self.parent_diversity_mutation_candidate_solution_sampling = (
             parent_diversity_mutation_candidate_solution_sampling
@@ -528,7 +558,7 @@ class GA:
 
     @population_mutation.setter
     def population_mutation(self, value: str):
-        self._population_mutation = ga_utils.prepare_string(value)
+        self._population_mutation = _migrate_deprecated_values(ga_utils.prepare_string(value), "population_mutation")
 
     @property
     def parent_diversity_mutation_candidate_solution_sampling(self) -> str:
@@ -584,15 +614,15 @@ class GA:
 
         Supported values:
 
-        **"cross_diversity"** - Considers the diversity of decision variables of the same
+        **"variable_columnar_diversity"** - Considers the diversity of decision variables of the same
         type in the population. Lower diversity can mean
         that this decision variable approaches some local
         minimums, and therefore such decision variables increase the
         chance for mutation. Based on the calculated
-        cross-diversity, candidate solutions may be selected by
+        variable-columnar-diversity, candidate solutions may be selected by
         one of the sampling methods, which is
         determined by the value of the
-        cross_diversity_mutation_decision_variable_sampling parameter.
+        variable_columnar_diversity_mutation_decision_variable_sampling parameter.
 
         **"random"** - Decision variables are randomly selected for the mutation
         """
@@ -600,7 +630,7 @@ class GA:
 
     @candidate_solution_mutation.setter
     def candidate_solution_mutation(self, value: str):
-        self._candidate_solution_mutation = ga_utils.prepare_string(value)
+        self._candidate_solution_mutation = _migrate_deprecated_values(ga_utils.prepare_string(value), "candidate_solution_mutation")
 
     @property
     def decision_variable_mutation(self) -> str:
@@ -617,29 +647,29 @@ class GA:
 
     @decision_variable_mutation.setter
     def decision_variable_mutation(self, value: str):
-        self._decision_variable_mutation = ga_utils.prepare_string(value)
+        self._decision_variable_mutation = _migrate_deprecated_values(ga_utils.prepare_string(value), "decision_variable_mutation")
 
     @property
-    def cross_diversity_mutation_decision_variable_sampling(self) -> str:
+    def variable_columnar_diversity_mutation_decision_variable_sampling(self) -> str:
         """
         The sampling algorithm for mutating candidate solutions when candidate_solution_mutation
-        has value “cross_diversity”.
-        It only applies when candidate_solution_mutation has value “cross_diversity” .
-        It determines the way how decision variables are to be selected based on the cross-diversity.
+        has value “variable_columnar_diversity”.
+        It only applies when candidate_solution_mutation has value “variable_columnar_diversity” .
+        It determines the way how decision variables are to be selected based on the variable-columnar-diversity.
 
         Supported values:
 
         **"roulette_wheel"** - The Roulette Wheel sampling algorithm
         (also known as “Weighted Random Pairing”). The probabilities
         assigned to the decision variables to be mutated are inversely
-        proportional to their cross-diversity. A decision variable
-        with the lowest cross-diversity has the greatest
+        proportional to their variable-columnar-diversity. A decision variable
+        with the lowest variable-columnar-diversity has the greatest
         probability of mutation, while the decision variable with the
-        highest cross-diversity has the lowest
+        highest variable-columnar-diversity has the lowest
         probability of mutation.
 
         **"tournament"** - The Tournament sampling algorithm. It randomly picks
-        small subsets (groups) of decision variables, and decision variables with the lowest cross-diversity
+        small subsets (groups) of decision variables, and decision variables with the lowest variable-columnar-diversity
         in subsets are chosen to be mutated. “tournament” can have
         an additional parameter separated from the “tournament”
         keyword by the comma. The other value represents a group size.
@@ -653,13 +683,13 @@ class GA:
         **"random"** - Random sampling algorithm uses a
         uniform random number generator to select decision variables for mutation.
         In this case, sampling for the mutation will not
-        depend on decision variable cross-diversity.
+        depend on the variable-columnar-diversity of the decision variable.
         """
-        return self._cross_diversity_mutation_decision_variable_sampling
+        return self._variable_columnar_diversity_mutation_decision_variable_sampling
 
-    @cross_diversity_mutation_decision_variable_sampling.setter
-    def cross_diversity_mutation_decision_variable_sampling(self, value: str):
-        self._cross_diversity_mutation_decision_variable_sampling = ga_utils.prepare_string(value)
+    @variable_columnar_diversity_mutation_decision_variable_sampling.setter
+    def variable_columnar_diversity_mutation_decision_variable_sampling(self, value: str):
+        self._variable_columnar_diversity_mutation_decision_variable_sampling = ga_utils.prepare_string(value)
 
     @property
     def max_attempt_no(self) -> int:
@@ -773,7 +803,7 @@ class GA:
 
     @crossover.setter
     def crossover(self, value: str):
-        self._crossover = ga_utils.prepare_string(value)
+        self._crossover = _migrate_deprecated_values(ga_utils.prepare_string(value), "crossover")
 
     @property
     def requested_cost(self) -> float:
