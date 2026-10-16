@@ -35,6 +35,12 @@ Pure Python, no compiled code. `README.md` is also the PyPI long description.
   Anything that changes variable values after a candidate solution is added must call `population.register_candidate_solution(c)`.
   `add_candidate_solution` returns `False` (and silently drops the candidate solution) when the population is full.
   It is a real cost late in a run (many retries once the search converges), but it avoids repeated evaluations.
+- Two coefficients are NaN unless the updater that computes them is created, and the factory creates each only when its token
+  appears in a relevant option: `columnar_diversity_coefficient` (`ColumnarDiversityDecisionVariableUpdater`, token
+  `variable_columnar_diversity` in a mutation **or crossover** option, see `_get_decision_variable_updater`) and
+  `relative_cost_diversity_coefficient` (`CostDiversityPopulationUpdater`, token `cost_diversity` in `population_mutation` **or
+  `crossover`**, see `_get_population_updater`). Anything new that reads one of them must be covered there. A NaN crossover
+  probability used to hang `BaseCrossover._mate_pair` forever; it is now an error.
 - `ParentDiversityCandidateSolutionUpdater` is a singleton (`__new__`), so its state is shared across `GA` instances.
 - Pure-Python per-decision-variable overhead dominates for cheap cost functions (~1 ms/generation at pop 32 x 10 decision variables,
   scaling linearly with population size and decision-variable count). For real cost functions, the number of evaluations

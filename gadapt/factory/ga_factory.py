@@ -595,12 +595,19 @@ class GAFactory(BaseGAFactory):
             ms.strip()
             for ms in self._ga.decision_variable_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        all_mutator_strings = (
+        crossover_strings = [
+            ms.strip()
+            for ms in self._ga.crossover.split(definitions.PARAM_SEPARATOR)
+        ]
+        # The columnar diversity coefficients of the decision variables are also needed by the
+        # crossover probability method. Without them they stay NaN, and so does the probability.
+        all_strings = (
             population_mutator_strings
             + candidate_solution_mutator_strings
             + decision_variable_mutator_strings
+            + crossover_strings
         )
-        if definitions.VARIABLE_COLUMNAR_DIVERSITY in all_mutator_strings:
+        if definitions.VARIABLE_COLUMNAR_DIVERSITY in all_strings:
             return ColumnarDiversityDecisionVariableUpdater()
         return BaseDecisionVariableUpdater()
 
@@ -627,9 +634,16 @@ class GAFactory(BaseGAFactory):
             ms.strip()
             for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
         ]
+        crossover_strings = [
+            ms.strip()
+            for ms in self._ga.crossover.split(definitions.PARAM_SEPARATOR)
+        ]
+        # The relative cost diversity coefficient is also needed by the crossover probability
+        # method. Without the updater it stays NaN, and so does the probability.
         if (
             not population_mutator_strings
             or definitions.COST_DIVERSITY in population_mutator_strings
+            or definitions.COST_DIVERSITY in crossover_strings
         ):
             return CostDiversityPopulationUpdater()
         return BasePopulationUpdater()

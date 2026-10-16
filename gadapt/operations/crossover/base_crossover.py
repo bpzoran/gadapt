@@ -119,6 +119,9 @@ class BaseCrossover(ABC):
         self._offspring1 = CandidateSolution(population.population_generation)
         self._offspring2 = CandidateSolution(population.population_generation)
         c_o_p = self._get_crossover_probability(population)
+        if math.isnan(c_o_p):
+            # A NaN probability is never reached by random(), so the loop below would never end
+            raise Exception("Crossover probability is not a number!")
         crossed = self._cross_genetic_material(c_o_p)
         while not crossed:
             c_o_p += 0.1
