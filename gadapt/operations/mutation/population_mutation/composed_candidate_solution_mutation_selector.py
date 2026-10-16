@@ -34,17 +34,22 @@ class ComposedCandidateSolutionMutationSelector(BaseCandidateSolutionMutationSel
             raise Exception("at least one selector must be added")
         if len(self.selectors) > 1:
             random.shuffle(self.selectors)
-        nmc = 0
         limit_number_of_mutation_candidate_solutions = self.number_of_mutation_candidate_solutions
         if limit_number_of_mutation_candidate_solutions == 0:
             return []
         candidate_solutions_for_mutation = []
+        # Nothing is mutated until all selectors have been asked, so two selectors can pick the same
+        # candidate solution. It is taken once, so that it is counted and mutated once.
+        selected_ids = set()
         for m in self.selectors:
-            if nmc < limit_number_of_mutation_candidate_solutions:
-                m.population = self.population
-                m.number_of_mutation_candidate_solutions = (
-                    limit_number_of_mutation_candidate_solutions - nmc
-                )
-                candidate_solutions_for_mutation.extend(m._get_candidate_solutions_for_mutation())
-                nmc += len(candidate_solutions_for_mutation)
+            if len(candidate_solutions_for_mutation) >= limit_number_of_mutation_candidate_solutions:
+                break
+            m.population = self.population
+            m.number_of_mutation_candidate_solutions = (
+                limit_number_of_mutation_candidate_solutions - len(candidate_solutions_for_mutation)
+            )
+            for c in m._get_candidate_solutions_for_mutation():
+                if id(c) not in selected_ids:
+                    selected_ids.add(id(c))
+                    candidate_solutions_for_mutation.append(c)
         return candidate_solutions_for_mutation

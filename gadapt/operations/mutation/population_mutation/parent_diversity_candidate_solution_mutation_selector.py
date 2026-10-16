@@ -45,10 +45,12 @@ class ParentDiversityCandidateSolutionMutationSelector(BaseCandidateSolutionMuta
         unallocated_candidate_solutions: list[CandidateSolution] = self._get_unallocated_candidate_solutions(
             self._sort_key_parent_diversity
         )
-        if any(isnan(c.parent_structural_diversity_coefficient) for c in unallocated_candidate_solutions):
-            gadapt_log_error("parent_structural_diversity_coefficient not set!")
+        if any(isnan(self._get_diversity_coefficient(c)) for c in unallocated_candidate_solutions):
+            gadapt_log_error(f"{type(self).__name__}: parent diversity coefficient not set!")
         candidate_solutions_for_mutation: list[CandidateSolution] = []
         if self.population.options.must_mutate_for_same_parents:
+            # "The same parents" means parents with identical variable values, i.e. a parent structural
+            # diversity of 0, whichever diversity coefficient is used to rank the other candidate solutions.
             candidate_solutions_for_mutation = [
                 c
                 for c in unallocated_candidate_solutions

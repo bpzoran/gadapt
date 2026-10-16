@@ -32,7 +32,7 @@ class RandomCandidateSolutionMutationSelector(BaseCandidateSolutionMutationSelec
         )
         mutation_candidate_solution_number = self.number_of_mutation_candidate_solutions
         if mutation_candidate_solution_number == 0:
-            return 0
+            return []
         candidate_solutions_for_mutation = unallocated_candidate_solutions[:mutation_candidate_solution_number]
         return candidate_solutions_for_mutation
 
