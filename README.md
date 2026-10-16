@@ -12,17 +12,18 @@ A comprehensive and customizable genetic algorithm library.
 - [Usage](#usage)
   - [Parameter Settings](#parameter-settings)
   - [Parameters Description](#parameters-description)
+  - [Previous Parameter Names](#previous-parameter-names)
   - [Adding Variables](#adding-variables)
   - [GA Execution and Optimisation Results](#ga-execution-and-optimisation-results)
 - [GA Customisation](#ga-customisation)
 
 ## Introduction
 
-[GAdapt](https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for adaptive mutation of genes and chromosomes.
+[GAdapt](https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for adaptive mutation of decision variables and candidate solutions.
 
 ### What Innovations Does GAdapt Bring?
 
-**GAdapt** introduces self-adaptive determination of how many and which chromosomes and genes will be mutated. In addition, it determines the gene alteration type. This determination is based on the diversity of parents, diversity of cost, and cross-diversity of genes in the population. The higher diversity and lower convergence necessitate fewer mutated chromosomes. A high diversity level also allows for more mutated genes within each chromosome. At this stage, gene value alterations are encouraged to be unbiased, favoring a uniform distribution of values. This approach ensures that mutations are not overly frequent, but selected chromosomes can undergo significant changes, promoting the exploration of potential solutions. As diversity decreases and convergence increases, the frequency of mutated chromosomes rises, the number of mutated genes inside chromosomes decreases, and gene value changes are biased towards previously attained values, encouraging greater exploitation and fine-tuning of existing solutions. Throughout this process, the selection of mutated chromosomes and gene values should prioritize those with lower diversity and higher convergence levels, maintaining exploration and preventing GA from getting stuck in some local optimums.
+**GAdapt** introduces self-adaptive determination of how many and which candidate solutions and decision variables will be mutated. In addition, it determines the decision variable alteration type. This determination is based on the diversity of parents, diversity of cost, and cross-diversity of decision variables in the population. The higher diversity and lower convergence necessitate fewer mutated candidate solutions. A high diversity level also allows for more mutated decision variables within each candidate solution. At this stage, variable value alterations are encouraged to be unbiased, favoring a uniform distribution of values. This approach ensures that mutations are not overly frequent, but selected candidate solutions can undergo significant changes, promoting the exploration of potential solutions. As diversity decreases and convergence increases, the frequency of mutated candidate solutions rises, the number of mutated decision variables inside candidate solutions decreases, and variable value changes are biased towards previously attained values, encouraging greater exploitation and fine-tuning of existing solutions. Throughout this process, the selection of mutated candidate solutions and variable values should prioritize those with lower diversity and higher convergence levels, maintaining exploration and preventing GA from getting stuck in some local optimums.
 
 The proposed method refines mutation selection, rate determination, and alteration processes, potentially surpassing the limitations of traditional mutation techniques and opening up new possibilities for significantly improved GA performance.
 
@@ -97,8 +98,8 @@ Passing parameters through the class constructor:
 ga = GA(cost_function=trig_func,
     population_size=32,
     population_mutation="cost_diversity,parent_diversity",
-    number_of_mutation_chromosomes=6,
-    number_of_mutation_genes=2,
+    number_of_mutation_candidate_solutions=6,
+    number_of_mutation_decision_variables=2,
     exit_check="min_cost",
     max_attempt_no=20,
     logging=True,
@@ -110,8 +111,8 @@ ga = GA()
 ga.cost_function = trig_func
 ga.population_size=32
 ga.population_mutation="cost_diversity,parent_diversity"
-ga.number_of_mutation_chromosomes=6
-ga.number_of_mutation_genes=2
+ga.number_of_mutation_candidate_solutions=6
+ga.number_of_mutation_decision_variables=2
 ga.exit_check="min_cost"
 ga.max_attempt_no=20
 ga.logging=True
@@ -121,8 +122,8 @@ Passing parameters through the class constructor and properties:
 ```python
 ga = GA(cost_function=trig_func, population_size=32)
 ga.population_mutation="cost_diversity,parent_diversity"
-ga.number_of_mutation_chromosomes=6
-ga.number_of_mutation_genes=2
+ga.number_of_mutation_candidate_solutions=6
+ga.number_of_mutation_decision_variables=2
 ga.exit_check="min_cost"
 ga.max_attempt_no=20
 ga.logging=True
@@ -131,11 +132,11 @@ ga.timeout=3600
 ### Parameters Description
 **cost_function**=*None* - Custom function for the cost calculation (fitness). The optimisation goal is minimising the output of the cost function. *cost_function* must be the function with one argument - a list of values, where the index is the ordinal of adding parameters and the item is the parameter's value to be optimised. When adding parameters, there should be as many parameters as the function uses. The *cost_function* is the only mandatory parameter.
 
-**population_size**=*32* - Number of chromosomes in the population.
+**population_size**=*32* - Number of candidate solutions in the population.
 
-**keep_elitism_percentage**=*50* - The percentage of the best chromosomes (by cost value) that are kept in the population from one generation to the next. The remaining chromosomes are replaced by the offspring of the kept ones. For example, with *population_size* of 32 and *keep_elitism_percentage* of 50, the 16 best chromosomes are kept and 16 new ones are created in each generation.
+**keep_elitism_percentage**=*50* - The percentage of the best candidate solutions (by cost value) that are kept in the population from one generation to the next. The remaining candidate solutions are replaced by the offspring of the kept ones. For example, with *population_size* of 32 and *keep_elitism_percentage* of 50, the 16 best candidate solutions are kept and 16 new ones are created in each generation.
 
-**number_of_crossover_parents**=*-1* - The number of chromosomes in the mating pool, i.e. the number of parents selected for crossover in each generation. If its value is lower than 2, all kept chromosomes (see *keep_elitism_percentage*) are used as parents.
+**number_of_crossover_parents**=*-1* - The number of candidate solutions in the mating pool, i.e. the number of parents selected for crossover in each generation. If its value is lower than 2, all kept candidate solutions (see *keep_elitism_percentage*) are used as parents.
 
 **exit_check**=*"avg_cost"* - A criteria for the exit for the genetic algorithm.  
 Supported values:
@@ -156,81 +157,101 @@ Supported values:
 
 **parent_selection**=*"roulette_wheel"* - The algorithm for parent selection.  
 Supported values:
-- *"roulette_wheel"* - Roulette Wheel selection algorithm (also known as "Weighted Random Pairing"). The probabilities assigned to the chromosomes in the mating pool are inversely proportional to their cost. A chromosome with the lowest cost has the greatest probability of mating, while the chromosome with the highest cost has the lowest probability of mating.  
-- *"tournament"* - Tournament selection algorithm. It randomly picks small subsets (groups) of chromosomes from the mating pool, and chromosomes with the lowest cost in subsets become a parent. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,8"* means that the tournament parent selection algorithm is chosen, and each group contains up to 8 members. The default group size is 4.  
-- *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and pairs the chromosomes two at a time until the top kept chromosomes are selected for mating. Thus, the algorithm pairs odd rows with even rows.  
-- *"random"* - Random selection algorithm uses a uniform random number generator to select chromosomes.  
+- *"roulette_wheel"* - Roulette Wheel selection algorithm (also known as "Weighted Random Pairing"). The probabilities assigned to the candidate solutions in the mating pool are inversely proportional to their cost. A candidate solution with the lowest cost has the greatest probability of mating, while the candidate solution with the highest cost has the lowest probability of mating.  
+- *"tournament"* - Tournament selection algorithm. It randomly picks small subsets (groups) of candidate solutions from the mating pool, and candidate solutions with the lowest cost in subsets become a parent. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,8"* means that the tournament parent selection algorithm is chosen, and each group contains up to 8 members. The default group size is 4.  
+- *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and pairs the candidate solutions two at a time until the top kept candidate solutions are selected for mating. Thus, the algorithm pairs odd rows with even rows.  
+- *"random"* - Random selection algorithm uses a uniform random number generator to select candidate solutions.  
 
 **crossover**=*"blending"* - The crossover algorithm, optionally followed by a method for determining the crossover probability, separated by a comma.  
 Supported crossover algorithms:
-- *"blending"* - Blending crossover combines gene values from the two parents into new variable values in offsprings. One value of the offspring variable comes from a combination of the two corresponding values of the parental genes  
-- *"uniform"* - Uniform crossover combines chromosomes in a uniform way.
+- *"blending"* - Blending crossover combines variable values from the two parents into new variable values in offsprings. One value of the offspring variable comes from a combination of the two corresponding values of the parental decision variables  
+- *"uniform"* - Uniform crossover combines candidate solutions in a uniform way.
 
-Supported methods for determining the crossover probability (the probability that the values of a gene are crossed between the two parents):
+Supported methods for determining the crossover probability (the probability that the values of a decision variable are crossed between the two parents):
 - *"fixed"* - The probability is defined by the *crossover_probability* parameter. This is used when no method is specified.  
 - *"cost_diversity"* - The probability is adaptive. It lies between *crossover_min_probability* and *crossover_max_probability*, and it is higher when the diversity of costs in the population is higher.  
-- *"cross_diversity"* - The probability is adaptive. It lies between *crossover_min_probability* and *crossover_max_probability*, and it is higher when the diversity of gene values in the population is higher.  
+- *"cross_diversity"* - The probability is adaptive. It lies between *crossover_min_probability* and *crossover_max_probability*, and it is higher when the diversity of variable values in the population is higher.  
 
 For example, *"blending,cost_diversity"* means that blending crossover is used, with the probability determined by the cost diversity. If more methods are specified, one of them is randomly chosen for each pair of parents.
 
-**crossover_probability**=*0.5* - The probability for crossing the values of a gene between the two parents. It applies when the probability is determined by the *"fixed"* method (the default).
+**crossover_probability**=*0.5* - The probability for crossing the values of a decision variable between the two parents. It applies when the probability is determined by the *"fixed"* method (the default).
 
 **crossover_min_probability**=*0.5* and **crossover_max_probability**=*1.0* - The lower and the upper bound for the adaptive crossover probability. They apply when the probability is determined by the *"cost_diversity"* or the *"cross_diversity"* method.
     
-**percentage_of_mutation_chromosomes**=*50.0* - The percentage of mutated chromosomes in the population. This value is applied to the *population_size* value and rounded to an integer value, giving the number of mutation chromosomes. For example, if *population_size* has a value of 32, and *percentage_of_mutation_chromosomes* has a value of 10, the number of mutation chromosomes will be 3. The calculated value is an upper bound - the actual number of mutated chromosomes can vary from 1 to the calculated value. *percentage_of_mutation_chromosomes* only applies if *number_of_mutation_chromosomes* does not have a valid integer value equal to or higher than 0.
+**percentage_of_mutation_candidate_solutions**=*50.0* - The percentage of mutated candidate solutions in the population. This value is applied to the *population_size* value and rounded to an integer value, giving the number of mutation candidate solutions. For example, if *population_size* has a value of 32, and *percentage_of_mutation_candidate_solutions* has a value of 10, the number of mutation candidate solutions will be 3. The calculated value is an upper bound - the actual number of mutated candidate solutions can vary from 1 to the calculated value. *percentage_of_mutation_candidate_solutions* only applies if *number_of_mutation_candidate_solutions* does not have a valid integer value equal to or higher than 0.
 
-**number_of_mutation_chromosomes**=*-1* - The number of mutation chromosomes in the population. In case it's value is equal to or higher than 0, it overrides *percentage_of_mutation_chromosomes*. This value is the upper bound - the actual number of mutated chromosomes can vary from 1 to *number_of_mutation_chromosomes*.
+**number_of_mutation_candidate_solutions**=*-1* - The number of mutation candidate solutions in the population. In case it's value is equal to or higher than 0, it overrides *percentage_of_mutation_candidate_solutions*. This value is the upper bound - the actual number of mutated candidate solutions can vary from 1 to *number_of_mutation_candidate_solutions*.
 
-**percentage_of_mutation_genes**=*20* - The percentage of mutated genes in each chromosome. It applies to the chromosome size (number of genes in each chromosome), and the calculated value rounds to an integer value. The calculated value is the upper bound - the actual number of mutated genes can vary from 1 to the calculated value. *percentage_of_mutations_genes* only applies if *number_of_mutations_genes* does not have a valid integer value equal to or higher than 0.
+**percentage_of_mutation_decision_variables**=*20* - The percentage of mutated decision variables in each candidate solution. It applies to the candidate solution size (number of decision variables in each candidate solution), and the calculated value rounds to an integer value. The calculated value is the upper bound - the actual number of mutated decision variables can vary from 1 to the calculated value. *percentage_of_mutation_decision_variables* only applies if *number_of_mutation_decision_variables* does not have a valid integer value equal to or higher than 0.
 
-**number_of_mutation_genes**=*-1* - The number of mutated genes in each chromosome. In case it's value is equal to or higher than 0, it overrides *percentage_of_mutations_genes*. This value is the upper bound - the number of mutated genes can vary from 1 to *number_of_mutation_genes*.
+**number_of_mutation_decision_variables**=*-1* - The number of mutated decision variables in each candidate solution. In case it's value is equal to or higher than 0, it overrides *percentage_of_mutation_decision_variables*. This value is the upper bound - the number of mutated decision variables can vary from 1 to *number_of_mutation_decision_variables*.
 
-**population_mutation**=*"cost_diversity,parent_diversity"* - A type of mutation for the entire population. Based on the value of this parameter, the number of mutation chromosomes can be determined, along with how chromosomes for the mutation will be selected.
+**population_mutation**=*"cost_diversity,parent_diversity"* - A type of mutation for the entire population. Based on the value of this parameter, the number of mutation candidate solutions can be determined, along with how candidate solutions for the mutation will be selected.
 Supported values:
-- *"cost_diversity"* - It applies to the number of mutation chromosomes. *"cost_diversity"* determines the number of mutated chromosomes adaptively, using the diversity of costs in the population. Lower cost diversity means a higher number of mutated chromosomes. The minimal value of mutated chromosomes is 0, and the maximal value is determined by the value of *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes* parameters. If *population_mutation* has a value other than *"cost_diversity"*, the number of mutation chromosomes is a random value from 1 to *number_of_mutation_chromosomes* value (or to value determined by *percentage_of_mutation_chromosomes* value). *"cost_diversity"* means that the *"parent_diversity"* method is selected to select chromosomes to be mutated. This method only determines the number of mutated chromosomes, but not how chromosomes are selected for the mutation.  
-- *"cross_diversity"* - It applies to the number of mutation chromosomes. Determines the number of mutated chromosomes based on dispersion of gene values. The lower dispersion indicates the higher number of mutated chromosomes. The minimal value of mutated chromosomes is 0, and the maximal value is determined by the value of *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes* parameters.
-- *"parent_diversity"* - It applies to the way how mutation chromosomes will be selected. *"parent_diversity"* selects chromosomes to be mutated using the diversity of their parents. The more similar parents (lower parent diversity) mean a higher probability of mutation for the child. Based on the calculated parent diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *parent_diversity_mutation_chromosome_sampling* parameter.  
-- *"random"* - It applies to the number of mutation chromosomes and to the way how mutation chromosomes will be selected. *"random"* selects chromosomes to be mutated randomly, and randomly determines the number of mutated chromosomes (with the upper bound of **number_of_mutation_chromosomes**)
-- *"strict"* - It applies to the number of mutation chromosomes. The strict number of chromosomes will be mutated, determined by **number_of_mutation_chromosomes** parameter.
+- *"cost_diversity"* - It applies to the number of mutation candidate solutions. *"cost_diversity"* determines the number of mutated candidate solutions adaptively, using the diversity of costs in the population. Lower cost diversity means a higher number of mutated candidate solutions. The minimal value of mutated candidate solutions is 0, and the maximal value is determined by the value of *number_of_mutation_candidate_solutions* or *percentage_of_mutation_candidate_solutions* parameters. If *population_mutation* has a value other than *"cost_diversity"*, the number of mutation candidate solutions is a random value from 1 to *number_of_mutation_candidate_solutions* value (or to value determined by *percentage_of_mutation_candidate_solutions* value). *"cost_diversity"* means that the *"parent_diversity"* method is selected to select candidate solutions to be mutated. This method only determines the number of mutated candidate solutions, but not how candidate solutions are selected for the mutation.  
+- *"cross_diversity"* - It applies to the number of mutation candidate solutions. Determines the number of mutated candidate solutions based on dispersion of variable values. The lower dispersion indicates the higher number of mutated candidate solutions. The minimal value of mutated candidate solutions is 0, and the maximal value is determined by the value of *number_of_mutation_candidate_solutions* or *percentage_of_mutation_candidate_solutions* parameters.
+- *"parent_diversity"* - It applies to the way how mutation candidate solutions will be selected. *"parent_diversity"* selects candidate solutions to be mutated using the diversity of their parents. The more similar parents (lower parent diversity) mean a higher probability of mutation for the child. Based on the calculated parent diversity, candidate solutions may be selected by one of the selection methods, which is determined by the value of the *parent_diversity_mutation_candidate_solution_sampling* parameter.  
+- *"random"* - It applies to the number of mutation candidate solutions and to the way how mutation candidate solutions will be selected. *"random"* selects candidate solutions to be mutated randomly, and randomly determines the number of mutated candidate solutions (with the upper bound of **number_of_mutation_candidate_solutions**)
+- *"strict"* - It applies to the number of mutation candidate solutions. The strict number of candidate solutions will be mutated, determined by **number_of_mutation_candidate_solutions** parameter.
 
-Population_mutation may have more values, separated by a comma. It means that more than one method can be chosen for the mutation of chromosomes in the population. For example, *"cost_diversity,parent_diversity"* means that number of mutation chromosomes will be determined by the cost diversity and the selection of chromosomes to be mutated will be defined by parent diversity. *"cost_diversity,random"* means that the cost diversity will determine the number of mutation chromosomes, and the selection of chromosomes to be mutated will be chosen randomly.
+Population_mutation may have more values, separated by a comma. It means that more than one method can be chosen for the mutation of candidate solutions in the population. For example, *"cost_diversity,parent_diversity"* means that number of mutation candidate solutions will be determined by the cost diversity and the selection of candidate solutions to be mutated will be defined by parent diversity. *"cost_diversity,random"* means that the cost diversity will determine the number of mutation candidate solutions, and the selection of candidate solutions to be mutated will be chosen randomly.
     
-**parent_diversity_mutation_chromosome_sampling**=*"roulette_wheel"* - The selection algorithm for mutating chromosomes when *population_mutation* contains value *"parent_diversity"*. It only applies when *population_mutation* has value *"parent_diversity"*. It determines the way how chromosomes are to be selected based on the diversity of their parents.  
+**parent_diversity_mutation_candidate_solution_sampling**=*"roulette_wheel"* - The selection algorithm for mutating candidate solutions when *population_mutation* contains value *"parent_diversity"*. It only applies when *population_mutation* has value *"parent_diversity"*. It determines the way how candidate solutions are to be selected based on the diversity of their parents.  
 Supported values:
-- *"roulette_wheel"* - The Roulette Wheel selection algorithm (also known as "Weighted Random Pairing"). The probabilities assigned to the chromosomes to be mutated are proportional to the similarity of their parents (inversely proportional to the parent diversity). A chromosome with the lowest parent diversity has the greatest probability of mutation, while the chromosome with the highest parent diversity has the lowest probability of mutation.  
-- *"tournament"* - The Tournament selection algorithm. It randomly picks small subsets (groups) of chromosomes, and chromosomes with the lowest parent diversity (highest parent similarity) in subsets are chosen to be mutated. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,8"* means that the tournament mutation selection algorithm is chosen, and each group contains up to 8 members. The default group size is 4.  
-- *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and selects chromosomes for mutation.  
-- *"random"* - Random selection algorithm uses a uniform random number generator to select chromosomes for mutation. In this case, selection for mutation will not depend on parent diversity.  
+- *"roulette_wheel"* - The Roulette Wheel selection algorithm (also known as "Weighted Random Pairing"). The probabilities assigned to the candidate solutions to be mutated are proportional to the similarity of their parents (inversely proportional to the parent diversity). A candidate solution with the lowest parent diversity has the greatest probability of mutation, while the candidate solution with the highest parent diversity has the lowest probability of mutation.  
+- *"tournament"* - The Tournament selection algorithm. It randomly picks small subsets (groups) of candidate solutions, and candidate solutions with the lowest parent diversity (highest parent similarity) in subsets are chosen to be mutated. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,8"* means that the tournament mutation selection algorithm is chosen, and each group contains up to 8 members. The default group size is 4.  
+- *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and selects candidate solutions for mutation.  
+- *"random"* - Random selection algorithm uses a uniform random number generator to select candidate solutions for mutation. In this case, selection for mutation will not depend on parent diversity.  
     
-**must_mutate_for_same_parents**=*True* - Indicates if completely the same parents must influence mutation for their children. In other words, each child will be mutated if it has parents with a diversity of value of 0. If *must_mutate_for_same_parents* has the value True, the number of mutated chromosomes can outreach value determined by *number_of_mutation_chromosomes* or *percentage_of_mutation_chromosomes*
+**must_mutate_for_same_parents**=*True* - Indicates if completely the same parents must influence mutation for their children. In other words, each child will be mutated if it has parents with a diversity of value of 0. If *must_mutate_for_same_parents* has the value True, the number of mutated candidate solutions can outreach value determined by *number_of_mutation_candidate_solutions* or *percentage_of_mutation_candidate_solutions*
 
-**chromosome_mutation**=*"cross_diversity,random"* - The type of gene selection in chromosomes for mutation  
+**candidate_solution_mutation**=*"cross_diversity,random"* - The type of decision variable selection in candidate solutions for mutation  
 Supported values:
-- *"cross_diversity"* - Considers the diversity of genes of the same type in the population. Lower diversity can mean that this gene approaches some local minimums, and therefore such genes increase the chance for mutation. Based on the calculated cross-diversity, chromosomes may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_gene_sampling* parameter.  
-- *"random"* - Genes are randomly selected for the mutation. Random number of genes for mutation is determined, up to *number_of_mutation_genes*
-- *"strict"* - Strict number of genes will be mutated, determined by *number_of_mutation_genes* parameter.
+- *"cross_diversity"* - Considers the diversity of decision variables of the same type in the population. Lower diversity can mean that this decision variable approaches some local minimums, and therefore such decision variables increase the chance for mutation. Based on the calculated cross-diversity, candidate solutions may be selected by one of the selection methods, which is determined by the value of the *cross_diversity_mutation_decision_variable_sampling* parameter.  
+- *"random"* - Decision variables are randomly selected for the mutation. Random number of decision variables for mutation is determined, up to *number_of_mutation_decision_variables*
+- *"strict"* - Strict number of decision variables will be mutated, determined by *number_of_mutation_decision_variables* parameter.
 
-**gene_mutation**=*"cross_diversity,random"* - The type of assigning mutated values to genes
+**decision_variable_mutation**=*"cross_diversity,random"* - The type of assigning mutated values to decision variables
 Supported values:
 - *"normal_distribution"* - assigns normally distributed random number to the variable selected for mutation
 - *"cross_diversity"* - assigns normally distributed random number to the variable selected for mutation, with standard deviation based on the cross-diversity coefficient
 - *"cost_diversity"* - assigns normally distributed random number to the variable selected for mutation, with standard deviation based on the diversity of costs in the population. Higher cost diversity means a higher standard deviation.
-- *"random"* - Random values are assigned to genes
+- *"random"* - Random values are assigned to decision variables
 
-**normal_distribution_mutation_min_std_dev**=*0.001* and **normal_distribution_mutation_max_std_dev**=*0.6* - The lower and the upper bound of the standard deviation of normally distributed mutated values. They apply when *gene_mutation* contains *"cross_diversity"* or *"cost_diversity"*. The values are relative to the range of the variable (between 0 and 1), so 0.6 means 60% of the difference between the maximal and the minimal value of the variable. The maximum must be higher than the minimum. Otherwise, the default values are used.
+**normal_distribution_mutation_min_std_dev**=*0.001* and **normal_distribution_mutation_max_std_dev**=*0.6* - The lower and the upper bound of the standard deviation of normally distributed mutated values. They apply when *decision_variable_mutation* contains *"cross_diversity"* or *"cost_diversity"*. The values are relative to the range of the variable (between 0 and 1), so 0.6 means 60% of the difference between the maximal and the minimal value of the variable. The maximum must be higher than the minimum. Otherwise, the default values are used.
 
-**cross_diversity_mutation_gene_sampling**=*"roulette_wheel"* - the selection algorithm for mutating chromosomes when *chromosome_mutation* has value *"cross_diversity"*. It only applies when *chromosome_mutation* has value *"cross_diversity"* . It determines the way how genes are to be selected based on the cross-diversity.  
+**cross_diversity_mutation_decision_variable_sampling**=*"roulette_wheel"* - the selection algorithm for mutating candidate solutions when *candidate_solution_mutation* has value *"cross_diversity"*. It only applies when *candidate_solution_mutation* has value *"cross_diversity"* . It determines the way how decision variables are to be selected based on the cross-diversity.  
 Supported values:
-- *"roulette_wheel"* - The Roulette Wheel selection algorithm (also known as "Weighted Random Pairing"). The probabilities assigned to the genes to be mutated are inversely proportional to their cross-diversity. A gene value with the lowest cross-diversity has the greatest probability of mutation, while the gene with the highest cross-diversity has the lowest probability of mutation.  
-- *"tournament"* - The Tournament selection algorithm. It randomly picks small subsets (groups) of genes, and genes with the lowest cross-diversity in subsets are chosen to be mutated. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,3"* means that the tournament mutation selection algorithm is chosen, and each group contains up to 3 members. The default group size is 4.  
-- *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and selects genes for mutation.  
-- *"random"* - Random selection algorithm uses a uniform random number generator to select genes for mutation. In this case, selection for the mutation will not depend on gene cross-diversity.  
+- *"roulette_wheel"* - The Roulette Wheel selection algorithm (also known as "Weighted Random Pairing"). The probabilities assigned to the decision variables to be mutated are inversely proportional to their cross-diversity. A variable value with the lowest cross-diversity has the greatest probability of mutation, while the decision variable with the highest cross-diversity has the lowest probability of mutation.  
+- *"tournament"* - The Tournament selection algorithm. It randomly picks small subsets (groups) of decision variables, and decision variables with the lowest cross-diversity in subsets are chosen to be mutated. *"tournament"* can have an additional parameter separated from the *"tournament"* keyword by the comma. The other value represents a group size. For example, *"tournament,3"* means that the tournament mutation selection algorithm is chosen, and each group contains up to 3 members. The default group size is 4.  
+- *"from_top_to_bottom"* - From Top To Bottom selection algorithm starts at the top of the list and selects decision variables for mutation.  
+- *"random"* - Random selection algorithm uses a uniform random number generator to select decision variables for mutation. In this case, selection for the mutation will not depend on decision variable cross-diversity.  
     
 **immigration_number**=*0* - Refers to the "Random Immigrants" concepts. This strategy introduces a certain number of individuals into the population during the evolution process. These new individuals are generated randomly and injected into the population.
 
-**ensure_unique_individuals**=*None* - If this parameter has a True value, the genetic algorithm ensures that no two individuals have the same gene values: offspring and mutated chromosomes that repeat values already seen during the optimisation are regenerated, so the cost function is not evaluated twice for the same values. Duplicates are only likely when the variables take values from a grid defined by the step, so the default (*None*) means *True* when all variables have a step, and *False* when any variable is continuous (added without a step). Set it explicitly to *True* or *False* to override this. Ensuring uniqueness adds some computation per generation, especially late in the optimisation, which is usually negligible compared to the cost function execution time.
+**ensure_unique_individuals**=*None* - If this parameter has a True value, the genetic algorithm ensures that no two individuals have the same variable values: offspring and mutated candidate solutions that repeat values already seen during the optimisation are regenerated, so the cost function is not evaluated twice for the same values. Duplicates are only likely when the variables take values from a grid defined by the step, so the default (*None*) means *True* when all variables have a step, and *False* when any variable is continuous (added without a step). Set it explicitly to *True* or *False* to override this. Ensuring uniqueness adds some computation per generation, especially late in the optimisation, which is usually negligible compared to the cost function execution time.
 
-**logging**=*False* - If this parameter has a True value, the log file will be created in the current working directory. The log file contains the flow of genetic algorithm execution, along with values of chromosomes, genes and cost functions in each generation
+**logging**=*False* - If this parameter has a True value, the log file will be created in the current working directory. The log file contains the flow of genetic algorithm execution, along with values of candidate solutions, decision variables and cost functions in each generation
+
+### Previous Parameter Names
+In earlier versions, the terms *chromosome*, *gene* and *allele* were used. They are now called *candidate solution*, *decision variable* and *variable value*. The previous *GA* parameter names are still accepted, both in the constructor and as properties, but they are deprecated: using them emits a *DeprecationWarning*, and they will be removed in a future release.
+
+| Previous name | Current name |
+|---|---|
+| *number_of_mutation_chromosomes* | *number_of_mutation_candidate_solutions* |
+| *percentage_of_mutation_chromosomes* | *percentage_of_mutation_candidate_solutions* |
+| *parent_diversity_mutation_chromosome_sampling* | *parent_diversity_mutation_candidate_solution_sampling* |
+| *chromosome_mutation* | *candidate_solution_mutation* |
+| *gene_mutation* | *decision_variable_mutation* |
+| *number_of_mutation_genes* | *number_of_mutation_decision_variables* |
+| *percentage_of_mutation_genes* | *percentage_of_mutation_decision_variables* |
+| *cross_diversity_mutation_gene_sampling* | *cross_diversity_mutation_decision_variable_sampling* |
+
+```python
+ga = GA(cost_function=trig_func, chromosome_mutation="random")  # works, but emits a DeprecationWarning
+ga.number_of_mutation_genes = 2                                   # works, but emits a DeprecationWarning
+```
+Passing both a previous name and its replacement with different values raises a *TypeError*. Only the *GA* parameters have aliases: the module paths and class names used by custom factories (see *GA Customisation*) and the *value* property of a variable value (previously *variable_value*) changed without aliases.
 
 ### Adding Variables
 Variables to be optimized can be added by calling the *add* method of the *GA* object. Parameters of this method are the minimum value, the maximum value, and the step. The minimum and maximum value determine a range of possible variable values. The *step* parameter specifies the step that will be used in changing the variables values during the optimization. The step is optional: a variable added without a step is continuous, and can take any value in the range.
@@ -326,32 +347,32 @@ GAdapt follows clean architecture and SOLID principles, allowing easy customizat
 
 The factory creates all objects used by the genetic algorithm (selectors, mutators, crossover, exit checker, etc.), based on the parameters of the *GA* object. To replace one of them, subclass *GAFactory* and override the corresponding *_get_...* method. The factory is initialized by the *GA* object when *execute* is called, so objects that depend on the *GA* parameters should be created inside the overridden method.
 
-For example, customizing the chromosome mutation selector:
+For example, customizing the candidate solution mutation selector:
 
 ```python
 import math
 from gadapt.factory.ga_factory import GAFactory
 from gadapt.ga import GA
-from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import BaseChromosomeMutationSelector
+from gadapt.operations.mutation.population_mutation.base_candidate_solution_mutation_selector import BaseCandidateSolutionMutationSelector
 
 
-class BottomMutationSelector(BaseChromosomeMutationSelector):
+class BottomMutationSelector(BaseCandidateSolutionMutationSelector):
     """
-    Chromosome mutation selector which selects mutating chromosomes from the bottom of
-    existing unallocated chromosomes sorted by the cost function value
+    Candidate solution mutation selector which selects mutating candidate solutions from the bottom of
+    existing unallocated candidate solutions sorted by the cost function value
     """
 
-    def _get_chromosomes_for_mutation(self):
-        unallocated_chromosomes = self._get_unallocated_chromosomes(
-            lambda chrom: self.population.options.cost_function([g.variable_value for g in chrom])
+    def _get_candidate_solutions_for_mutation(self):
+        unallocated_candidate_solutions = self._get_unallocated_candidate_solutions(
+            lambda candidate_solution: self.population.options.cost_function([g.value for g in candidate_solution])
         )
-        return unallocated_chromosomes[len(unallocated_chromosomes) - self.number_of_mutation_chromosomes:]
+        return unallocated_candidate_solutions[len(unallocated_candidate_solutions) - self.number_of_mutation_candidate_solutions:]
 
 
 class BottomMutationFactory(GAFactory):
-    def _get_chromosome_mutation_selector(self):
-        rate_determinator, _ = self._get_chromosome_mutation_rate_determinators()
-        return BottomMutationSelector(rate_determinator, self.get_gene_mutation_selector())
+    def _get_candidate_solution_mutation_selector(self):
+        rate_determinator, _ = self._get_candidate_solution_mutation_rate_determinators()
+        return BottomMutationSelector(rate_determinator, self.get_decision_variable_mutation_selector())
 
 
 def some_func(args):

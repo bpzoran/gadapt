@@ -4,7 +4,7 @@ Genetic algorithm options
 
 from typing import List
 
-from gadapt.ga_model.gene import Gene
+from gadapt.ga_model.decision_variable import DecisionVariable
 
 
 class GAOptions:
@@ -24,39 +24,39 @@ class GAOptions:
         self._crossover_probability = ga.crossover_probability
         self._crossover_min_probability = ga.crossover_min_probability
         self._crossover_max_probability = ga.crossover_max_probability
-        self._set_number_of_mutation_chromosomes(ga)
+        self._set_number_of_mutation_candidate_solutions(ga)
         self._max_attempt_no = ga.max_attempt_no
         self._requested_cost = ga.requested_cost
         if ga.ensure_unique_individuals is None:
             # grid values are likely to repeat, continuous values practically never
-            self._ensure_unique_individuals = len(ga._genes) > 0 and all(
-                g.is_discrete for g in ga._genes
+            self._ensure_unique_individuals = len(ga._decision_variables) > 0 and all(
+                g.is_discrete for g in ga._decision_variables
             )
         else:
             self._ensure_unique_individuals = ga.ensure_unique_individuals
         self._normal_distribution_mutation_min_std_dev = ga.normal_distribution_mutation_min_std_dev
         self._normal_distribution_mutation_max_std_dev = ga.normal_distribution_mutation_max_std_dev
         self._logging = ga.logging
-        self._genes = ga._genes
-        self._set_number_of_mutation_genes(ga)
+        self._decision_variables = ga._decision_variables
+        self._set_number_of_mutation_decision_variables(ga)
         self._must_mutate_for_same_parents = ga.must_mutate_for_same_parents
         self._timeout = ga.timeout
 
-    def _set_number_of_mutation_chromosomes(self, ga):
+    def _set_number_of_mutation_candidate_solutions(self, ga):
         if (
-            (ga.number_of_mutation_chromosomes is not None)
-            and isinstance(ga.number_of_mutation_chromosomes, int)
-            and ga.number_of_mutation_chromosomes >= 0
+            (ga.number_of_mutation_candidate_solutions is not None)
+            and isinstance(ga.number_of_mutation_candidate_solutions, int)
+            and ga.number_of_mutation_candidate_solutions >= 0
         ):
-            self._number_of_mutation_chromosomes = ga.number_of_mutation_chromosomes
+            self._number_of_mutation_candidate_solutions = ga.number_of_mutation_candidate_solutions
         elif (
-            (ga.percentage_of_mutation_chromosomes is not None)
-            and isinstance(ga.percentage_of_mutation_chromosomes, float)
-            and 0.0 <= ga.percentage_of_mutation_chromosomes <= 100
+            (ga.percentage_of_mutation_candidate_solutions is not None)
+            and isinstance(ga.percentage_of_mutation_candidate_solutions, float)
+            and 0.0 <= ga.percentage_of_mutation_candidate_solutions <= 100
         ):
             nomc = round(
                 (self.population_size / 2)
-                * (ga.percentage_of_mutation_chromosomes / 100)
+                * (ga.percentage_of_mutation_candidate_solutions / 100)
             )
             while (
                 nomc
@@ -66,29 +66,29 @@ class GAOptions:
                 nomc -= 1
             if nomc < 0:
                 raise Exception(
-                    "Invalid percentage of mutation chromosomes and immigration number"
+                    "Invalid percentage of mutation candidate solutions and immigration number"
                 )
-            self._number_of_mutation_chromosomes = nomc
+            self._number_of_mutation_candidate_solutions = nomc
         else:
-            self._number_of_mutation_chromosomes = ga.number_of_mutation_chromosomes
+            self._number_of_mutation_candidate_solutions = ga.number_of_mutation_candidate_solutions
 
-    def _set_number_of_mutation_genes(self, ga):
+    def _set_number_of_mutation_decision_variables(self, ga):
         if (
-            (ga.number_of_mutation_genes is not None)
-            and isinstance(ga.number_of_mutation_genes, int)
-            and ga.number_of_mutation_genes >= 0
+            (ga.number_of_mutation_decision_variables is not None)
+            and isinstance(ga.number_of_mutation_decision_variables, int)
+            and ga.number_of_mutation_decision_variables >= 0
         ):
-            self._number_of_mutation_genes = ga.number_of_mutation_genes
+            self._number_of_mutation_decision_variables = ga.number_of_mutation_decision_variables
         elif (
-            (ga.percentage_of_mutation_genes is not None)
-            and isinstance(ga.percentage_of_mutation_genes, float)
-            and 0.0 <= ga.percentage_of_mutation_genes <= 100
+            (ga.percentage_of_mutation_decision_variables is not None)
+            and isinstance(ga.percentage_of_mutation_decision_variables, float)
+            and 0.0 <= ga.percentage_of_mutation_decision_variables <= 100
         ):
-            self._number_of_mutation_genes = round(
-                float(len(self._genes)) * (ga.percentage_of_mutation_genes / 100)
+            self._number_of_mutation_decision_variables = round(
+                float(len(self._decision_variables)) * (ga.percentage_of_mutation_decision_variables / 100)
             )
         else:
-            self._number_of_mutation_genes = ga.number_of_mutation_genes
+            self._number_of_mutation_decision_variables = ga.number_of_mutation_decision_variables
 
     @property
     def requested_cost(self) -> float:
@@ -140,7 +140,7 @@ class GAOptions:
     @property
     def immigration_number(self) -> int:
         """
-        Number of immigration chromosomes
+        Number of immigration candidate solutions
         """
         return self._immigration_number
 
@@ -173,26 +173,26 @@ class GAOptions:
         self._crossover_max_probability = value
 
     @property
-    def number_of_mutation_chromosomes(self) -> int:
+    def number_of_mutation_candidate_solutions(self) -> int:
         """
-        The number of mutation chromosomes in the population.
+        The number of mutation candidate solutions in the population.
         """
-        return self._number_of_mutation_chromosomes
+        return self._number_of_mutation_candidate_solutions
 
-    @number_of_mutation_chromosomes.setter
-    def number_of_mutation_chromosomes(self, value: int):
-        self._number_of_mutation_chromosomes = value
+    @number_of_mutation_candidate_solutions.setter
+    def number_of_mutation_candidate_solutions(self, value: int):
+        self._number_of_mutation_candidate_solutions = value
 
     @property
-    def number_of_mutation_genes(self) -> int:
+    def number_of_mutation_decision_variables(self) -> int:
         """
-        The number of mutated genes in each chromosome.
+        The number of mutated decision variables in each candidate solution.
         """
-        return self._number_of_mutation_genes
+        return self._number_of_mutation_decision_variables
 
-    @number_of_mutation_genes.setter
-    def number_of_mutation_genes(self, value: int):
-        self._number_of_mutation_genes = value
+    @number_of_mutation_decision_variables.setter
+    def number_of_mutation_decision_variables(self, value: int):
+        self._number_of_mutation_decision_variables = value
 
     @property
     def cost_function(self):
@@ -219,7 +219,7 @@ class GAOptions:
     @property
     def population_size(self) -> int:
         """
-        Number of chromosomes in the population.
+        Number of candidate solutions in the population.
         """
         return self._population_size
 
@@ -230,7 +230,7 @@ class GAOptions:
     @property
     def keep_elitism_percentage(self) -> int:
         """
-        Percentage number of chromosomes to be kept in the population by the cost value
+        Percentage number of candidate solutions to be kept in the population by the cost value
         """
         return self._keep_elitism_percentage
 
@@ -252,11 +252,11 @@ class GAOptions:
         self._number_of_crossover_parents = value
 
     @property
-    def genes(self) -> List[Gene]:
+    def decision_variables(self) -> List[DecisionVariable]:
         """
-        Collection of genes
+        Collection of decision variables
         """
-        return self._genes
+        return self._decision_variables
 
     @property
     def _abandon_number(self) -> int:

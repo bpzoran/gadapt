@@ -2,7 +2,7 @@ import random
 from abc import ABC, abstractmethod
 from typing import List, Tuple
 
-from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.candidate_solution import CandidateSolution
 
 
 class BaseParentSelector(ABC):
@@ -16,7 +16,7 @@ class BaseParentSelector(ABC):
         super().__init__()
         self.population = None
 
-    def select_mates(self, population) -> List[Tuple[Chromosome, Chromosome]]:
+    def select_mates(self, population) -> List[Tuple[CandidateSolution, CandidateSolution]]:
         """
         Selects and returns individuals for the crossover from the population
         Args:
@@ -25,23 +25,23 @@ class BaseParentSelector(ABC):
         self.population = population
         return self._select_mates_from_population()
 
-    def _select_mates_from_population(self) -> List[Tuple[Chromosome, Chromosome]]:
-        working_chromosomes = self._select_potential_parents()
+    def _select_mates_from_population(self) -> List[Tuple[CandidateSolution, CandidateSolution]]:
+        working_candidate_solutions = self._select_potential_parents()
         num_of_crossover_parents = self.population.options.number_of_crossover_parents
-        working_chromosomes_len = len(working_chromosomes)
-        if num_of_crossover_parents > working_chromosomes_len:
-            num_of_crossover_parents = working_chromosomes_len
-        working_chromosomes = working_chromosomes[:num_of_crossover_parents]
-        working_chromosomes_len = len(working_chromosomes)
-        random_number_for_reserve = random.randint(0, working_chromosomes_len - 1)
-        reserve_chromosome = working_chromosomes[random_number_for_reserve]
-        list_of_mates: List[Tuple[Chromosome, Chromosome]] = []
-        while len(working_chromosomes) > 0:
-            c1 = working_chromosomes.pop(0)
-            if len(working_chromosomes) > 0:
-                c2 = working_chromosomes.pop(0)
+        working_candidate_solutions_len = len(working_candidate_solutions)
+        if num_of_crossover_parents > working_candidate_solutions_len:
+            num_of_crossover_parents = working_candidate_solutions_len
+        working_candidate_solutions = working_candidate_solutions[:num_of_crossover_parents]
+        working_candidate_solutions_len = len(working_candidate_solutions)
+        random_number_for_reserve = random.randint(0, working_candidate_solutions_len - 1)
+        reserve_candidate_solution = working_candidate_solutions[random_number_for_reserve]
+        list_of_mates: List[Tuple[CandidateSolution, CandidateSolution]] = []
+        while len(working_candidate_solutions) > 0:
+            c1 = working_candidate_solutions.pop(0)
+            if len(working_candidate_solutions) > 0:
+                c2 = working_candidate_solutions.pop(0)
             else:
-                c2 = reserve_chromosome
+                c2 = reserve_candidate_solution
             list_of_mates.append((c1, c2))
         return list_of_mates
 

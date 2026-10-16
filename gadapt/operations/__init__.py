@@ -3,10 +3,10 @@ Genetic Algorithm Operations:
 - Finding Costs
 - Crossover
 - Exit Check
-- Gene Combination
+- Decision Variable Combination
 - Immigration
 - Mutation
 - Parent Selection
 - Sampling
-- Gene Update
+- Decision Variable Update
 """

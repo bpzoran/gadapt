@@ -19,11 +19,11 @@ from gadapt.operations.exit_check.min_cost_exit_checker import MinCostExitChecke
 from gadapt.operations.exit_check.requested_cost_exit_checker import (
     RequestedCostExitChecker,
 )
-from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
-    BaseChromosomeImmigrator,
+from gadapt.operations.immigration.candidate_solution_immigration.base_candidate_solution_immigrator import (
+    BaseCandidateSolutionImmigrator,
 )
-from gadapt.operations.immigration.chromosome_immigration.random_chromosome_immigrator import (
-    RandomChromosomeImmigrator,
+from gadapt.operations.immigration.candidate_solution_immigration.random_candidate_solution_immigrator import (
+    RandomCandidateSolutionImmigrator,
 )
 from gadapt.operations.immigration.population_immigration.base_population_immigrator import (
     BasePopulationImmigrator,
@@ -31,70 +31,70 @@ from gadapt.operations.immigration.population_immigration.base_population_immigr
 from gadapt.operations.immigration.population_immigration.common_population_immigrator import (
     CommonPopulationImmigrator,
 )
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
-    BaseGeneMutationSelector,
+from gadapt.operations.mutation.candidate_solution_mutation.base_decision_variable_mutation_selector import (
+    BaseDecisionVariableMutationSelector,
 )
-from gadapt.operations.mutation.chromosome_mutation.composed_gene_mutation_rate_determinator import (
-    ComposedGeneMutationRateDeterminator,
+from gadapt.operations.mutation.candidate_solution_mutation.composed_decision_variable_mutation_rate_determinator import (
+    ComposedDecisionVariableMutationRateDeterminator,
 )
-from gadapt.operations.mutation.chromosome_mutation.composed_gene_mutation_selector import (
-    ComposedGeneMutationSelector,
+from gadapt.operations.mutation.candidate_solution_mutation.composed_decision_variable_mutation_selector import (
+    ComposedDecisionVariableMutationSelector,
 )
-from gadapt.operations.mutation.chromosome_mutation.cross_diversity_gene_mutation_rate_determinator import (
-    CrossDiversityGeneMutationRateDeterminator,
+from gadapt.operations.mutation.candidate_solution_mutation.cross_diversity_decision_variable_mutation_rate_determinator import (
+    CrossDiversityDecisionVariableMutationRateDeterminator,
 )
-from gadapt.operations.mutation.chromosome_mutation.cross_diversity_gene_mutation_selector import (
-    CrossDiversityGeneMutationSelector,
+from gadapt.operations.mutation.candidate_solution_mutation.cross_diversity_decision_variable_mutation_selector import (
+    CrossDiversityDecisionVariableMutationSelector,
 )
-from gadapt.operations.mutation.chromosome_mutation.random_gene_mutation_rate_determinator import (
-    RandomGeneMutationRateDeterminator,
+from gadapt.operations.mutation.candidate_solution_mutation.random_decision_variable_mutation_rate_determinator import (
+    RandomDecisionVariableMutationRateDeterminator,
 )
-from gadapt.operations.mutation.chromosome_mutation.random_gene_mutation_selector import (
-    RandomGeneMutationSelector,
+from gadapt.operations.mutation.candidate_solution_mutation.random_decision_variable_mutation_selector import (
+    RandomDecisionVariableMutationSelector,
 )
-from gadapt.operations.mutation.chromosome_mutation.strict_gene_mutation_rate_determinator import (
-    StrictGeneMutationRateDeterminator,
+from gadapt.operations.mutation.candidate_solution_mutation.strict_decision_variable_mutation_rate_determinator import (
+    StrictDecisionVariableMutationRateDeterminator,
 )
-from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
-from gadapt.operations.mutation.gene_mutation.extreme_pointed_gene_mutator import (
-    ExtremePointedGeneMutator,
+from gadapt.operations.mutation.decision_variable_mutation.base_decision_variable_mutator import BaseDecisionVariableMutator
+from gadapt.operations.mutation.decision_variable_mutation.extreme_pointed_decision_variable_mutator import (
+    ExtremePointedDecisionVariableMutator,
 )
-from gadapt.operations.mutation.gene_mutation.normal_distribution_cost_diversity_gene_mutator import \
-    NormalDistributionCostDiversityGeneMutator
-from gadapt.operations.mutation.gene_mutation.normal_distribution_gene_mutator import (
-    NormalDistributionGeneMutator,
+from gadapt.operations.mutation.decision_variable_mutation.normal_distribution_cost_diversity_decision_variable_mutator import \
+    NormalDistributionCostDiversityDecisionVariableMutator
+from gadapt.operations.mutation.decision_variable_mutation.normal_distribution_decision_variable_mutator import (
+    NormalDistributionDecisionVariableMutator,
 )
-from gadapt.operations.mutation.gene_mutation.random_gene_mutator import (
-    RandomGeneMutator,
+from gadapt.operations.mutation.decision_variable_mutation.random_decision_variable_mutator import (
+    RandomDecisionVariableMutator,
 )
-from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import (
-    BaseChromosomeMutationSelector,
+from gadapt.operations.mutation.population_mutation.base_candidate_solution_mutation_selector import (
+    BaseCandidateSolutionMutationSelector,
 )
-from gadapt.operations.mutation.population_mutation.composed_chromosome_mutation_rate_determinator import (
-    ComposedChromosomeMutationRateDeterminator,
+from gadapt.operations.mutation.population_mutation.composed_candidate_solution_mutation_rate_determinator import (
+    ComposedCandidateSolutionMutationRateDeterminator,
 )
-from gadapt.operations.mutation.population_mutation.composed_chromosome_mutation_selector import (
-    ComposedChromosomeMutationSelector,
+from gadapt.operations.mutation.population_mutation.composed_candidate_solution_mutation_selector import (
+    ComposedCandidateSolutionMutationSelector,
 )
-from gadapt.operations.mutation.population_mutation.cost_diversity_chromosome_mutation_rate_determinator import (
-    CostDiversityChromosomeMutationRateDeterminator,
+from gadapt.operations.mutation.population_mutation.cost_diversity_candidate_solution_mutation_rate_determinator import (
+    CostDiversityCandidateSolutionMutationRateDeterminator,
 )
-from gadapt.operations.mutation.population_mutation.cross_diversity_chromosome_mutation_rate_determinator import (
-    CrossDiversityChromosomeMutationRateDeterminator,
+from gadapt.operations.mutation.population_mutation.cross_diversity_candidate_solution_mutation_rate_determinator import (
+    CrossDiversityCandidateSolutionMutationRateDeterminator,
 )
-from gadapt.operations.mutation.population_mutation.parent_cost_diversity_chromosome_mutation_selector import \
-    ParentCostDiversityChromosomeMutationSelector
-from gadapt.operations.mutation.population_mutation.parent_structural_diversity_chromosome_mutation_selector import (
-    ParentStructuralDiversityChromosomeMutationSelector,
+from gadapt.operations.mutation.population_mutation.parent_cost_diversity_candidate_solution_mutation_selector import \
+    ParentCostDiversityCandidateSolutionMutationSelector
+from gadapt.operations.mutation.population_mutation.parent_structural_diversity_candidate_solution_mutation_selector import (
+    ParentStructuralDiversityCandidateSolutionMutationSelector,
 )
-from gadapt.operations.mutation.population_mutation.random_chromosome_mutation_rate_determinator import (
-    RandomChromosomeMutationRateDeterminator,
+from gadapt.operations.mutation.population_mutation.random_candidate_solution_mutation_rate_determinator import (
+    RandomCandidateSolutionMutationRateDeterminator,
 )
-from gadapt.operations.mutation.population_mutation.random_chromosome_mutation_selector import (
-    RandomChromosomeMutationSelector,
+from gadapt.operations.mutation.population_mutation.random_candidate_solution_mutation_selector import (
+    RandomCandidateSolutionMutationSelector,
 )
-from gadapt.operations.mutation.population_mutation.strict_chromosome_mutation_rate_determinator import (
-    StrictChromosomeMutationRateDeterminator,
+from gadapt.operations.mutation.population_mutation.strict_candidate_solution_mutation_rate_determinator import (
+    StrictCandidateSolutionMutationRateDeterminator,
 )
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
 from gadapt.operations.parent_selection.sampling_parent_selector import (
@@ -107,33 +107,33 @@ from gadapt.operations.sampling.from_top_to_bottom_sampling import (
 from gadapt.operations.sampling.random_sampling import RandomSampling
 from gadapt.operations.sampling.roulette_wheel_sampling import RouletteWheelSampling
 from gadapt.operations.sampling.tournament_sampling import TournamentSampling
-from gadapt.operations.gene_update.cross_diversity_gene_updater import (
-    ColumnarDiversityGeneUpdater,
+from gadapt.operations.decision_variable_update.cross_diversity_decision_variable_updater import (
+    ColumnarDiversityDecisionVariableUpdater,
 )
 from gadapt.operations.crossover.blending_crossover import BlendingCrossover
 from gadapt.operations.crossover.uniform_crossover import UniformCrossover
 from gadapt.operations.exit_check.number_of_generations_exit_checker import (
     NumberOfGenerationsExitChecker,
 )
-from gadapt.operations.mutation.gene_mutation.composed_gene_mutator import (
-    ComposedGeneMutator,
+from gadapt.operations.mutation.decision_variable_mutation.composed_decision_variable_mutator import (
+    ComposedDecisionVariableMutator,
 )
-from gadapt.operations.mutation.gene_mutation.normal_distribution_cross_diversity_gene_mutator import (
-    NormalDistributionCrossDiversityGeneMutator,
+from gadapt.operations.mutation.decision_variable_mutation.normal_distribution_cross_diversity_decision_variable_mutator import (
+    NormalDistributionCrossDiversityDecisionVariableMutator,
 )
-from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_rate_determinator import (
-    BaseChromosomeMutationRateDeterminator,
+from gadapt.operations.mutation.population_mutation.base_candidate_solution_mutation_rate_determinator import (
+    BaseCandidateSolutionMutationRateDeterminator,
 )
 from gadapt.operations.population_update.cost_diversity_population_updater import (
     CostDiversityPopulationUpdater,
 )
-from gadapt.operations.chromosome_update.base_chromosome_updater import (
-    BaseChromosomeUpdater,
+from gadapt.operations.candidate_solution_update.base_candidate_solution_updater import (
+    BaseCandidateSolutionUpdater,
 )
-from gadapt.operations.chromosome_update.parent_diversity_chromosome_updater import (
-    ParentDiversityChromosomeUpdater,
+from gadapt.operations.candidate_solution_update.parent_diversity_candidate_solution_updater import (
+    ParentDiversityCandidateSolutionUpdater,
 )
-from gadapt.operations.gene_update.base_gene_updater import BaseGeneUpdater
+from gadapt.operations.decision_variable_update.base_decision_variable_updater import BaseDecisionVariableUpdater
 from gadapt.operations.population_update.base_population_updater import (
     BasePopulationUpdater,
 )
@@ -146,8 +146,8 @@ class GAFactory(BaseGAFactory):
 
     def __init__(self):
         super().__init__()
-        self.gene_mutation_rate_determinator = None
-        self.chromosome_mutation_rate_determinator = None
+        self.decision_variable_mutation_rate_determinator = None
+        self.candidate_solution_mutation_rate_determinator = None
 
     def _get_cost_finder(self) -> BaseCostFinder:
         """
@@ -159,57 +159,57 @@ class GAFactory(BaseGAFactory):
         """
         Population Immigrator Instance
         """
-        return CommonPopulationImmigrator(self.get_chromosome_immigrator())
+        return CommonPopulationImmigrator(self.get_candidate_solution_immigrator())
 
-    def _get_chromosome_immigrator(self) -> BaseChromosomeImmigrator:
+    def _get_candidate_solution_immigrator(self) -> BaseCandidateSolutionImmigrator:
         """
-        Chromosome Immigrator Instance
+        Candidate Solution Immigrator Instance
         """
-        return RandomChromosomeImmigrator()
+        return RandomCandidateSolutionImmigrator()
 
-    def _get_gene_mutation_selector(self) -> BaseGeneMutationSelector:
+    def _get_decision_variable_mutation_selector(self) -> BaseDecisionVariableMutationSelector:
         """
-        Allele Mutation Selector Instance
+        Decision Variable Mutation Selector Instance
         """
-        return self._get_gene_mutation_selector_combined()
+        return self._get_decision_variable_mutation_selector_combined()
 
     def _get_crossover_probability_determinator(self) -> BaseCrossoverProbabilityDeterminator:
         return self._get_crossover_probability_determinator_combined()
 
-    def _get_gene_mutator_combined(self) -> BaseGeneMutator:
+    def _get_decision_variable_mutator_combined(self) -> BaseDecisionVariableMutator:
         if self._ga is None:
             raise Exception("_ga object must not be None!")
         mutator_strings = [
             gm.strip()
-            for gm in self._ga.gene_mutation.split(definitions.PARAM_SEPARATOR)
+            for gm in self._ga.decision_variable_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        gene_mutators: List[BaseGeneMutator] = []
+        decision_variable_mutators: List[BaseDecisionVariableMutator] = []
         if definitions.RANDOM in mutator_strings:
-            gene_mutators.append(RandomGeneMutator())
+            decision_variable_mutators.append(RandomDecisionVariableMutator())
         if definitions.EXTREME_POINTED in mutator_strings:
-            gene_mutators.append(ExtremePointedGeneMutator())
+            decision_variable_mutators.append(ExtremePointedDecisionVariableMutator())
         if definitions.CROSS_DIVERSITY in mutator_strings:
-            gene_mutators.append(NormalDistributionCrossDiversityGeneMutator(self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev))
+            decision_variable_mutators.append(NormalDistributionCrossDiversityDecisionVariableMutator(self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev))
         if definitions.COST_DIVERSITY in mutator_strings:
-            gene_mutators.append(NormalDistributionCostDiversityGeneMutator(self._options.get_cost_diversity_coefficient_function, self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev))
+            decision_variable_mutators.append(NormalDistributionCostDiversityDecisionVariableMutator(self._options.get_cost_diversity_coefficient_function, self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev))
         elif definitions.NORMAL_DISTRIBUTION in mutator_strings:
-            gene_mutators.append(NormalDistributionGeneMutator())
-        if len(gene_mutators) == 0:
-            gene_mutators.append(NormalDistributionGeneMutator())
-            gene_mutators.append(RandomGeneMutator())
-        if len(gene_mutators) == 1:
-            return gene_mutators[0]
+            decision_variable_mutators.append(NormalDistributionDecisionVariableMutator())
+        if len(decision_variable_mutators) == 0:
+            decision_variable_mutators.append(NormalDistributionDecisionVariableMutator())
+            decision_variable_mutators.append(RandomDecisionVariableMutator())
+        if len(decision_variable_mutators) == 1:
+            return decision_variable_mutators[0]
         else:
-            main_gene_mutator = ComposedGeneMutator()
-            for mutator in gene_mutators:
-                main_gene_mutator.append(mutator)
-        return main_gene_mutator
+            main_decision_variable_mutator = ComposedDecisionVariableMutator()
+            for mutator in decision_variable_mutators:
+                main_decision_variable_mutator.append(mutator)
+        return main_decision_variable_mutator
 
-    def _get_gene_mutator(self) -> BaseGeneMutator:
+    def _get_decision_variable_mutator(self) -> BaseDecisionVariableMutator:
         """
-        Chromosome Mutator Instance
+        Decision Variable Mutator Instance
         """
-        return self._get_gene_mutator_combined()
+        return self._get_decision_variable_mutator_combined()
 
     def _population_mutation_options_validation(self):
         """
@@ -222,87 +222,87 @@ class GAFactory(BaseGAFactory):
             if s.strip() not in definitions.POPULATION_MUTATION_STRINGS:
                 raise Exception(s + " is not defined as option for population mutation")
 
-    def _make_chromosome_mutation_selector(
+    def _make_candidate_solution_mutation_selector(
         self, population_mutator_string=None
-    ) -> BaseChromosomeMutationSelector:
+    ) -> BaseCandidateSolutionMutationSelector:
         """
         Population Mutator Instance
         """
         self._population_mutation_options_validation()
-        return self._get_chromosome_mutation_selector_combined()
+        return self._get_candidate_solution_mutation_selector_combined()
 
-    def _get_chromosome_mutation_selector(self) -> BaseChromosomeMutationSelector:
+    def _get_candidate_solution_mutation_selector(self) -> BaseCandidateSolutionMutationSelector:
         """
         Population Mutator Instance
         """
-        return self._make_chromosome_mutation_selector()
+        return self._make_candidate_solution_mutation_selector()
 
-    def _get_chromosome_mutation_rate_determinators(
+    def _get_candidate_solution_mutation_rate_determinators(
         self,
     ) -> Tuple[
-        BaseChromosomeMutationRateDeterminator, BaseChromosomeMutationRateDeterminator
+        BaseCandidateSolutionMutationRateDeterminator, BaseCandidateSolutionMutationRateDeterminator
     ]:
         if self._ga is None:
             raise Exception("_ga object must not be None!")
-        if self.chromosome_mutation_rate_determinator is not None:
-            return self.chromosome_mutation_rate_determinator
+        if self.candidate_solution_mutation_rate_determinator is not None:
+            return self.candidate_solution_mutation_rate_determinator
         mutator_strings = [
             ms.strip()
             for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        chromosome_mutation_rate_determinators: List[
-            BaseChromosomeMutationRateDeterminator
+        candidate_solution_mutation_rate_determinators: List[
+            BaseCandidateSolutionMutationRateDeterminator
         ] = []
 
         if definitions.RANDOM in mutator_strings:
-            chromosome_mutation_rate_determinators.append(
-                RandomChromosomeMutationRateDeterminator()
+            candidate_solution_mutation_rate_determinators.append(
+                RandomCandidateSolutionMutationRateDeterminator()
             )
         if definitions.STRICT in mutator_strings:
-            chromosome_mutation_rate_determinators.append(
-                StrictChromosomeMutationRateDeterminator()
+            candidate_solution_mutation_rate_determinators.append(
+                StrictCandidateSolutionMutationRateDeterminator()
             )
         if definitions.CROSS_DIVERSITY in mutator_strings:
-            chromosome_mutation_rate_determinators.append(
-                CrossDiversityChromosomeMutationRateDeterminator()
+            candidate_solution_mutation_rate_determinators.append(
+                CrossDiversityCandidateSolutionMutationRateDeterminator()
             )
         if definitions.COST_DIVERSITY in mutator_strings:
-            chromosome_mutation_rate_determinators.append(
-                CostDiversityChromosomeMutationRateDeterminator()
+            candidate_solution_mutation_rate_determinators.append(
+                CostDiversityCandidateSolutionMutationRateDeterminator()
             )
-        if len(chromosome_mutation_rate_determinators) == 0:
-            chromosome_mutation_rate_determinators.append(
-                CostDiversityChromosomeMutationRateDeterminator()
+        if len(candidate_solution_mutation_rate_determinators) == 0:
+            candidate_solution_mutation_rate_determinators.append(
+                CostDiversityCandidateSolutionMutationRateDeterminator()
             )
-        if len(chromosome_mutation_rate_determinators) == 1:
-            main_chromosome_mutation_rate_determinator: (
-                BaseChromosomeMutationRateDeterminator
-            ) = chromosome_mutation_rate_determinators[0]
+        if len(candidate_solution_mutation_rate_determinators) == 1:
+            main_candidate_solution_mutation_rate_determinator: (
+                BaseCandidateSolutionMutationRateDeterminator
+            ) = candidate_solution_mutation_rate_determinators[0]
         else:
-            main_chromosome_mutation_rate_determinator = (
-                ComposedChromosomeMutationRateDeterminator()
+            main_candidate_solution_mutation_rate_determinator = (
+                ComposedCandidateSolutionMutationRateDeterminator()
             )
-            for determinator in chromosome_mutation_rate_determinators:
-                main_chromosome_mutation_rate_determinator.append(determinator)
+            for determinator in candidate_solution_mutation_rate_determinators:
+                main_candidate_solution_mutation_rate_determinator.append(determinator)
         if (
             definitions.RANDOM in mutator_strings
             and definitions.PARENT_DIVERSITY in mutator_strings
         ):
-            helper_chromosome_mutation_rate_determinator: (
-                BaseChromosomeMutationRateDeterminator
-            ) = StrictChromosomeMutationRateDeterminator()
+            helper_candidate_solution_mutation_rate_determinator: (
+                BaseCandidateSolutionMutationRateDeterminator
+            ) = StrictCandidateSolutionMutationRateDeterminator()
         else:
-            helper_chromosome_mutation_rate_determinator = (
-                main_chromosome_mutation_rate_determinator
+            helper_candidate_solution_mutation_rate_determinator = (
+                main_candidate_solution_mutation_rate_determinator
             )
         return (
-            main_chromosome_mutation_rate_determinator,
-            helper_chromosome_mutation_rate_determinator,
+            main_candidate_solution_mutation_rate_determinator,
+            helper_candidate_solution_mutation_rate_determinator,
         )
 
-    def _get_chromosome_mutation_selector_combined(
+    def _get_candidate_solution_mutation_selector_combined(
         self,
-    ) -> BaseChromosomeMutationSelector:
+    ) -> BaseCandidateSolutionMutationSelector:
         """
         Population Mutator Instance - combined
         """
@@ -313,110 +313,110 @@ class GAFactory(BaseGAFactory):
             for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
         ]
         (
-            main_chromosome_mutation_rate_determinator,
-            helper_chromosome_mutation_rate_determinator,
-        ) = self._get_chromosome_mutation_rate_determinators()
-        chromosome_mutation_selectors: List[BaseChromosomeMutationSelector] = []
+            main_candidate_solution_mutation_rate_determinator,
+            helper_candidate_solution_mutation_rate_determinator,
+        ) = self._get_candidate_solution_mutation_rate_determinators()
+        candidate_solution_mutation_selectors: List[BaseCandidateSolutionMutationSelector] = []
         if definitions.RANDOM in mutator_strings:
-            chromosome_mutation_selectors.append(
-                RandomChromosomeMutationSelector(
-                    helper_chromosome_mutation_rate_determinator,
-                    self._get_gene_mutation_selector(),
+            candidate_solution_mutation_selectors.append(
+                RandomCandidateSolutionMutationSelector(
+                    helper_candidate_solution_mutation_rate_determinator,
+                    self._get_decision_variable_mutation_selector(),
                 )
             )
         if definitions.PARENT_DIVERSITY in mutator_strings:
-            chromosome_mutation_selectors.append(
-                ParentStructuralDiversityChromosomeMutationSelector(
-                    helper_chromosome_mutation_rate_determinator,
-                    self._get_gene_mutation_selector(),
+            candidate_solution_mutation_selectors.append(
+                ParentStructuralDiversityCandidateSolutionMutationSelector(
+                    helper_candidate_solution_mutation_rate_determinator,
+                    self._get_decision_variable_mutation_selector(),
                     self._get_sampling_method(
-                        self._ga.parent_diversity_mutation_chromosome_sampling
+                        self._ga.parent_diversity_mutation_candidate_solution_sampling
                     ),
                 )
             )
-            chromosome_mutation_selectors.append(
-                ParentCostDiversityChromosomeMutationSelector(
-                    helper_chromosome_mutation_rate_determinator,
-                    self._get_gene_mutation_selector(),
+            candidate_solution_mutation_selectors.append(
+                ParentCostDiversityCandidateSolutionMutationSelector(
+                    helper_candidate_solution_mutation_rate_determinator,
+                    self._get_decision_variable_mutation_selector(),
                     self._get_sampling_method(
-                        self._ga.parent_diversity_mutation_chromosome_sampling
+                        self._ga.parent_diversity_mutation_candidate_solution_sampling
                     ),
                 )
             )
-        if len(chromosome_mutation_selectors) == 0:
-            chromosome_mutation_selectors.append(
-                ParentStructuralDiversityChromosomeMutationSelector(
-                    helper_chromosome_mutation_rate_determinator,
-                    self._get_gene_mutation_selector(),
+        if len(candidate_solution_mutation_selectors) == 0:
+            candidate_solution_mutation_selectors.append(
+                ParentStructuralDiversityCandidateSolutionMutationSelector(
+                    helper_candidate_solution_mutation_rate_determinator,
+                    self._get_decision_variable_mutation_selector(),
                     self._get_sampling_method(
-                        self._ga.parent_diversity_mutation_chromosome_sampling
+                        self._ga.parent_diversity_mutation_candidate_solution_sampling
                     ),
                 )
             )
-        if len(chromosome_mutation_selectors) == 1:
-            return chromosome_mutation_selectors[0]
+        if len(candidate_solution_mutation_selectors) == 1:
+            return candidate_solution_mutation_selectors[0]
         else:
-            chromosome_mutation_selector = ComposedChromosomeMutationSelector(
-                main_chromosome_mutation_rate_determinator,
-                self._get_gene_mutation_selector(),
+            candidate_solution_mutation_selector = ComposedCandidateSolutionMutationSelector(
+                main_candidate_solution_mutation_rate_determinator,
+                self._get_decision_variable_mutation_selector(),
             )
-            for selector in chromosome_mutation_selectors:
-                chromosome_mutation_selector.append(selector)
-        return chromosome_mutation_selector
+            for selector in candidate_solution_mutation_selectors:
+                candidate_solution_mutation_selector.append(selector)
+        return candidate_solution_mutation_selector
 
-    def _get_gene_mutation_rate_determinators(self):
-        if self.gene_mutation_rate_determinator is not None:
+    def _get_decision_variable_mutation_rate_determinators(self):
+        if self.decision_variable_mutation_rate_determinator is not None:
             return (
-                self.gene_mutation_rate_determinator,
-                self.gene_mutation_rate_determinator,
+                self.decision_variable_mutation_rate_determinator,
+                self.decision_variable_mutation_rate_determinator,
             )
         mutator_strings = [
             ms.strip()
-            for ms in self._ga.chromosome_mutation.split(definitions.PARAM_SEPARATOR)
+            for ms in self._ga.candidate_solution_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        gene_mutation_rate_determinators = []
+        decision_variable_mutation_rate_determinators = []
 
         if definitions.RANDOM in mutator_strings:
-            gene_mutation_rate_determinators.append(
-                RandomGeneMutationRateDeterminator()
+            decision_variable_mutation_rate_determinators.append(
+                RandomDecisionVariableMutationRateDeterminator()
             )
         if definitions.STRICT in mutator_strings:
-            gene_mutation_rate_determinators.append(
-                StrictGeneMutationRateDeterminator()
+            decision_variable_mutation_rate_determinators.append(
+                StrictDecisionVariableMutationRateDeterminator()
             )
         if definitions.CROSS_DIVERSITY in mutator_strings:
-            gene_mutation_rate_determinators.append(
-                CrossDiversityGeneMutationRateDeterminator()
+            decision_variable_mutation_rate_determinators.append(
+                CrossDiversityDecisionVariableMutationRateDeterminator()
             )
-        if len(gene_mutation_rate_determinators) == 0:
-            gene_mutation_rate_determinators.append(
-                RandomGeneMutationRateDeterminator()
+        if len(decision_variable_mutation_rate_determinators) == 0:
+            decision_variable_mutation_rate_determinators.append(
+                RandomDecisionVariableMutationRateDeterminator()
             )
-            gene_mutation_rate_determinators.append(
-                CrossDiversityGeneMutationRateDeterminator()
+            decision_variable_mutation_rate_determinators.append(
+                CrossDiversityDecisionVariableMutationRateDeterminator()
             )
-        if len(gene_mutation_rate_determinators) == 1:
-            main_gene_mutation_rate_determinator = gene_mutation_rate_determinators[0]
+        if len(decision_variable_mutation_rate_determinators) == 1:
+            main_decision_variable_mutation_rate_determinator = decision_variable_mutation_rate_determinators[0]
         else:
-            main_gene_mutation_rate_determinator = (
-                ComposedGeneMutationRateDeterminator()
+            main_decision_variable_mutation_rate_determinator = (
+                ComposedDecisionVariableMutationRateDeterminator()
             )
-            for determinator in gene_mutation_rate_determinators:
-                main_gene_mutation_rate_determinator.append(determinator)
+            for determinator in decision_variable_mutation_rate_determinators:
+                main_decision_variable_mutation_rate_determinator.append(determinator)
         if (
             definitions.RANDOM in mutator_strings
             and definitions.COST_DIVERSITY in mutator_strings
         ):
-            helper_gene_mutation_rate_determinator = (
-                StrictGeneMutationRateDeterminator()
+            helper_decision_variable_mutation_rate_determinator = (
+                StrictDecisionVariableMutationRateDeterminator()
             )
         else:
-            helper_gene_mutation_rate_determinator = (
-                main_gene_mutation_rate_determinator
+            helper_decision_variable_mutation_rate_determinator = (
+                main_decision_variable_mutation_rate_determinator
             )
         return (
-            main_gene_mutation_rate_determinator,
-            helper_gene_mutation_rate_determinator,
+            main_decision_variable_mutation_rate_determinator,
+            helper_decision_variable_mutation_rate_determinator,
         )
 
     def _get_crossover_probability_determinator_combined(self) -> BaseCrossoverProbabilityDeterminator:
@@ -438,82 +438,82 @@ class GAFactory(BaseGAFactory):
             crossover_probability_determinator.append(FixedCrossoverProbabilityDeterminator())
         return crossover_probability_determinator
 
-    def _get_gene_mutation_selector_combined(self) -> BaseGeneMutationSelector:
+    def _get_decision_variable_mutation_selector_combined(self) -> BaseDecisionVariableMutationSelector:
         """
-        Chromosome Mutator Instance - combined
+        Decision Variable Mutation Selector Instance - combined
         """
         if self._ga is None:
             raise Exception("_ga object must not be None!")
         mutator_strings = [
             ms.strip()
-            for ms in self._ga.chromosome_mutation.split(definitions.PARAM_SEPARATOR)
+            for ms in self._ga.candidate_solution_mutation.split(definitions.PARAM_SEPARATOR)
         ]
         (
-            main_gene_mutation_rate_determinator,
-            helper_gene_mutation_rate_determinator,
-        ) = self._get_gene_mutation_rate_determinators()
-        gene_mutation_selectors = []
+            main_decision_variable_mutation_rate_determinator,
+            helper_decision_variable_mutation_rate_determinator,
+        ) = self._get_decision_variable_mutation_rate_determinators()
+        decision_variable_mutation_selectors = []
         if definitions.RANDOM in mutator_strings:
-            gene_mutation_selectors.append(
-                RandomGeneMutationSelector(
-                    helper_gene_mutation_rate_determinator, self.get_gene_mutator()
+            decision_variable_mutation_selectors.append(
+                RandomDecisionVariableMutationSelector(
+                    helper_decision_variable_mutation_rate_determinator, self.get_decision_variable_mutator()
                 ),
             )
         if definitions.CROSS_DIVERSITY in mutator_strings:
-            gene_mutation_selectors.append(
-                CrossDiversityGeneMutationSelector(
-                    helper_gene_mutation_rate_determinator,
-                    self.get_gene_mutator(),
+            decision_variable_mutation_selectors.append(
+                CrossDiversityDecisionVariableMutationSelector(
+                    helper_decision_variable_mutation_rate_determinator,
+                    self.get_decision_variable_mutator(),
                     self._get_sampling_method(
-                        self._ga.cross_diversity_mutation_gene_sampling
+                        self._ga.cross_diversity_mutation_decision_variable_sampling
                     ),
                 )
             )
-        if len(gene_mutation_selectors) == 0:
-            gene_mutation_selectors.append(
-                CrossDiversityGeneMutationSelector(
-                    helper_gene_mutation_rate_determinator,
-                    self.get_gene_mutator(),
+        if len(decision_variable_mutation_selectors) == 0:
+            decision_variable_mutation_selectors.append(
+                CrossDiversityDecisionVariableMutationSelector(
+                    helper_decision_variable_mutation_rate_determinator,
+                    self.get_decision_variable_mutator(),
                     self._get_sampling_method(
-                        self._ga.cross_diversity_mutation_gene_sampling
+                        self._ga.cross_diversity_mutation_decision_variable_sampling
                     ),
                 )
             )
-        if len(gene_mutation_selectors) == 1:
-            gene_mutation_selector = gene_mutation_selectors[0]
+        if len(decision_variable_mutation_selectors) == 1:
+            decision_variable_mutation_selector = decision_variable_mutation_selectors[0]
         else:
-            gene_mutation_selector = self.get_composed_gene_mutation_selector(
-                main_gene_mutation_rate_determinator,
-                gene_mutation_selectors,
-                helper_gene_mutation_rate_determinator,
+            decision_variable_mutation_selector = self.get_composed_decision_variable_mutation_selector(
+                main_decision_variable_mutation_rate_determinator,
+                decision_variable_mutation_selectors,
+                helper_decision_variable_mutation_rate_determinator,
             )
-        return gene_mutation_selector
+        return decision_variable_mutation_selector
 
-    def get_composed_gene_mutation_selector(
+    def get_composed_decision_variable_mutation_selector(
         self,
-        main_gene_mutation_rate_determinator,
-        gene_mutation_selectors,
-        helper_gene_mutation_rate_determinator,
+        main_decision_variable_mutation_rate_determinator,
+        decision_variable_mutation_selectors,
+        helper_decision_variable_mutation_rate_determinator,
     ):
-        if not gene_mutation_selectors:
-            gene_mutation_selectors.append(
-                CrossDiversityGeneMutationSelector(
-                    helper_gene_mutation_rate_determinator,
-                    self.get_gene_mutator(),
+        if not decision_variable_mutation_selectors:
+            decision_variable_mutation_selectors.append(
+                CrossDiversityDecisionVariableMutationSelector(
+                    helper_decision_variable_mutation_rate_determinator,
+                    self.get_decision_variable_mutator(),
                     self._get_sampling_method(
-                        self._ga.cross_diversity_mutation_gene_sampling
+                        self._ga.cross_diversity_mutation_decision_variable_sampling
                     ),
                 )
             )
-            gene_mutation_selectors.append(
-                RandomGeneMutationSelector(helper_gene_mutation_rate_determinator)
+            decision_variable_mutation_selectors.append(
+                RandomDecisionVariableMutationSelector(helper_decision_variable_mutation_rate_determinator)
             )
-        gene_mutation_selector = ComposedGeneMutationSelector(
-            main_gene_mutation_rate_determinator, self.get_gene_mutator()
+        decision_variable_mutation_selector = ComposedDecisionVariableMutationSelector(
+            main_decision_variable_mutation_rate_determinator, self.get_decision_variable_mutator()
         )
-        for selector in gene_mutation_selectors:
-            gene_mutation_selector.append(selector)
-        return gene_mutation_selector
+        for selector in decision_variable_mutation_selectors:
+            decision_variable_mutation_selector.append(selector)
+        return decision_variable_mutation_selector
 
     def _get_parent_selector(self) -> BaseParentSelector:
         """
@@ -566,48 +566,48 @@ class GAFactory(BaseGAFactory):
         """
         if self._ga is None:
             raise Exception("ga object must not be None!")
-        chromosome_updater = self.get_chromosome_updater()
-        chromosome_mutation_selector = self._get_gene_mutation_selector()
+        candidate_solution_updater = self.get_candidate_solution_updater()
+        candidate_solution_mutation_selector = self._get_decision_variable_mutation_selector()
         crossover_probability_determinator = self._get_crossover_probability_determinator()
         crossover_strings = [
             ms.strip()
             for ms in self._ga.crossover.split(definitions.PARAM_SEPARATOR)
         ]
         if definitions.BLENDING in crossover_strings:
-            return BlendingCrossover(chromosome_updater, chromosome_mutation_selector, crossover_probability_determinator)
+            return BlendingCrossover(candidate_solution_updater, candidate_solution_mutation_selector, crossover_probability_determinator)
         if definitions.UNIFORM in crossover_strings:
-            return UniformCrossover(chromosome_updater, chromosome_mutation_selector, crossover_probability_determinator)
-        return BlendingCrossover(chromosome_updater, chromosome_mutation_selector, crossover_probability_determinator)
+            return UniformCrossover(candidate_solution_updater, candidate_solution_mutation_selector, crossover_probability_determinator)
+        return BlendingCrossover(candidate_solution_updater, candidate_solution_mutation_selector, crossover_probability_determinator)
 
-    def _get_gene_updater(self):
+    def _get_decision_variable_updater(self):
         """
-        Gene Updater Instance
+        Decision Variable Updater Instance
         """
         population_mutator_strings = [
             ms.strip()
             for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        chromosome_mutator_strings = [
+        candidate_solution_mutator_strings = [
             ms.strip()
-            for ms in self._ga.chromosome_mutation.split(definitions.PARAM_SEPARATOR)
+            for ms in self._ga.candidate_solution_mutation.split(definitions.PARAM_SEPARATOR)
         ]
-        gene_mutator_strings = [
+        decision_variable_mutator_strings = [
             ms.strip()
-            for ms in self._ga.gene_mutation.split(definitions.PARAM_SEPARATOR)
+            for ms in self._ga.decision_variable_mutation.split(definitions.PARAM_SEPARATOR)
         ]
         all_mutator_strings = (
             population_mutator_strings
-            + chromosome_mutator_strings
-            + gene_mutator_strings
+            + candidate_solution_mutator_strings
+            + decision_variable_mutator_strings
         )
         if definitions.CROSS_DIVERSITY in all_mutator_strings:
-            return ColumnarDiversityGeneUpdater()
-        return BaseGeneUpdater()
+            return ColumnarDiversityDecisionVariableUpdater()
+        return BaseDecisionVariableUpdater()
 
-    def _get_chromosome_updater(self):
-        return ParentDiversityChromosomeUpdater()
+    def _get_candidate_solution_updater(self):
+        return ParentDiversityCandidateSolutionUpdater()
 
-    def get_chromosome_updater(self):
+    def get_candidate_solution_updater(self):
         population_mutator_strings = [
             ms.strip()
             for ms in self._ga.population_mutation.split(definitions.PARAM_SEPARATOR)
@@ -616,8 +616,8 @@ class GAFactory(BaseGAFactory):
             not population_mutator_strings
             or definitions.PARENT_DIVERSITY in population_mutator_strings
         ):
-            return ParentDiversityChromosomeUpdater()
-        return BaseChromosomeUpdater()
+            return ParentDiversityCandidateSolutionUpdater()
+        return BaseCandidateSolutionUpdater()
 
     def _get_population_updater(self):
         """

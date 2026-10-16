@@ -5,19 +5,19 @@ from gadapt.ga_model.ga_options import GAOptions
 from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
 from gadapt.operations.crossover.base_crossover import BaseCrossover
 from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
-from gadapt.operations.immigration.chromosome_immigration.base_chromosome_immigrator import (
-    BaseChromosomeImmigrator,
+from gadapt.operations.immigration.candidate_solution_immigration.base_candidate_solution_immigrator import (
+    BaseCandidateSolutionImmigrator,
 )
 from gadapt.operations.immigration.population_immigration.base_population_immigrator import (
     BasePopulationImmigrator,
 )
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import (
-    BaseGeneMutationSelector,
+from gadapt.operations.mutation.candidate_solution_mutation.base_decision_variable_mutation_selector import (
+    BaseDecisionVariableMutationSelector,
 )
-from gadapt.operations.mutation.gene_mutation.base_gene_mutator import BaseGeneMutator
+from gadapt.operations.mutation.decision_variable_mutation.base_decision_variable_mutator import BaseDecisionVariableMutator
 from gadapt.operations.parent_selection.base_parent_selector import BaseParentSelector
-from gadapt.operations.mutation.population_mutation.base_chromosome_mutation_selector import (
-    BaseChromosomeMutationSelector,
+from gadapt.operations.mutation.population_mutation.base_candidate_solution_mutation_selector import (
+    BaseCandidateSolutionMutationSelector,
 )
 
 """
@@ -31,14 +31,14 @@ class BaseGAFactory(ABC):
         self.population_updater = None
         self._ga = None
         self._options = None
-        self.gene_updater = None
-        self.chromosome_updater = None
+        self.decision_variable_updater = None
+        self.candidate_solution_updater = None
         self.cost_finder: Optional[BaseCostFinder] = None
         self.population_immigrator: Optional[BasePopulationImmigrator] = None
-        self.chromosome_immigrator: Optional[BaseChromosomeImmigrator] = None
-        self.gene_mutator: Optional[BaseGeneMutator] = None
-        self.gene_mutation_selector: Optional[BaseGeneMutationSelector] = None
-        self.chromosome_mutation_selector: Optional[BaseChromosomeMutationSelector] = (
+        self.candidate_solution_immigrator: Optional[BaseCandidateSolutionImmigrator] = None
+        self.decision_variable_mutator: Optional[BaseDecisionVariableMutator] = None
+        self.decision_variable_mutation_selector: Optional[BaseDecisionVariableMutationSelector] = None
+        self.candidate_solution_mutation_selector: Optional[BaseCandidateSolutionMutationSelector] = (
             None
         )
         self.parent_selector: Optional[BaseParentSelector] = None
@@ -65,37 +65,37 @@ class BaseGAFactory(ABC):
             self.population_immigrator = self._get_population_immigrator()
         return self.population_immigrator
 
-    def get_chromosome_immigrator(self) -> BaseChromosomeImmigrator:
+    def get_candidate_solution_immigrator(self) -> BaseCandidateSolutionImmigrator:
         """
-        Chromosome Immigrator Instance
+        Candidate Solution Immigrator Instance
         """
-        if self.chromosome_immigrator is None:
-            self.chromosome_immigrator = self._get_chromosome_immigrator()
-        return self.chromosome_immigrator
+        if self.candidate_solution_immigrator is None:
+            self.candidate_solution_immigrator = self._get_candidate_solution_immigrator()
+        return self.candidate_solution_immigrator
 
-    def get_gene_mutation_selector(self) -> BaseGeneMutationSelector:
+    def get_decision_variable_mutation_selector(self) -> BaseDecisionVariableMutationSelector:
         """
-        Gene Mutation Selector Instance
+        Decision Variable Mutation Selector Instance
         """
-        if self.gene_mutation_selector is None:
-            self.gene_mutation_selector = self._get_gene_mutation_selector()
-        return self.gene_mutation_selector
+        if self.decision_variable_mutation_selector is None:
+            self.decision_variable_mutation_selector = self._get_decision_variable_mutation_selector()
+        return self.decision_variable_mutation_selector
 
-    def get_gene_mutator(self) -> BaseGeneMutator:
+    def get_decision_variable_mutator(self) -> BaseDecisionVariableMutator:
         """
-        Allele Mutator Instance
+        Decision Variable Mutator Instance
         """
-        if self.gene_mutator is None:
-            self.gene_mutator = self._get_gene_mutator()
-        return self.gene_mutator
+        if self.decision_variable_mutator is None:
+            self.decision_variable_mutator = self._get_decision_variable_mutator()
+        return self.decision_variable_mutator
 
-    def get_chromosome_mutation_selector(self) -> BaseChromosomeMutationSelector:
+    def get_candidate_solution_mutation_selector(self) -> BaseCandidateSolutionMutationSelector:
         """
-        Chromosome Mutation Selector Instance
+        Candidate Solution Mutation Selector Instance
         """
-        if self.chromosome_mutation_selector is None:
-            self.chromosome_mutation_selector = self._get_chromosome_mutation_selector()
-        return self.chromosome_mutation_selector
+        if self.candidate_solution_mutation_selector is None:
+            self.candidate_solution_mutation_selector = self._get_candidate_solution_mutation_selector()
+        return self.candidate_solution_mutation_selector
 
     def get_parent_selector(self) -> BaseParentSelector:
         """
@@ -113,21 +113,21 @@ class BaseGAFactory(ABC):
             self.exit_checker = self._get_exit_checker()
         return self.exit_checker
 
-    def get_gene_updater(self):
+    def get_decision_variable_updater(self):
         """
-        Gene Updater Instance
+        Decision Variable Updater Instance
         """
-        if self.gene_updater is None:
-            self.gene_updater = self._get_gene_updater()
-        return self.gene_updater
+        if self.decision_variable_updater is None:
+            self.decision_variable_updater = self._get_decision_variable_updater()
+        return self.decision_variable_updater
 
-    def get_chromosome_updater(self):
+    def get_candidate_solution_updater(self):
         """
-        chromosome Updater Instance
+        Candidate Solution Updater Instance
         """
-        if self.chromosome_updater is None:
-            self.chromosome_updater = self._get_chromosome_updater()
-        return self.chromosome_updater
+        if self.candidate_solution_updater is None:
+            self.candidate_solution_updater = self._get_candidate_solution_updater()
+        return self.candidate_solution_updater
 
     def get_population_updater(self):
         """
@@ -160,28 +160,28 @@ class BaseGAFactory(ABC):
         pass
 
     @abstractmethod
-    def _get_chromosome_immigrator(self) -> BaseChromosomeImmigrator:
+    def _get_candidate_solution_immigrator(self) -> BaseCandidateSolutionImmigrator:
         """
-        Chromosome Immigrator Instance
-        """
-        pass
-
-    @abstractmethod
-    def _get_gene_mutation_selector(self) -> BaseGeneMutationSelector:
-        """
-        Chromosome Mutator Instance
+        Candidate Solution Immigrator Instance
         """
         pass
 
     @abstractmethod
-    def _get_gene_mutator(self) -> BaseGeneMutator:
+    def _get_decision_variable_mutation_selector(self) -> BaseDecisionVariableMutationSelector:
         """
-        Allele Mutator Instance
+        Decision Variable Mutation Selector Instance
         """
         pass
 
     @abstractmethod
-    def _get_chromosome_mutation_selector(self) -> BaseChromosomeMutationSelector:
+    def _get_decision_variable_mutator(self) -> BaseDecisionVariableMutator:
+        """
+        Decision Variable Mutator Instance
+        """
+        pass
+
+    @abstractmethod
+    def _get_candidate_solution_mutation_selector(self) -> BaseCandidateSolutionMutationSelector:
         """
         Population Mutator Instance
         """
@@ -202,16 +202,16 @@ class BaseGAFactory(ABC):
         pass
 
     @abstractmethod
-    def _get_gene_updater(self):
+    def _get_decision_variable_updater(self):
         """
-        Gene Updater Instance
+        Decision Variable Updater Instance
         """
         pass
 
     @abstractmethod
-    def _get_chromosome_updater(self):
+    def _get_candidate_solution_updater(self):
         """
-        Chromosome Updater Instance
+        Candidate Solution Updater Instance
         """
         pass
 

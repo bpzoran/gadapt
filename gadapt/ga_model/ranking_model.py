@@ -9,7 +9,7 @@ class RankingModel:
     def __init__(self):
         """
         Base class for the object that can be ranked\
-            (chromosomes and genes), for sampling purposes.
+            (candidate solutions and decision variables), for sampling purposes.
         """
         self._rank = -1
         self._cummulative_probability = definitions.FLOAT_NAN
@@ -28,7 +28,7 @@ class RankingModel:
     @property
     def action_probability(self):
         """
-        A probability for executing some action (e.allele. pairing or mutation)
+        A probability for executing some action (e.g. pairing or mutation)
         """
         return self._cummulative_probability
 

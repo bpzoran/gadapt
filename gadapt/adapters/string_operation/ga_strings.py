@@ -5,35 +5,35 @@ Genetic algorithm string operations
 """
 
 
-def gene_value_to_string(allele):
+def variable_value_to_string(variable_value):
     """
-    Creates string  from the gene value
+    Creates string  from the variable value
     Args:
-        allele: Allele for string representation
+        variable_value: Variable value for string representation
     """
-    return str(allele.gene.variable_id) + ": " + str(round(allele.variable_value, 2))
+    return str(variable_value.decision_variable.variable_id) + ": " + str(round(variable_value.value, 2))
 
 
-def chromosome_to_string(c):
+def candidate_solution_to_string(c):
     """
-    Creates string  from the chromosome
+    Creates string  from the candidate solution
     Args:
-        c: Chromosome for string representation
+        c: Candidate solution for string representation
     """
-    str_res = "Chromosome "
-    id_str = str(c.chromosome_id)
+    str_res = "Candidate solution "
+    id_str = str(c.candidate_solution_id)
     while len(id_str) < 4:
         id_str = " " + id_str
     str_res = str_res + id_str + " - "
     for g in c:
         decimal_places = 12
-        if 12 > g.gene.decimal_places > 0:
-            decimal_places = g.gene.decimal_places
+        if 12 > g.decision_variable.decimal_places > 0:
+            decimal_places = g.decision_variable.decimal_places
         str_res += (
-            str(g.gene.variable_id) + ": " + str(round(g.variable_value, decimal_places)) + "; "
+            str(g.decision_variable.variable_id) + ": " + str(round(g.value, decimal_places)) + "; "
         )
     str_res += "Cost value: " + str(c.cost_value) + "; "
-    str_res += "Chromosome generation: " + str(c.chromosome_generation) + "; "
+    str_res += "Candidate solution generation: " + str(c.candidate_solution_generation) + "; "
     if not (
         c.mother_id == -1
         or c.father_id == -1
@@ -44,7 +44,7 @@ def chromosome_to_string(c):
             "Mother: " + str(c.mother_id) + ", Father: " + str(c.father_id) + "; "
         )
     if c.is_mutated and len(c.mutated_variables_id_list) > 0:
-        str_res += "Chromosome mutated. Mutated variables: "
+        str_res += "Candidate solution mutated. Mutated variables: "
         for mv in c.mutated_variables_id_list:
             str_res += str(mv) + ", "
     if c.first_mutant_generation > 0:
@@ -52,7 +52,7 @@ def chromosome_to_string(c):
     if c.last_mutant_generation > 0:
         str_res += "Last mutant generation: " + str(c.last_mutant_generation) + "; "
     if c.is_immigrant:
-        str_res += "Chromosome immigrated. "
+        str_res += "Candidate solution immigrated. "
     if c.first_immigrant_generation > 0:
         str_res += (
             "First immigrant generation: " + str(c.first_immigrant_generation) + "; "

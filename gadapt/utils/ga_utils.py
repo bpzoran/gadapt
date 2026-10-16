@@ -123,7 +123,7 @@ def average_difference(diff_list):
 
 def get_columnar_diversity_rate(population) -> float:
     avg_rsd = average(
-        [g.columnar_diversity_coefficient for g in population.options.genes]
+        [g.columnar_diversity_coefficient for g in population.options.decision_variables]
     )
     if avg_rsd > 1:
         avg_rsd = 1

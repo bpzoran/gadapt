@@ -2,53 +2,53 @@ import random
 import sys
 
 from gadapt.operations.crossover.base_crossover import BaseCrossover
-from gadapt.operations.chromosome_update.base_chromosome_updater import (
-    BaseChromosomeUpdater,
+from gadapt.operations.candidate_solution_update.base_candidate_solution_updater import (
+    BaseCandidateSolutionUpdater,
 )
 from gadapt.operations.crossover.base_crossover_probability_determinator import BaseCrossoverProbabilityDeterminator
-from gadapt.operations.mutation.chromosome_mutation.base_gene_mutation_selector import BaseGeneMutationSelector
+from gadapt.operations.mutation.candidate_solution_mutation.base_decision_variable_mutation_selector import BaseDecisionVariableMutationSelector
 
 
 class BlendingCrossover(BaseCrossover):
     """
     Blending Crossover combines
-    gene values from the two parents into new variable values in offsprings.
+    variable values from the two parents into new variable values in offsprings.
     One value of the offspring variable comes from a combination of the two
-    corresponding values of the parental genes
+    corresponding values of the parental decision variables
     """
 
-    def __init__(self, chromosome_updater: BaseChromosomeUpdater, mutator: BaseGeneMutationSelector, crossover_rate_determinator: BaseCrossoverProbabilityDeterminator):
-        super(BlendingCrossover, self).__init__(chromosome_updater, mutator, crossover_rate_determinator)
-        self._current_gene_number = -1
+    def __init__(self, candidate_solution_updater: BaseCandidateSolutionUpdater, mutator: BaseDecisionVariableMutationSelector, crossover_rate_determinator: BaseCrossoverProbabilityDeterminator):
+        super(BlendingCrossover, self).__init__(candidate_solution_updater, mutator, crossover_rate_determinator)
+        self._current_decision_variable_number = -1
 
     def _combine(self):
-        gene = self._father_allele.gene
-        val_father = self._father_allele.variable_value
-        val_mother = self._mother_allele.variable_value
-        if hasattr(gene, "step") and gene.step is not None and gene.step > 0 and gene.step > sys.float_info.min:
-            val1, val2 = self._combine_with_step(gene, val_father, val_mother)
+        decision_variable = self._father_variable_value.decision_variable
+        val_father = self._father_variable_value.value
+        val_mother = self._mother_variable_value.value
+        if hasattr(decision_variable, "step") and decision_variable.step is not None and decision_variable.step > 0 and decision_variable.step > sys.float_info.min:
+            val1, val2 = self._combine_with_step(decision_variable, val_father, val_mother)
         else:
-            val1, val2 = self._combine_without_step(gene, val_father, val_mother)
+            val1, val2 = self._combine_without_step(decision_variable, val_father, val_mother)
         return val1, val2
 
-    def _combine_with_step(self, gene, val_father, val_mother):
+    def _combine_with_step(self, decision_variable, val_father, val_mother):
         x = 1
         if val_mother > val_father:
             x = -1
         beta_steps = random.randint(
-            0, round(abs((val_father - val_mother) / gene.step))
+            0, round(abs((val_father - val_mother) / decision_variable.step))
         )
         val1 = round(
-            val_father - (beta_steps * x) * gene.step,
-            gene.decimal_places,
+            val_father - (beta_steps * x) * decision_variable.step,
+            decision_variable.decimal_places,
         )
         val2 = round(
-            val_mother + (beta_steps * x) * gene.step,
-            gene.decimal_places,
+            val_mother + (beta_steps * x) * decision_variable.step,
+            decision_variable.decimal_places,
         )
         return val1, val2
 
-    def _combine_without_step(self, gene, val_father, val_mother):
+    def _combine_without_step(self, decision_variable, val_father, val_mother):
         # --- Continuous case (no step defined) ---
         alpha = random.random()  # uniform in [0,1]
         val1 = alpha * val_father + (1 - alpha) * val_mother

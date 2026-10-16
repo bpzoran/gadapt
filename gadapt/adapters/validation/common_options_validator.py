@@ -13,14 +13,14 @@ class CommonOptionsValidator(BaseOptionsValidator):
 
     def _validate_options(self):
         self.success &= self._check_nones_types_and_values()
-        self.success &= self._check_genes()
+        self.success &= self._check_decision_variables()
         self.success &= self._check_cost_function()
 
-    def _check_genes(self) -> bool:
-        if self.options._genes is None:
+    def _check_decision_variables(self) -> bool:
+        if self.options._decision_variables is None:
             return False
         rslt = True
-        for v in self.options._genes:
+        for v in self.options._decision_variables:
             if v.min_value is None or v.max_value is None:
                 self._add_message(
                     "Min value and max value must not be\
@@ -81,7 +81,7 @@ class CommonOptionsValidator(BaseOptionsValidator):
             return False
         argsmin = []
         argsmax = []
-        for v in self.options._genes:
+        for v in self.options._decision_variables:
             argsmin.append(v.min_value)
             argsmax.append(v.max_value)
         try:
@@ -144,117 +144,117 @@ class CommonOptionsValidator(BaseOptionsValidator):
         else:
             immigration_number = self.options.immigration_number
         if (
-            self.options.number_of_mutation_chromosomes is None
-            and self.options.percentage_of_mutation_chromosomes is None
+            self.options.number_of_mutation_candidate_solutions is None
+            and self.options.percentage_of_mutation_candidate_solutions is None
         ):
             self._add_message(
-                "Number of Mutation Chromosomes or Percentage of Mutation\
-                    Chromosomes must not be None!"
+                "Number of Mutation Candidate Solutions or Percentage of Mutation\
+                    Candidate Solutions must not be None!"
             )
             rslt &= False
         elif not isinstance(
-            self.options.number_of_mutation_chromosomes, int
-        ) and not isinstance(self.options.percentage_of_mutation_chromosomes, float):
+            self.options.number_of_mutation_candidate_solutions, int
+        ) and not isinstance(self.options.percentage_of_mutation_candidate_solutions, float):
             self._add_message(
-                "Number of Mutation Chromosomes must be type int or Percentage\
-                    of Mutation Chromosomes must be float!"
+                "Number of Mutation Candidate Solutions must be type int or Percentage\
+                    of Mutation Candidate Solutions must be float!"
             )
             rslt &= False
         else:
             if (
-                (self.options.number_of_mutation_chromosomes is not None)
-                and (isinstance(self.options.number_of_mutation_chromosomes, int))
-                and (self.options.number_of_mutation_chromosomes > 0)
+                (self.options.number_of_mutation_candidate_solutions is not None)
+                and (isinstance(self.options.number_of_mutation_candidate_solutions, int))
+                and (self.options.number_of_mutation_candidate_solutions > 0)
             ):
                 if (
                     population_size > 0
-                    and self.options.number_of_mutation_chromosomes
+                    and self.options.number_of_mutation_candidate_solutions
                     > round(population_size * (keep_elitism_percentage / 100))
                     - immigration_number
                 ):
                     self._add_message(
-                        "Invalid number of mutation chromosomes: {0}".format(
-                            str(self.options.number_of_mutation_chromosomes)
+                        "Invalid number of mutation candidate solutions: {0}".format(
+                            str(self.options.number_of_mutation_candidate_solutions)
                         )
                     )
                     rslt &= False
-            elif (self.options.percentage_of_mutation_chromosomes is None) or (
-                not isinstance(self.options.percentage_of_mutation_chromosomes, float)
+            elif (self.options.percentage_of_mutation_candidate_solutions is None) or (
+                not isinstance(self.options.percentage_of_mutation_candidate_solutions, float)
             ):
                 self._add_message(
-                    "Number of Mutation Chromosomes must have int\
+                    "Number of Mutation Candidate Solutions must have int\
                         value >=0 or Percentage of\
-                        Mutation Chromosomes must have float (0.0-100.0) value! "
+                        Mutation Candidate Solutions must have float (0.0-100.0) value! "
                 )
                 rslt &= False
             elif (
-                self.options.percentage_of_mutation_chromosomes < 0.0
-                or self.options.percentage_of_mutation_chromosomes > 100.0
+                self.options.percentage_of_mutation_candidate_solutions < 0.0
+                or self.options.percentage_of_mutation_candidate_solutions > 100.0
             ):
                 self._add_message(
-                    "Invalid percentage of mutation chromosomes: {0} and number\
-                        of mutation chromosomes: {1}".format(
-                        str(self.options.percentage_of_mutation_chromosomes),
-                        str(self.options.number_of_mutation_chromosomes),
+                    "Invalid percentage of mutation candidate solutions: {0} and number\
+                        of mutation candidate solutions: {1}".format(
+                        str(self.options.percentage_of_mutation_candidate_solutions),
+                        str(self.options.number_of_mutation_candidate_solutions),
                     )
                 )
                 rslt &= False
-        if self.options._genes is None:
-            self._add_message("Genes must not be None!")
+        if self.options._decision_variables is None:
+            self._add_message("Decision Variables must not be None!")
             rslt &= False
-        num_of_genes = len(self.options._genes)  # type: ignore
-        if num_of_genes < 1:
-            self._add_message("At least one gene must be added!")
+        num_of_decision_variables = len(self.options._decision_variables)  # type: ignore
+        if num_of_decision_variables < 1:
+            self._add_message("At least one decision variable must be added!")
             rslt &= False
         if (
-            self.options.number_of_mutation_genes is None
-            and self.options.percentage_of_mutation_genes is None
+            self.options.number_of_mutation_decision_variables is None
+            and self.options.percentage_of_mutation_decision_variables is None
         ):
             self._add_message(
-                "Number Of Mutation Genes or Percentage Of\
-                    Mutation Genes must not be None!"
+                "Number Of Mutation Decision Variables or Percentage Of\
+                    Mutation Decision Variables must not be None!"
             )
             rslt &= False
         elif not isinstance(
-            self.options.number_of_mutation_genes, int
-        ) and not isinstance(self.options.percentage_of_mutation_genes, float):
+            self.options.number_of_mutation_decision_variables, int
+        ) and not isinstance(self.options.percentage_of_mutation_decision_variables, float):
             self._add_message(
-                "Number Of Mutation Genes must have int value >=0 or Percentage of\
-                    Mutation Genes must have float (0.0-100.0) value!"
+                "Number Of Mutation Decision Variables must have int value >=0 or Percentage of\
+                    Mutation Decision Variables must have float (0.0-100.0) value!"
             )
             rslt &= False
         elif (
-            (self.options.number_of_mutation_genes is not None)
-            and isinstance(self.options.number_of_mutation_genes, int)
-            and (self.options.number_of_mutation_genes > 0)
+            (self.options.number_of_mutation_decision_variables is not None)
+            and isinstance(self.options.number_of_mutation_decision_variables, int)
+            and (self.options.number_of_mutation_decision_variables > 0)
         ):
             if (
-                num_of_genes > 0
-                and self.options.number_of_mutation_genes > num_of_genes
+                num_of_decision_variables > 0
+                and self.options.number_of_mutation_decision_variables > num_of_decision_variables
             ):
                 self._add_message(
-                    "Invalid number of mutation genes: {0}".format(
-                        str(self.options.number_of_mutation_genes)
+                    "Invalid number of mutation decision variables: {0}".format(
+                        str(self.options.number_of_mutation_decision_variables)
                     )
                 )
                 rslt &= False
-        elif (self.options.percentage_of_mutation_genes is None) or (
-            not isinstance(self.options.percentage_of_mutation_genes, float)
+        elif (self.options.percentage_of_mutation_decision_variables is None) or (
+            not isinstance(self.options.percentage_of_mutation_decision_variables, float)
         ):
             self._add_message(
-                "Number of Mutation Genes must have int value or Percentage\
-                    of Mutation Genes must have float value! "
+                "Number of Mutation Decision Variables must have int value or Percentage\
+                    of Mutation Decision Variables must have float value! "
             )
             rslt &= False
         elif (
-            self.options.percentage_of_mutation_genes < 0.0
-            or self.options.percentage_of_mutation_genes > 100.0
+            self.options.percentage_of_mutation_decision_variables < 0.0
+            or self.options.percentage_of_mutation_decision_variables > 100.0
         ):
             self._add_message(
-                "Invalid percentage of mutation genes: {} and number of\
-                    mutation genes: {}".format(
-                    str(self.options.percentage_of_mutation_genes),
-                    str(self.options.number_of_mutation_genes),
+                "Invalid percentage of mutation decision variables: {} and number of\
+                    mutation decision variables: {}".format(
+                    str(self.options.percentage_of_mutation_decision_variables),
+                    str(self.options.number_of_mutation_decision_variables),
                 )
             )
             rslt &= False
@@ -268,54 +268,54 @@ class CommonOptionsValidator(BaseOptionsValidator):
             self._add_message("Max Attempt No must be type an int between 1 and 65536!")
             rslt &= False
         if (
-            self.options.chromosome_mutation == definitions.CROSS_DIVERSITY
-            or definitions.CROSS_DIVERSITY in self.options.chromosome_mutation
+            self.options.candidate_solution_mutation == definitions.CROSS_DIVERSITY
+            or definitions.CROSS_DIVERSITY in self.options.candidate_solution_mutation
         ):
-            if self.options.cross_diversity_mutation_gene_sampling is None:
+            if self.options.cross_diversity_mutation_decision_variable_sampling is None:
                 self._add_message(
-                    "Cross Diversity Mutation Gene Sampling must not be None!"
+                    "Cross Diversity Mutation Decision Variable Sampling must not be None!"
                 )
                 rslt &= False
             elif not isinstance(
-                self.options.cross_diversity_mutation_gene_sampling, str
+                self.options.cross_diversity_mutation_decision_variable_sampling, str
             ):
                 self._add_message(
-                    "Cross Diversity Mutation Gene Sampling must be type str!"
+                    "Cross Diversity Mutation Decision Variable Sampling must be type str!"
                 )
                 rslt &= False
-        if self.options.chromosome_mutation is None:
-            self._add_message("Chromosome Mutation must not be None!")
+        if self.options.candidate_solution_mutation is None:
+            self._add_message("Candidate Solution Mutation must not be None!")
             rslt &= False
-        elif not isinstance(self.options.chromosome_mutation, str):
-            self._add_message("Chromosome Mutation must be type str!")
+        elif not isinstance(self.options.candidate_solution_mutation, str):
+            self._add_message("Candidate Solution Mutation must be type str!")
             rslt &= False
-        elif definitions.PARAM_SEPARATOR in self.options.chromosome_mutation:
+        elif definitions.PARAM_SEPARATOR in self.options.candidate_solution_mutation:
             mutator_strings = [
                 ms.strip()
-                for ms in self.options.chromosome_mutation.split(
+                for ms in self.options.candidate_solution_mutation.split(
                     definitions.PARAM_SEPARATOR
                 )
             ]
             for mutator_string in mutator_strings:
-                if mutator_string not in definitions.CHROMOSOME_MUTATION_STRINGS:
+                if mutator_string not in definitions.CANDIDATE_SOLUTION_MUTATION_STRINGS:
                     self._add_message(
-                        "Invalid value of Chromosome Mutation:\
+                        "Invalid value of Candidate Solution Mutation:\
                             {0}. Allowed values: {1}".format(
                             mutator_string,
                             self._get_allowed_values(
-                                definitions.CHROMOSOME_MUTATION_STRINGS
+                                definitions.CANDIDATE_SOLUTION_MUTATION_STRINGS
                             ),
                         )
                     )
                     rslt &= False
         elif (
-            self.options.chromosome_mutation
-            not in definitions.CHROMOSOME_MUTATION_STRINGS
+            self.options.candidate_solution_mutation
+            not in definitions.CANDIDATE_SOLUTION_MUTATION_STRINGS
         ):
             self._add_message(
-                "Invalid value of Chromosome Mutation: {0}. Allowed values: {1}".format(
-                    self.options.chromosome_mutation,
-                    self._get_allowed_values(definitions.CHROMOSOME_MUTATION_STRINGS),
+                "Invalid value of Candidate Solution Mutation: {0}. Allowed values: {1}".format(
+                    self.options.candidate_solution_mutation,
+                    self._get_allowed_values(definitions.CANDIDATE_SOLUTION_MUTATION_STRINGS),
                 )
             )
             rslt &= False
@@ -333,25 +333,25 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 )
             )
             rslt &= False
-        if self.options.chromosome_mutation == definitions.CROSS_DIVERSITY:
-            if self.options.cross_diversity_mutation_gene_sampling is None:
+        if self.options.candidate_solution_mutation == definitions.CROSS_DIVERSITY:
+            if self.options.cross_diversity_mutation_decision_variable_sampling is None:
                 self._add_message(
-                    "Cross Diversity Mutation Gene Selection must not be None!"
+                    "Cross Diversity Mutation Decision Variable Selection must not be None!"
                 )
                 rslt &= False
             elif not isinstance(
-                self.options.cross_diversity_mutation_gene_sampling, str
+                self.options.cross_diversity_mutation_decision_variable_sampling, str
             ):
                 self._add_message(
-                    "Cross Diversity Mutation Gene Selection must be type str!"
+                    "Cross Diversity Mutation Decision Variable Selection must be type str!"
                 )
                 rslt &= False
             elif not self._validate_selection(
-                self.options.cross_diversity_mutation_gene_sampling,
-                "Cross Diversity Mutation Gene Selection",
-                self.options.number_of_mutation_genes,
-                "Group Size for Cross Diversity Mutation Gene Selection must be below\
-                    or equal than the number of mutation genes!",
+                self.options.cross_diversity_mutation_decision_variable_sampling,
+                "Cross Diversity Mutation Decision Variable Selection",
+                self.options.number_of_mutation_decision_variables,
+                "Group Size for Cross Diversity Mutation Decision Variable Selection must be below\
+                    or equal than the number of mutation decision variables!",
             ):
                 rslt &= False
         if self.options.logging is None:
@@ -370,23 +370,23 @@ class CommonOptionsValidator(BaseOptionsValidator):
             self.options.population_mutation == definitions.COST_DIVERSITY
             or definitions.PARENT_DIVERSITY in self.options.population_mutation
         ):
-            if self.options.parent_diversity_mutation_chromosome_sampling is None:
+            if self.options.parent_diversity_mutation_candidate_solution_sampling is None:
                 self._add_message(
-                    "Parent Diversity Mutation Chromosome Sampling must not be None!"
+                    "Parent Diversity Mutation Candidate Solution Sampling must not be None!"
                 )
                 rslt &= False
             elif not isinstance(
-                self.options.parent_diversity_mutation_chromosome_sampling, str
+                self.options.parent_diversity_mutation_candidate_solution_sampling, str
             ):
                 self._add_message(
-                    "Parent Diversity Mutation Chromosome Sampling must be type str!"
+                    "Parent Diversity Mutation Candidate Solution Sampling must be type str!"
                 )
                 rslt &= False
             elif not self._validate_selection(
-                self.options.parent_diversity_mutation_chromosome_sampling,
-                "Parents Diversity Mutation Chromosome Sampling",
+                self.options.parent_diversity_mutation_candidate_solution_sampling,
+                "Parents Diversity Mutation Candidate Solution Sampling",
                 round(population_size * (keep_elitism_percentage / 100)) - self.options.immigration_number,  # type: ignore
-                "Group Size for Parents Diversity Mutation Chromosome\
+                "Group Size for Parents Diversity Mutation Candidate Solution\
                 Sampling cannot have the value below half population!",
             ):
                 rslt &= False
@@ -426,32 +426,32 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 )
             )
             rslt &= False
-        if self.options.gene_mutation is None:
-            self._add_message("Gene Mutation must not be None!")
+        if self.options.decision_variable_mutation is None:
+            self._add_message("Decision Variable Mutation must not be None!")
             rslt &= False
-        elif not isinstance(self.options.gene_mutation, str):
-            self._add_message("Gene Mutation must be type str!")
+        elif not isinstance(self.options.decision_variable_mutation, str):
+            self._add_message("Decision Variable Mutation must be type str!")
             rslt &= False
-        elif definitions.PARAM_SEPARATOR in self.options.gene_mutation:
+        elif definitions.PARAM_SEPARATOR in self.options.decision_variable_mutation:
             mutator_strings = [
                 ms.strip()
-                for ms in self.options.gene_mutation.split(definitions.PARAM_SEPARATOR)
+                for ms in self.options.decision_variable_mutation.split(definitions.PARAM_SEPARATOR)
             ]
             for mutator_string in mutator_strings:
-                if mutator_string not in definitions.GENE_MUTATION_STRINGS:
+                if mutator_string not in definitions.DECISION_VARIABLE_MUTATION_STRINGS:
                     self._add_message(
-                        "Invalid value of Gene Mutation:\
+                        "Invalid value of Decision Variable Mutation:\
                             {0}. Allowed values: {1}".format(
                             mutator_string,
-                            self._get_allowed_values(definitions.GENE_MUTATION_STRINGS),
+                            self._get_allowed_values(definitions.DECISION_VARIABLE_MUTATION_STRINGS),
                         )
                     )
                     rslt &= False
-        elif self.options.gene_mutation not in definitions.GENE_MUTATION_STRINGS:
+        elif self.options.decision_variable_mutation not in definitions.DECISION_VARIABLE_MUTATION_STRINGS:
             self._add_message(
-                "Invalid value of Gene Mutation: {0}. Allowed values: {1}".format(
-                    self.options.gene_mutation,
-                    self._get_allowed_values(definitions.GENE_MUTATION_STRINGS),
+                "Invalid value of Decision Variable Mutation: {0}. Allowed values: {1}".format(
+                    self.options.decision_variable_mutation,
+                    self._get_allowed_values(definitions.DECISION_VARIABLE_MUTATION_STRINGS),
                 )
             )
             rslt &= False

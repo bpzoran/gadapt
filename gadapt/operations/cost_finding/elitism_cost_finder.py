@@ -2,7 +2,7 @@ import math
 from typing import List
 
 from gadapt.adapters.ga_logging.logging_settings import gadapt_log_info
-from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.candidate_solution import CandidateSolution
 from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
 
 
@@ -14,7 +14,7 @@ class ElitismCostFinder(BaseCostFinder):
     def _find_costs_for_population(self):
         if self.population is None:
             raise Exception("population must not be null!")
-        chromosomes_for_execution: List[Chromosome] = [
+        candidate_solutions_for_execution: List[CandidateSolution] = [
             c
             for c in self.population
             if (math.isnan(c.cost_value))
@@ -23,25 +23,25 @@ class ElitismCostFinder(BaseCostFinder):
                 and c.population_generation == self.population.population_generation
             )
         ]
-        for c in chromosomes_for_execution:
+        for c in candidate_solutions_for_execution:
             self._execute_function(self.population.options.cost_function, c)
-        better_chromosomes: List[Chromosome] = self.population.get_sorted(
+        better_candidate_solutions: List[CandidateSolution] = self.population.get_sorted(
             key=lambda x: x.cost_value
         )
-        better_chromosomes = better_chromosomes[:self.population.options.keep_number]
-        self.population.best_individual = better_chromosomes[0]
+        better_candidate_solutions = better_candidate_solutions[:self.population.options.keep_number]
+        self.population.best_individual = better_candidate_solutions[0]
         self.population.min_cost = (
-            min(better_chromosomes, key=lambda x: x.cost_value)
+            min(better_candidate_solutions, key=lambda x: x.cost_value)
         ).cost_value
-        better_chromosomes_without_immigrants = better_chromosomes[
+        better_candidate_solutions_without_immigrants = better_candidate_solutions[
             : self.population.options.keep_number
             - self.population.options.immigration_number
         ]
         self.population.avg_cost = sum(
-            [c.cost_value for c in better_chromosomes_without_immigrants]
-        ) / len(better_chromosomes_without_immigrants)
+            [c.cost_value for c in better_candidate_solutions_without_immigrants]
+        ) / len(better_candidate_solutions_without_immigrants)
         self._log_population()
-        self.population.clear_and_add_chromosomes(better_chromosomes)
+        self.population.clear_and_add_candidate_solutions(better_candidate_solutions)
 
     def _log_population(self):
         if self.population.options.logging:

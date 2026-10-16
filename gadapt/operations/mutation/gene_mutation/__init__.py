@@ -1,3 +1,0 @@
-"""
-Gene mutation
-"""

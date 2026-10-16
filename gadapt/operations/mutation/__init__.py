@@ -1,3 +1,3 @@
 """
-Chromosome and gene mutation
+Candidate solution and decision variable mutation
 """

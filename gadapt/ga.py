@@ -2,7 +2,9 @@
 The main genetic algorithm module
 """
 
+import inspect
 import sys
+import warnings
 from typing import List, Optional, Callable
 
 import gadapt.ga_model.definitions as definitions
@@ -11,10 +13,33 @@ from gadapt.adapters.validation.common_options_validator import CommonOptionsVal
 from gadapt.execution.ga_executor import GAExecutor
 from gadapt.factory.ga_base_factory import BaseGAFactory
 from gadapt.factory.ga_factory import GAFactory
-from gadapt.ga_model.gene import Gene
+from gadapt.ga_model.decision_variable import DecisionVariable
 from gadapt.ga_model.ga_options import GAOptions
 from gadapt.ga_model.ga_results import GAResults
 import copy
+
+# Parameter names used before allele/gene/chromosome were renamed to
+# variable value/decision variable/candidate solution. They are still accepted
+# by the GA constructor and as GA properties, but emit a DeprecationWarning.
+DEPRECATED_PARAMETER_NAMES = {
+    "number_of_mutation_chromosomes": "number_of_mutation_candidate_solutions",
+    "percentage_of_mutation_chromosomes": "percentage_of_mutation_candidate_solutions",
+    "parent_diversity_mutation_chromosome_sampling": "parent_diversity_mutation_candidate_solution_sampling",
+    "chromosome_mutation": "candidate_solution_mutation",
+    "gene_mutation": "decision_variable_mutation",
+    "number_of_mutation_genes": "number_of_mutation_decision_variables",
+    "percentage_of_mutation_genes": "percentage_of_mutation_decision_variables",
+    "cross_diversity_mutation_gene_sampling": "cross_diversity_mutation_decision_variable_sampling",
+}
+
+
+def _warn_deprecated_name(old_name: str) -> None:
+    # stacklevel=3: this helper -> GA.__init__ or the alias property -> the user's code
+    warnings.warn(
+        f"'{old_name}' is deprecated, use '{DEPRECATED_PARAMETER_NAMES[old_name]}' instead",
+        DeprecationWarning,
+        stacklevel=3,
+    )
 
 
 class GA:
@@ -42,15 +67,15 @@ class GA:
             definitions.PARAM_SEPARATOR,
             definitions.PARENT_DIVERSITY,
         ),
-        number_of_mutation_chromosomes=-1,
-        percentage_of_mutation_chromosomes=50.0,
-        parent_diversity_mutation_chromosome_sampling=definitions.ROULETTE_WHEEL,
+        number_of_mutation_candidate_solutions=-1,
+        percentage_of_mutation_candidate_solutions=50.0,
+        parent_diversity_mutation_candidate_solution_sampling=definitions.ROULETTE_WHEEL,
         must_mutate_for_same_parents=True,
-        chromosome_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
-        gene_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
-        number_of_mutation_genes=-1,
-        percentage_of_mutation_genes=20.0,
-        cross_diversity_mutation_gene_sampling=definitions.ROULETTE_WHEEL,
+        candidate_solution_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
+        decision_variable_mutation=f"{definitions.CROSS_DIVERSITY}{definitions.PARAM_SEPARATOR}{definitions.RANDOM}",
+        number_of_mutation_decision_variables=-1,
+        percentage_of_mutation_decision_variables=20.0,
+        cross_diversity_mutation_decision_variable_sampling=definitions.ROULETTE_WHEEL,
         crossover_probability=0.5,
         crossover_min_probability=0.5,
         crossover_max_probability=1.0,
@@ -61,6 +86,7 @@ class GA:
         logging=False,
         timeout=600,
         factory: Optional[BaseGAFactory] = None,
+        **deprecated_kwargs,
     ) -> None:
         """
         The constructor of the GA class accepts all parameters required to
@@ -78,7 +104,7 @@ class GA:
                 many parameters as the function uses. The
                 cost_function is the only mandatory parameter.
 
-            population_size: Number of chromosomes in the population.
+            population_size: Number of candidate solutions in the population.
 
             exit_check: A criteria for the exit for the genetic algorithm
 
@@ -101,40 +127,40 @@ class GA:
             population_mutation: A type of mutation for the entire population.
 
                 Based on the value of this parameter, the number of mutation
-                chromosomes can be determined, along with how
-                chromosomes for the mutation will be selected.
+                candidate solutions can be determined, along with how
+                candidate solutions for the mutation will be selected.
 
-            number_of_mutation_chromosomes: The number of
-            mutation chromosomes in the population.
+            number_of_mutation_candidate_solutions: The number of
+            mutation candidate solutions in the population.
 
                 In case it's value is equal to or higher than 0,
-                it overrides percentage_of_mutation_chromosomes.
+                it overrides percentage_of_mutation_candidate_solutions.
 
                 This value is the upper bound - the actual
-                number of mutated chromosomes
-                can vary from 1 to number_of_mutation_chromosomes.
+                number of mutated candidate solutions
+                can vary from 1 to number_of_mutation_candidate_solutions.
 
-            percentage_of_mutation_chromosomes: The percentage of mutated chromosomes
+            percentage_of_mutation_candidate_solutions: The percentage of mutated candidate solutions
             in the population.
                 This value is applied to the population_size value and rounded to an
-                integer value, giving the number of mutation chromosomes.
+                integer value, giving the number of mutation candidate solutions.
 
                 For example, if population_size has a value of 32,
-                and percentage_of_mutation_chromosomes has a value of
-                10, the number of mutation chromosomes will be 3.
+                and percentage_of_mutation_candidate_solutions has a value of
+                10, the number of mutation candidate solutions will be 3.
 
                 The calculated value is an upper bound - the actual
-                number of mutated chromosomes can vary from 1 to the calculated value.
+                number of mutated candidate solutions can vary from 1 to the calculated value.
 
-                percentage_of_mutation_chromosomes only applies if
-                number_of_mutation_chromosomes does not have a valid
+                percentage_of_mutation_candidate_solutions only applies if
+                number_of_mutation_candidate_solutions does not have a valid
                 integer value equal to or higher than 0.
 
-            parent_diversity_mutation_chromosome_sampling: The
-            sampling algorithm for mutating chromosomes when population_mutation
+            parent_diversity_mutation_candidate_solution_sampling: The
+            sampling algorithm for mutating candidate solutions when population_mutation
             contains value “parent_structural_diversity”.
                 It only applies when population_mutation has value
-                “parent_structural_diversity”. It determines the way how chromosomes are to
+                “parent_structural_diversity”. It determines the way how candidate solutions are to
                 be selected based on the diversity of their parents.
 
             must_mutate_for_same_parents: Indicates if completely the same
@@ -143,40 +169,40 @@ class GA:
                 parents with a diversity value of 0.
 
                 If must_mutate_for_same_parents has the value True, the
-                number of mutated chromosomes can outreach value
-                determined by number_of_mutation_chromosomes or
-                percentage_of_mutation_chromosomes
+                number of mutated candidate solutions can outreach value
+                determined by number_of_mutation_candidate_solutions or
+                percentage_of_mutation_candidate_solutions
 
-            chromosome_mutation: The type of mutation of genes in chromosomes.
+            candidate_solution_mutation: The type of mutation of decision variables in candidate solutions.
 
-            gene_mutation: The type of assigning values to genes in the mutation
+            decision_variable_mutation: The type of assigning values to decision variables in the mutation
 
-            number_of_mutation_genes: The number of mutated genes in each chromosome.
+            number_of_mutation_decision_variables: The number of mutated decision variables in each candidate solution.
                 In case it's value is equal to or higher than 0, it overrides
-                percentage_of_mutation_genes.
+                percentage_of_mutation_decision_variables.
 
-                This value is the upper bound - the number of mutated genes
-                can vary from 1 to number_of_mutation_genes.
+                This value is the upper bound - the number of mutated decision variables
+                can vary from 1 to number_of_mutation_decision_variables.
 
-            percentage_of_mutation_genes: The percentage of
-            mutated genes in each chromosome.
-                It applies to the chromosome size
-                (number of genes in each chromosome), and
+            percentage_of_mutation_decision_variables: The percentage of
+            mutated decision variables in each candidate solution.
+                It applies to the candidate solution size
+                (number of decision variables in each candidate solution), and
                 the calculated value rounds to an integer value.
 
                 The calculated value is the upper bound - the actual number of
-                mutated genes can vary from 1 to the calculated value.
+                mutated decision variables can vary from 1 to the calculated value.
 
-                percentage_of_mutation_genes only applies if
-                number_of_mutations_genes does not have a valid
+                percentage_of_mutation_decision_variables only applies if
+                number_of_mutation_decision_variables does not have a valid
                 integer value equal to or higher than 0.
 
-            cross_diversity_mutation_gene_sampling: The sampling algorithm for
-            mutating chromosomes when chromosome_mutation has value “cross_diversity”.
-                It only applies when chromosome_mutation has value
-                “cross_diversity” . It determines the way how genes
+            cross_diversity_mutation_decision_variable_sampling: The sampling algorithm for
+            mutating candidate solutions when candidate_solution_mutation has value “cross_diversity”.
+                It only applies when candidate_solution_mutation has value
+                “cross_diversity” . It determines the way how decision variables
                 are to be selected based on the cross-diversity.
-            ensure_unique_individuals: If this parameter has a True value, the genetic algorithm will ensure that all individuals in the population are unique. This means that no two individuals will have the same set of genes, promoting diversity within the population and potentially leading to better optimization results.
+            ensure_unique_individuals: If this parameter has a True value, the genetic algorithm will ensure that all individuals in the population are unique. This means that no two individuals will have the same set of decision variables, promoting diversity within the population and potentially leading to better optimization results.
                 If it is None (default), uniqueness is ensured when all variables have a step (values are taken from a grid, so duplicates are likely), and it is not ensured when any variable is continuous (no step), since identical individuals are then practically impossible.
             immigration_number: Refers to the “Random Immigrants”
             concepts. This strategy introduces a certain number of
@@ -187,7 +213,7 @@ class GA:
             logging: If this parameter has a True value, the log file
             will be created in the current working directory.
             The log file contains the flow of genetic algorithm execution,
-            along with values of chromosomes, genes and cost
+            along with values of candidate solutions, decision variables and cost
             functions in each generation
 
             timeout: A number of seconds after which the genetic algorithm
@@ -195,7 +221,19 @@ class GA:
             exit_check criteria is reached.
 
             factory: Factory for creating object
+
+            deprecated_kwargs: Previous names of the parameters (see
+            DEPRECATED_PARAMETER_NAMES), e.g. number_of_mutation_chromosomes.
+            They are still accepted, but emit a DeprecationWarning.
         """
+        parameters = inspect.signature(GA.__init__).parameters
+        arguments = locals()
+        for old_name in deprecated_kwargs:
+            new_name = DEPRECATED_PARAMETER_NAMES.get(old_name)
+            if new_name is None:
+                raise TypeError(f"GA.__init__() got an unexpected keyword argument '{old_name}'")
+            if arguments[new_name] != parameters[new_name].default:
+                raise TypeError(f"GA.__init__() got both '{old_name}' and its replacement '{new_name}'")
         self.cost_function = cost_function
         self.population_size = population_size
         self.keep_elitism_percentage = keep_elitism_percentage
@@ -209,23 +247,23 @@ class GA:
         self.crossover = crossover
         self.population_mutation = population_mutation
         self.must_mutate_for_same_parents = must_mutate_for_same_parents
-        self.number_of_mutation_chromosomes = number_of_mutation_chromosomes
-        self.percentage_of_mutation_chromosomes = percentage_of_mutation_chromosomes
-        self.number_of_mutation_genes = number_of_mutation_genes
-        self.percentage_of_mutation_genes = percentage_of_mutation_genes
-        self.chromosome_mutation = chromosome_mutation
-        self.gene_mutation = gene_mutation
+        self.number_of_mutation_candidate_solutions = number_of_mutation_candidate_solutions
+        self.percentage_of_mutation_candidate_solutions = percentage_of_mutation_candidate_solutions
+        self.number_of_mutation_decision_variables = number_of_mutation_decision_variables
+        self.percentage_of_mutation_decision_variables = percentage_of_mutation_decision_variables
+        self.candidate_solution_mutation = candidate_solution_mutation
+        self.decision_variable_mutation = decision_variable_mutation
         self.immigration_number = immigration_number
         self.crossover_probability = crossover_probability
         self.crossover_min_probability = crossover_min_probability
         self.crossover_max_probability = crossover_max_probability
         self.logging = logging
-        self._genes: List[Gene] = []
-        self.cross_diversity_mutation_gene_sampling = (
-            cross_diversity_mutation_gene_sampling
+        self._decision_variables: List[DecisionVariable] = []
+        self.cross_diversity_mutation_decision_variable_sampling = (
+            cross_diversity_mutation_decision_variable_sampling
         )
-        self.parent_diversity_mutation_chromosome_sampling = (
-            parent_diversity_mutation_chromosome_sampling
+        self.parent_diversity_mutation_candidate_solution_sampling = (
+            parent_diversity_mutation_candidate_solution_sampling
         )
         self.ensure_unique_individuals = ensure_unique_individuals
         self.normal_distribution_mutation_max_std_dev = normal_distribution_mutation_max_std_dev
@@ -233,6 +271,9 @@ class GA:
         self.timeout = timeout
         self._current_dv_id = 0
         self._factory = factory
+        for old_name, value in deprecated_kwargs.items():
+            _warn_deprecated_name(old_name)
+            setattr(self, DEPRECATED_PARAMETER_NAMES[old_name], value)
 
     def execute(self) -> GAResults:
         """
@@ -270,7 +311,7 @@ class GA:
     @property
     def keep_elitism_percentage(self) -> int:
         """
-        Percentage number of chromosomes to be kept in the population by the cost value
+        Percentage number of candidate solutions to be kept in the population by the cost value
         """
         return self._keep_elitism_percentage
 
@@ -307,11 +348,11 @@ class GA:
             not isinstance(max_value, float) and not isinstance(max_value, int)
         ):
             raise Exception("min value, max value and step must be numerical values!")
-        gene = Gene(self._current_dv_id)
-        gene.min_value = min_value
-        gene.max_value = max_value
-        gene.step = step
-        self._genes.append(gene)
+        decision_variable = DecisionVariable(self._current_dv_id)
+        decision_variable.min_value = min_value
+        decision_variable.max_value = max_value
+        decision_variable.step = step
+        self._decision_variables.append(decision_variable)
         self._current_dv_id += 1
 
     @property
@@ -334,76 +375,76 @@ class GA:
         self._cost_function = value
 
     @property
-    def number_of_mutation_genes(self) -> int:
+    def number_of_mutation_decision_variables(self) -> int:
         """
-        The number of mutated genes in each chromosome.
+        The number of mutated decision variables in each candidate solution.
         In case it's value is equal to or higher than 0, it overrides
-        percentage_of_mutation_genes.
-        This value is the upper bound - the number of mutated genes
-        can vary from 1 to number_of_mutation_genes.
+        percentage_of_mutation_decision_variables.
+        This value is the upper bound - the number of mutated decision variables
+        can vary from 1 to number_of_mutation_decision_variables.
         """
-        return self._number_of_mutation_genes
+        return self._number_of_mutation_decision_variables
 
-    @number_of_mutation_genes.setter
-    def number_of_mutation_genes(self, value: int):
-        self._number_of_mutation_genes = ga_utils.try_get_int(value)
+    @number_of_mutation_decision_variables.setter
+    def number_of_mutation_decision_variables(self, value: int):
+        self._number_of_mutation_decision_variables = ga_utils.try_get_int(value)
 
     @property
-    def percentage_of_mutation_genes(self) -> float:
+    def percentage_of_mutation_decision_variables(self) -> float:
         """
-        The percentage of mutated genes in each chromosome.
-        It applies to the chromosome size (number of genes in each chromosome),
+        The percentage of mutated decision variables in each candidate solution.
+        It applies to the candidate solution size (number of decision variables in each candidate solution),
         and the calculated value rounds to an integer value.
         The calculated value is the upper bound - the actual number of mutated
-        genes can vary from 1 to the calculated value.
-        percentage_of_mutation_genes only applies if number_of_mutations_genes
+        decision variables can vary from 1 to the calculated value.
+        percentage_of_mutation_decision_variables only applies if number_of_mutation_decision_variables
         does not have a valid integer value equal to or higher than 0.
         """
-        return self._percentage_of_mutation_genes
+        return self._percentage_of_mutation_decision_variables
 
-    @percentage_of_mutation_genes.setter
-    def percentage_of_mutation_genes(self, value: float):
-        self._percentage_of_mutation_genes = ga_utils.try_get_float(value)
+    @percentage_of_mutation_decision_variables.setter
+    def percentage_of_mutation_decision_variables(self, value: float):
+        self._percentage_of_mutation_decision_variables = ga_utils.try_get_float(value)
 
     @property
-    def number_of_mutation_chromosomes(self) -> int:
+    def number_of_mutation_candidate_solutions(self) -> int:
         """
-        The number of mutation chromosomes in the population.
+        The number of mutation candidate solutions in the population.
         In case it's value is equal to or higher than 0, it
-        overrides percentage_of_mutation_chromosomes.
+        overrides percentage_of_mutation_candidate_solutions.
         This value is the upper bound - the actual number of
-        mutated chromosomes can vary from 1 to number_of_mutation_chromosomes.
+        mutated candidate solutions can vary from 1 to number_of_mutation_candidate_solutions.
         """
-        return self._number_of_mutation_chromosomes
+        return self._number_of_mutation_candidate_solutions
 
-    @number_of_mutation_chromosomes.setter
-    def number_of_mutation_chromosomes(self, value: int):
-        self._number_of_mutation_chromosomes = ga_utils.try_get_int(value)
+    @number_of_mutation_candidate_solutions.setter
+    def number_of_mutation_candidate_solutions(self, value: int):
+        self._number_of_mutation_candidate_solutions = ga_utils.try_get_int(value)
 
     @property
-    def percentage_of_mutation_chromosomes(self) -> float:
+    def percentage_of_mutation_candidate_solutions(self) -> float:
         """
-        The percentage of mutated chromosomes in the population.
+        The percentage of mutated candidate solutions in the population.
 
         This value is applied to the population_size value and
         rounded to an integer value, giving the number
-        of mutation chromosomes.
+        of mutation candidate solutions.
 
         For example, if population_size has a value of 32, and
-        percentage_of_mutation_chromosomes has a value of 10,
-        the number of mutation chromosomes will be 3.
+        percentage_of_mutation_candidate_solutions has a value of 10,
+        the number of mutation candidate solutions will be 3.
 
         The calculated value is an upper bound - the actual number of
-        mutated chromosomes can vary from 1 to the calculated value.
-        percentage_of_mutation_chromosomes only applies
-        if number_of_mutation_chromosomes
+        mutated candidate solutions can vary from 1 to the calculated value.
+        percentage_of_mutation_candidate_solutions only applies
+        if number_of_mutation_candidate_solutions
         does not have a valid integer value equal to or higher than 0.
         """
-        return self._percentage_of_mutation_chromosomes
+        return self._percentage_of_mutation_candidate_solutions
 
-    @percentage_of_mutation_chromosomes.setter
-    def percentage_of_mutation_chromosomes(self, value: float):
-        self._percentage_of_mutation_chromosomes = ga_utils.try_get_float(value)
+    @percentage_of_mutation_candidate_solutions.setter
+    def percentage_of_mutation_candidate_solutions(self, value: float):
+        self._percentage_of_mutation_candidate_solutions = ga_utils.try_get_float(value)
 
     @property
     def immigration_number(self) -> int:
@@ -452,36 +493,36 @@ class GA:
 
         Supported values:
 
-        **"cost_diversity"** - It applies to the number of mutation chromosomes.
-        “cost_diversity” determines the number of mutated chromosomes adaptively,
+        **"cost_diversity"** - It applies to the number of mutation candidate solutions.
+        “cost_diversity” determines the number of mutated candidate solutions adaptively,
         using the diversity of costs in the population. Lower cost diversity
-        means a higher number of mutated chromosomes. The minimal value of
-        mutated chromosomes is 0, and the maximal value is determined by
-        the value of number_of_mutation_chromosomes or
-        percentage_of_mutation_chromosomes
+        means a higher number of mutated candidate solutions. The minimal value of
+        mutated candidate solutions is 0, and the maximal value is determined by
+        the value of number_of_mutation_candidate_solutions or
+        percentage_of_mutation_candidate_solutions
         parameters. If population_mutation has a value other than
-        “cost_diversity”, the number of mutation chromosomes is a
-        random value from 1 to number_of_mutation_chromosomes
-        value (or to value determined by percentage_of_mutation_chromosomes value).
+        “cost_diversity”, the number of mutation candidate solutions is a
+        random value from 1 to number_of_mutation_candidate_solutions
+        value (or to value determined by percentage_of_mutation_candidate_solutions value).
         “cost_diversity” means that the “parent_structural_diversity” method is selected
-        to select chromosomes to be mutated. This method only determines
-        the number of mutated chromosomes, but not how
-        chromosomes are selected for the mutation.
+        to select candidate solutions to be mutated. This method only determines
+        the number of mutated candidate solutions, but not how
+        candidate solutions are selected for the mutation.
 
         **"parent_diversity"** - It applies to the way how mutation
-        chromosomes will be selected. “parent_diversity” selects
-        chromosomes to be mutated using the diversity of their parents.
+        candidate solutions will be selected. “parent_diversity” selects
+        candidate solutions to be mutated using the diversity of their parents.
         The more similar parents (lower parent diversity) mean a higher
         probability of mutation for the child. Based on the calculated
-        parent diversity, chromosomes may be selected by one of the
+        parent diversity, candidate solutions may be selected by one of the
         sampling methods, which is determined by the value of the
-        parent_diversity_mutation_chromosome_sampling parameter.
+        parent_diversity_mutation_candidate_solution_sampling parameter.
 
-        **"random"** - It applies to the number of mutation chromosomes
-        and to the way how mutation chromosomes will be selected. “random”
-        selects chromosomes to be mutated randomly, and randomly
-        determines the number of mutated chromosomes (with the
-        upper bound of number_of_mutation_chromosomes)
+        **"random"** - It applies to the number of mutation candidate solutions
+        and to the way how mutation candidate solutions will be selected. “random”
+        selects candidate solutions to be mutated randomly, and randomly
+        determines the number of mutated candidate solutions (with the
+        upper bound of number_of_mutation_candidate_solutions)
         """
         return self._population_mutation
 
@@ -490,28 +531,28 @@ class GA:
         self._population_mutation = ga_utils.prepare_string(value)
 
     @property
-    def parent_diversity_mutation_chromosome_sampling(self) -> str:
+    def parent_diversity_mutation_candidate_solution_sampling(self) -> str:
         """
-        The sampling algorithm for mutating chromosomes when
+        The sampling algorithm for mutating candidate solutions when
         population_mutation contains value “parent_structural_diversity”.
         It only applies when population_mutation has value
-        “parent_structural_diversity”. It determines the way how chromosomes are
+        “parent_structural_diversity”. It determines the way how candidate solutions are
         to be selected based on the diversity of their parents.
 
         Supported values:
 
         **"roulette_wheel"** - The Roulette Wheel sampling algorithm
         (also known as “Weighted Random Pairing”). The probabilities
-        assigned to the chromosomes to be mutated are proportional
+        assigned to the candidate solutions to be mutated are proportional
         to the similarity of their parents (inversely proportional
-        to the parent diversity). A chromosome with the lowest
+        to the parent diversity). A candidate solution with the lowest
         parent diversity has the greatest probability of
-        mutation, while the chromosome with the highest
+        mutation, while the candidate solution with the highest
         parent diversity has the lowest probability of mutation.
 
         **"tournament"** - The Tournament sampling algorithm.
-        It randomly picks small subsets (groups) of chromosomes,
-        and chromosomes with the lowest parent diversity (highest parent similarity)
+        It randomly picks small subsets (groups) of candidate solutions,
+        and candidate solutions with the lowest parent diversity (highest parent similarity)
         in subsets are chosen to be mutated. “tournament” can have an additional
         parameter separated from the “tournament” keyword by the comma.
         The other value represents a group size. For example, “tournament,8” means
@@ -520,85 +561,85 @@ class GA:
 
         **"from_top_to_bottom"** - From Top To Bottom sampling
         algorithm starts at the top of the list and
-        selects chromosomes for mutation.
+        selects candidate solutions for mutation.
 
         **"random"** - Random selection algorithm uses a
         uniform random number generator to select
-        chromosomes for mutation. In this case,
+        candidate solutions for mutation. In this case,
         sampling for mutation will not depend
         on parent diversity.
         """
-        return self._parent_diversity_mutation_chromosome_sampling
+        return self._parent_diversity_mutation_candidate_solution_sampling
 
-    @parent_diversity_mutation_chromosome_sampling.setter
-    def parent_diversity_mutation_chromosome_sampling(self, value: str):
-        self._parent_diversity_mutation_chromosome_sampling = ga_utils.prepare_string(
+    @parent_diversity_mutation_candidate_solution_sampling.setter
+    def parent_diversity_mutation_candidate_solution_sampling(self, value: str):
+        self._parent_diversity_mutation_candidate_solution_sampling = ga_utils.prepare_string(
             value
         )
 
     @property
-    def chromosome_mutation(self) -> str:
+    def candidate_solution_mutation(self) -> str:
         """
-        The type of mutation of genes in chromosomes.
+        The type of mutation of decision variables in candidate solutions.
 
         Supported values:
 
-        **"cross_diversity"** - Considers the diversity of genes of the same
+        **"cross_diversity"** - Considers the diversity of decision variables of the same
         type in the population. Lower diversity can mean
-        that this gene approaches some local
-        minimums, and therefore such genes increase the
+        that this decision variable approaches some local
+        minimums, and therefore such decision variables increase the
         chance for mutation. Based on the calculated
-        cross-diversity, chromosomes may be selected by
+        cross-diversity, candidate solutions may be selected by
         one of the sampling methods, which is
         determined by the value of the
-        cross_diversity_mutation_gene_sampling parameter.
+        cross_diversity_mutation_decision_variable_sampling parameter.
 
-        **"random"** - Genes are randomly selected for the mutation
+        **"random"** - Decision variables are randomly selected for the mutation
         """
-        return self._chromosome_mutation
+        return self._candidate_solution_mutation
 
-    @chromosome_mutation.setter
-    def chromosome_mutation(self, value: str):
-        self._chromosome_mutation = ga_utils.prepare_string(value)
+    @candidate_solution_mutation.setter
+    def candidate_solution_mutation(self, value: str):
+        self._candidate_solution_mutation = ga_utils.prepare_string(value)
 
     @property
-    def gene_mutation(self) -> str:
+    def decision_variable_mutation(self) -> str:
         """
-        Way of assigning the value to the gene
+        Way of assigning the value to the decision variable
 
         Supported values:
 
         **"normal_distribution"** - assignes normally distributed random number to the variable selected for mutation
 
-        **"random"** - Random values are assigned to genes
+        **"random"** - Random values are assigned to decision variables
         """
-        return self._gene_mutation
+        return self._decision_variable_mutation
 
-    @gene_mutation.setter
-    def gene_mutation(self, value: str):
-        self._gene_mutation = ga_utils.prepare_string(value)
+    @decision_variable_mutation.setter
+    def decision_variable_mutation(self, value: str):
+        self._decision_variable_mutation = ga_utils.prepare_string(value)
 
     @property
-    def cross_diversity_mutation_gene_sampling(self) -> str:
+    def cross_diversity_mutation_decision_variable_sampling(self) -> str:
         """
-        The sampling algorithm for mutating chromosomes when chromosome_mutation
+        The sampling algorithm for mutating candidate solutions when candidate_solution_mutation
         has value “cross_diversity”.
-        It only applies when chromosome_mutation has value “cross_diversity” .
-        It determines the way how genes are to be selected based on the cross-diversity.
+        It only applies when candidate_solution_mutation has value “cross_diversity” .
+        It determines the way how decision variables are to be selected based on the cross-diversity.
 
         Supported values:
 
         **"roulette_wheel"** - The Roulette Wheel sampling algorithm
         (also known as “Weighted Random Pairing”). The probabilities
-        assigned to the genes to be mutated are inversely
-        proportional to their cross-diversity. A gene
+        assigned to the decision variables to be mutated are inversely
+        proportional to their cross-diversity. A decision variable
         with the lowest cross-diversity has the greatest
-        probability of mutation, while the gene with the
+        probability of mutation, while the decision variable with the
         highest cross-diversity has the lowest
         probability of mutation.
 
         **"tournament"** - The Tournament sampling algorithm. It randomly picks
-        small subsets (groups) of genes, and genes with the lowest cross-diversity
+        small subsets (groups) of decision variables, and decision variables with the lowest cross-diversity
         in subsets are chosen to be mutated. “tournament” can have
         an additional parameter separated from the “tournament”
         keyword by the comma. The other value represents a group size.
@@ -607,18 +648,18 @@ class GA:
         contains up to 3 members. The default group size is 4.
 
         **"from_top_to_bottom"** - From Top To Bottom sampling
-        algorithm starts at the top of the list and selects genes for mutation.
+        algorithm starts at the top of the list and selects decision variables for mutation.
 
         **"random"** - Random sampling algorithm uses a
-        uniform random number generator to select genes for mutation.
+        uniform random number generator to select decision variables for mutation.
         In this case, sampling for the mutation will not
-        depend on gene cross-diversity.
+        depend on decision variable cross-diversity.
         """
-        return self._cross_diversity_mutation_gene_sampling
+        return self._cross_diversity_mutation_decision_variable_sampling
 
-    @cross_diversity_mutation_gene_sampling.setter
-    def cross_diversity_mutation_gene_sampling(self, value: str):
-        self._cross_diversity_mutation_gene_sampling = ga_utils.prepare_string(value)
+    @cross_diversity_mutation_decision_variable_sampling.setter
+    def cross_diversity_mutation_decision_variable_sampling(self, value: str):
+        self._cross_diversity_mutation_decision_variable_sampling = ga_utils.prepare_string(value)
 
     @property
     def max_attempt_no(self) -> int:
@@ -686,13 +727,13 @@ class GA:
 
         **"roulette_wheel"** - Roulette Wheel sampling algorithm
         (also known as “Weighted Random Pairing”).
-        The probabilities assigned to the chromosomes in the mating pool are
-        inversely proportional to their cost. A chromosome with the lowest
-        cost has the greatest probability of mating, while the chromosome
+        The probabilities assigned to the candidate solutions in the mating pool are
+        inversely proportional to their cost. A candidate solution with the lowest
+        cost has the greatest probability of mating, while the candidate solution
         with the highest cost has the lowest probability of mating.
 
         **"tournament"** - Tournament sampling algorithm. It randomly picks small
-        subsets (groups) of chromosomes from the mating pool, and chromosomes
+        subsets (groups) of candidate solutions from the mating pool, and candidate solutions
         with the lowest cost in subsets become a parent. “tournament”
         can have an additional parameter separated from the “tournament”
         keyword by the comma. The other value represents a group size.
@@ -703,11 +744,11 @@ class GA:
 
         **"from_top_to_bottom"** - From Top To Bottom sampling
         algorithm starts at the top of
-        the list and pairs the chromosomes two at a time until the top kept chromosomes
+        the list and pairs the candidate solutions two at a time until the top kept candidate solutions
         are selected for mating. Thus, the algorithm pairs odd rows with even rows.
 
         **"random"** - Random sampling algorithm uses a uniform random
-        number generator to select chromosomes.
+        number generator to select candidate solutions.
         """
         return self._parent_selection
 
@@ -722,11 +763,11 @@ class GA:
 
         Supported values:
 
-        **"blending"** - combines gene values from the two parents into new variable values in offsprings.
+        **"blending"** - combines variable values from the two parents into new variable values in offsprings.
         One value of the offspring variable comes from a combination of the two
-        corresponding values of the parental genes
+        corresponding values of the parental decision variables
 
-        **"uniform"** - Genes from parents' chromosomes are combined in a uniform way.
+        **"uniform"** - Decision variables from parents' candidate solutions are combined in a uniform way.
         """
         return self._crossover
 
@@ -781,7 +822,7 @@ class GA:
         If this parameter has a True value, the log file will
         be created in the current working directory.
         The log file contains the flow of genetic algorithm execution,
-        along with values of chromosomes, genes and
+        along with values of candidate solutions, decision variables and
         cost functions in each generation
         """
         self._logging = ga_utils.try_get_bool(value)
@@ -794,9 +835,9 @@ class GA:
         In other words, each child will be mutated if it has parents
         with a diversity value of 0.
         If must_mutate_for_same_parents has the value True, the number of
-        mutated chromosomes can outreach value determined
-        by number_of_mutation_chromosomes
-        or percentage_of_mutation_chromosomes
+        mutated candidate solutions can outreach value determined
+        by number_of_mutation_candidate_solutions
+        or percentage_of_mutation_candidate_solutions
         """
         return self._must_mutate_for_same_parents
 
@@ -824,3 +865,21 @@ class GA:
         new_instance.__dict__ = copy.deepcopy(self.__dict__)
 
         return new_instance
+
+
+def _deprecated_alias(old_name: str) -> property:
+    new_name = DEPRECATED_PARAMETER_NAMES[old_name]
+
+    def getter(self):
+        _warn_deprecated_name(old_name)
+        return getattr(self, new_name)
+
+    def setter(self, value):
+        _warn_deprecated_name(old_name)
+        setattr(self, new_name, value)
+
+    return property(getter, setter, doc=f"Deprecated. Use {new_name}.")
+
+
+for _old_name in DEPRECATED_PARAMETER_NAMES:
+    setattr(GA, _old_name, _deprecated_alias(_old_name))

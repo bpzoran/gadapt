@@ -14,7 +14,7 @@ class CostDiversityPopulationUpdater(BasePopulationUpdater):
     def _calculate_absolute_cost_diversity(self):
         allocated_values = [
             c.cost_value
-            for c in self.population.chromosomes
+            for c in self.population.candidate_solutions
             if c.cost_value is not None and not math.isnan(c.cost_value)
         ]
         if allocated_values:
@@ -25,7 +25,7 @@ class CostDiversityPopulationUpdater(BasePopulationUpdater):
         # 1. Extract valid cost values
         allocated_values = [
             c.cost_value
-            for c in self.population.chromosomes
+            for c in self.population.candidate_solutions
             if c.cost_value is not None and not math.isnan(c.cost_value)
         ]
 
@@ -51,7 +51,7 @@ class CostDiversityPopulationUpdater(BasePopulationUpdater):
     def _get_coefficient_of_population_diversity_(self):
         allocated_values = [
             c.cost_value
-            for c in self.population.chromosomes
+            for c in self.population.candidate_solutions
             if c.cost_value is not None and not math.isnan(c.cost_value)
         ]
 
@@ -93,7 +93,7 @@ class CostDiversityPopulationUpdater(BasePopulationUpdater):
         # If costs can be 0, we add a tiny epsilon.
         raw_values = [
             c.cost_value
-            for c in self.population.chromosomes
+            for c in self.population.candidate_solutions
             if c.cost_value is not None and not math.isnan(c.cost_value)
         ]
 

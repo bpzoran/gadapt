@@ -1,7 +1,7 @@
 from typing import List, Tuple, Optional
 
 import gadapt.ga_model.message_levels as message_levels
-from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.candidate_solution import CandidateSolution
 from gadapt.adapters.ga_logging.logging_settings import init_logging
 from gadapt.factory.ga_factory import BaseGAFactory
 from gadapt.ga_model.ga_options import GAOptions
@@ -23,18 +23,18 @@ class GAExecutor:
         if ga_options is not None:
             self.ga_options = ga_options
         self.factory = factory
-        self.chromosome_mutator = self.factory.get_gene_mutation_selector()
-        self.population_mutator = self.factory.get_chromosome_mutation_selector()
+        self.candidate_solution_mutator = self.factory.get_decision_variable_mutation_selector()
+        self.population_mutator = self.factory.get_candidate_solution_mutation_selector()
         self.exit_checker = self.factory.get_exit_checker()
         self.cost_finder = self.factory.get_cost_finder()
         self.population_immigrator = self.factory.get_population_immigrator()
-        self.chromosome_immigrator = self.factory.get_chromosome_immigrator()
+        self.candidate_solution_immigrator = self.factory.get_candidate_solution_immigrator()
         self.selector = self.factory.get_parent_selector()
         self.crossover = self.factory.get_crossover()
-        self.gene_updater = self.factory.get_gene_updater()
+        self.decision_variable_updater = self.factory.get_decision_variable_updater()
         self.population_updater = self.factory.get_population_updater()
-        self.chromosome_updater = self.factory.get_chromosome_updater()
-        self.gene_mutator = self.factory.get_gene_mutator()
+        self.candidate_solution_updater = self.factory.get_candidate_solution_updater()
+        self.decision_variable_mutator = self.factory.get_decision_variable_mutator()
         self.initial_population: Optional[Population] = None
 
     def execute(self) -> GAResults:
@@ -59,7 +59,7 @@ class GAExecutor:
             self.ga_options.logging = False
         try:
             self.find_costs()
-            self.chromosome_updater.cost_diversity_in_initial_population = (
+            self.candidate_solution_updater.cost_diversity_in_initial_population = (
                 self.population.absolute_cost_diversity_in_first_population)
             while not self.exit():
                 self.immigrate()
@@ -73,7 +73,7 @@ class GAExecutor:
             results.number_of_iterations = self.population.population_generation
             results.min_cost_per_generation = self.population.min_cost_per_generation
             for g in best_individual:
-                results.result_values[g.gene.variable_id] = g.variable_value
+                results.result_values[g.decision_variable.variable_id] = g.value
         except Exception as ex:
             results.success = False
             results.messages.append((message_levels.ERROR, str(ex)))
@@ -90,34 +90,34 @@ class GAExecutor:
 
     def find_costs(self):
         """
-        Finds costs for chromosomes
+        Finds costs for candidate solutions
         """
         self.population.previous_avg_cost = self.population.avg_cost
         self.population.previous_min_cost = self.population.min_cost
         self.cost_finder.find_costs(self.population)
-        self.gene_updater.update_genes(self.population)
+        self.decision_variable_updater.update_decision_variables(self.population)
         self.population_updater.update_population(self.population)
 
     def immigrate(self):
         """
-        Immigrates new chromosomes
+        Immigrates new candidate solutions
         """
         self.population_immigrator.immigrate(self.population)
 
     def mate(self):
         """
-        Mates chromosomes
+        Mates candidate solutions
         """
-        chromosome_pairs = self.select_mates()
-        self.crossover.mate(chromosome_pairs, self.population)
+        candidate_solution_pairs = self.select_mates()
+        self.crossover.mate(candidate_solution_pairs, self.population)
 
     def mutate(self):
         """
-        Mutates chromosomes in the population
+        Mutates candidate solutions in the population
         """
         self.population_mutator.mutate(self.population)
 
-    def select_mates(self) -> List[Tuple[Chromosome, Chromosome]]:
+    def select_mates(self) -> List[Tuple[CandidateSolution, CandidateSolution]]:
         """
         Selects mates for pairing
         """

@@ -8,22 +8,22 @@ from typing import List
 
 import gadapt.adapters.string_operation.ga_strings as ga_strings
 import gadapt.ga_model.definitions as definitions
-from gadapt.ga_model.chromosome import Chromosome
+from gadapt.ga_model.candidate_solution import CandidateSolution
 from gadapt.ga_model.ga_options import GAOptions
-from gadapt.ga_model.allele import Allele
+from gadapt.ga_model.variable_value import VariableValue
 from copy import copy as _shallow_copy, deepcopy as _deepcopy
 
 
 class Population:
     def __init__(self, options: GAOptions):
         """Population for the genetic algorithm. It contains a collection of\
-            chromosomes, as well as additional parameters
+            candidate solutions, as well as additional parameters
 
         Args:
 
             options (GAOptions): Genetic Algorithm Options
         """
-        self._seen_chromosomes = set()
+        self._seen_candidate_solutions = set()
         self._previous_min_cost = sys.float_info.min
         self._avg_cost = sys.float_info.min
         self._min_cost = sys.float_info.min
@@ -32,10 +32,10 @@ class Population:
         if options.population_size < 4:
             raise Exception("Population size 4 must be higher than 3")
         self._set_init_values()
-        self.last_chromosome_id = 1
+        self.last_candidate_solution_id = 1
         self._population_generation = 0
         self.options = options
-        self.chromosomes: List[Chromosome] = []
+        self.candidate_solutions: List[CandidateSolution] = []
         self.generate_initial_population()
         self.start_time = datetime.now()
         self.absolute_cost_diversity = float("NaN")
@@ -50,34 +50,34 @@ class Population:
         return PopulationIterator(self)
 
     def __getitem__(self, index):
-        return self.chromosomes[index]
+        return self.candidate_solutions[index]
 
     def __next__(self):
-        return next(self.chromosomes)
+        return next(self.candidate_solutions)
 
     def __len__(self):
-        return len(self.chromosomes)
+        return len(self.candidate_solutions)
 
     def __str__(self):
         return self._to_string()
 
     def get_sorted(self, key=None, reverse: bool = False):
-        """Sorted list of chromosomes
+        """Sorted list of candidate solutions
         Args:
             key: Sorted key
             reverse (bool=False): is reversed
         """
-        return sorted(self.chromosomes, key=key, reverse=reverse)
+        return sorted(self.candidate_solutions, key=key, reverse=reverse)
 
     def get_relative_cost_diversity_coefficient(self) -> float:
         return self.relative_cost_diversity_coefficient
 
-    def append(self, c: Chromosome):
-        self.chromosomes.append(c)
+    def append(self, c: CandidateSolution):
+        self.candidate_solutions.append(c)
 
     def generate_initial_population(self):
         for i in range(self.options.population_size):
-            self.add_new_chromosome()
+            self.add_new_candidate_solution()
 
     def _to_string(self):
         return ga_strings.population_to_string(self)
@@ -145,14 +145,14 @@ class Population:
         self._previous_min_cost = value
 
     @property
-    def best_individual(self) -> Chromosome:
+    def best_individual(self) -> CandidateSolution:
         """
-        Best individual chromosome
+        Best individual candidate solution
         """
         return self._best_individual
 
     @best_individual.setter
-    def best_individual(self, value: Chromosome):
+    def best_individual(self, value: CandidateSolution):
         self._best_individual = value
 
     @property
@@ -168,96 +168,96 @@ class Population:
 
     def clear(self):
         """
-        Clears all chromosomes
+        Clears all candidate solutions
         """
-        self.chromosomes.clear()
+        self.candidate_solutions.clear()
 
-    def clear_and_add_chromosomes(self, chromosomes: List[Chromosome]):
+    def clear_and_add_candidate_solutions(self, candidate_solutions: List[CandidateSolution]):
         """
-        Clears chromosomes and adds new ones
+        Clears candidate solutions and adds new ones
         Args:
-            chromosomes (List[Chromosome]): chromosomes to add
+            candidate_solutions (List[CandidateSolution]): candidate solutions to add
         """
-        self.chromosomes.clear()
-        self.add_chromosomes(chromosomes)
+        self.candidate_solutions.clear()
+        self.add_candidate_solutions(candidate_solutions)
 
-    def add_not_contained_chromosomes(self, chromosomes) -> int:
+    def add_not_contained_candidate_solutions(self, candidate_solutions) -> int:
         """
-        Adds chromosomes to population
+        Adds candidate solutions to population
         Args:
-            chromosomes (Tuple[Chromosome]): chromosomes to add
+            candidate_solutions (Tuple[CandidateSolution]): candidate solutions to add
         Returns:
-            int: number of chromosomes added to the population
+            int: number of candidate solutions added to the population
         """
         cnt = 0
-        for c in chromosomes:
-            if not self.contained_chromosome(c) and self.add_chromosome(c):
+        for c in candidate_solutions:
+            if not self.contained_candidate_solution(c) and self.add_candidate_solution(c):
                 cnt += 1
         return cnt
 
-    def add_chromosomes(self, chromosomes) -> int:
+    def add_candidate_solutions(self, candidate_solutions) -> int:
         """
-        Adds chromosomes to population
+        Adds candidate solutions to population
         Args:
-            chromosomes (Tuple[Chromosome]): chromosomes to add
+            candidate_solutions (Tuple[CandidateSolution]): candidate solutions to add
         Returns:
-            int: number of chromosomes added to the population
+            int: number of candidate solutions added to the population
         """
-        for c in chromosomes:
-            self.add_chromosome(c)
+        for c in candidate_solutions:
+            self.add_candidate_solution(c)
 
-    def add_new_chromosome(self):
+    def add_new_candidate_solution(self):
         """
-        Adds new chromosomes to the population
+        Adds new candidate solutions to the population
         """
-        chromosome = Chromosome(
+        candidate_solution = CandidateSolution(
             self.population_generation,
         )
-        chromosome.chromosome_generation = 1
-        self.add_chromosome(chromosome)
+        candidate_solution.candidate_solution_generation = 1
+        self.add_candidate_solution(candidate_solution)
 
-    def add_chromosome(self, chromosome) -> bool:
+    def add_candidate_solution(self, candidate_solution) -> bool:
         """
-        Adds chromosome to the population
+        Adds candidate solution to the population
         Args:
-            chromosome: chromosome to add
+            candidate_solution: candidate solution to add
         Returns:
-            bool: True if the chromosome is added, False if the population is full
+            bool: True if the candidate solution is added, False if the population is full
         """
         if len(self) >= self.options.population_size:
             return False
-        if chromosome.chromosome_id is None or chromosome.chromosome_id == -1:
-            chromosome.chromosome_id = self.last_chromosome_id
-            self.last_chromosome_id += 1
-        if len(chromosome) == 0:
-            for g in self.options.genes:
-                a = Allele(g)
-                chromosome.append(a)
-        self.append(chromosome)
-        self.register_chromosome(chromosome)
+        if candidate_solution.candidate_solution_id is None or candidate_solution.candidate_solution_id == -1:
+            candidate_solution.candidate_solution_id = self.last_candidate_solution_id
+            self.last_candidate_solution_id += 1
+        if len(candidate_solution) == 0:
+            for g in self.options.decision_variables:
+                a = VariableValue(g)
+                candidate_solution.append(a)
+        self.append(candidate_solution)
+        self.register_candidate_solution(candidate_solution)
         return True
 
-    def register_chromosome(self, chromosome: Chromosome):
+    def register_candidate_solution(self, candidate_solution: CandidateSolution):
         """
-        Remembers the current gene values of the chromosome.
-        It must be called again when the gene values of the chromosome change.
+        Remembers the current variable values of the candidate solution.
+        It must be called again when the variable values of the candidate solution change.
         Args:
-            chromosome: chromosome to remember
+            candidate_solution: candidate solution to remember
         """
-        self._seen_chromosomes.add(chromosome.get_values_tuple())
+        self._seen_candidate_solutions.add(candidate_solution.get_values_tuple())
 
-    def contained_chromosome(self, chromosome: Chromosome) -> bool:
+    def contained_candidate_solution(self, candidate_solution: CandidateSolution) -> bool:
         """
-        Checks if the population has already contained a chromosome with the same gene values.
+        Checks if the population has already contained a candidate solution with the same variable values.
         Args:
-            chromosome: Chromosome to check
+            candidate_solution: Candidate solution to check
         Returns:
-            bool: True if the population ever contained a chromosome with the same gene values, False otherwise.
+            bool: True if the population ever contained a candidate solution with the same variable values, False otherwise.
         """
-        return chromosome.get_values_tuple() in self._seen_chromosomes
+        return candidate_solution.get_values_tuple() in self._seen_candidate_solutions
 
     def clone(self) -> "Population":
-        """Deep clone of the entire population (lists, chromosomes, alleles, etc.)."""
+        """Deep clone of the entire population (lists, candidate solutions, variable values, etc.)."""
         return _deepcopy(self)
 
     def copy(self) -> "Population":
@@ -275,8 +275,8 @@ class Population:
         dup._avg_cost = self._avg_cost
         dup._min_cost = self._min_cost
         dup._previous_avg_cost = getattr(self, "_previous_avg_cost", self._avg_cost)
-        dup._seen_chromosomes = set(self._seen_chromosomes)
-        dup.last_chromosome_id = self.last_chromosome_id
+        dup._seen_candidate_solutions = set(self._seen_candidate_solutions)
+        dup.last_candidate_solution_id = self.last_candidate_solution_id
         dup._population_generation = self._population_generation
         dup.start_time = _deepcopy(self.start_time, memo)
         dup.absolute_cost_diversity = self.absolute_cost_diversity
@@ -291,8 +291,8 @@ class Population:
         # best individual (if set)
         dup._best_individual = _deepcopy(getattr(self, "_best_individual", None), memo)
 
-        # chromosomes list
-        dup.chromosomes = _deepcopy(self.chromosomes, memo)
+        # candidate solutions list
+        dup.candidate_solutions = _deepcopy(self.candidate_solutions, memo)
 
         return dup
 
@@ -306,8 +306,8 @@ class PopulationIterator:
         return self
 
     def __next__(self):
-        if self.index < len(self.population.chromosomes):
-            result = self.population.chromosomes[self.index]
+        if self.index < len(self.population.candidate_solutions):
+            result = self.population.candidate_solutions[self.index]
             self.index += 1
             return result
         else:
