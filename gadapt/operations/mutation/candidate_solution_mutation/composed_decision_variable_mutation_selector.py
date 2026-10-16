@@ -35,7 +35,7 @@ class ComposedDecisionVariableMutationSelector(BaseDecisionVariableMutationSelec
         if self.candidate_solution is None:
             raise Exception("Candidate solution must not be null")
         if len(self.selectors) == 0:
-            raise Exception("at least one mutator must be added")
+            raise Exception("at least one selector must be added")
         if len(self.selectors) > 1:
             random.shuffle(self.selectors)
         nmg = 0

@@ -67,7 +67,8 @@ class BaseCrossover(ABC):
 
     def mate(self, candidate_solution_pairs: List[Tuple[CandidateSolution, CandidateSolution]], population):
         """
-        Returns list of candidate solution pairs using parents' genetic material
+        Mates the pairs of parents, using their genetic material, and adds the offspring to the population.
+        Surplus candidate solutions over the population size are removed, those with the highest cost first.
 
         Args:
             candidate_solution_pairs (List[Tuple[CandidateSolution, CandidateSolution]]) : List of candidate solution pairs for mating

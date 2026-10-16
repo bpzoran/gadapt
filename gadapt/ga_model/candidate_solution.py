@@ -205,7 +205,8 @@ class CandidateSolution(RankingModel):
     @property
     def parent_structural_diversity_coefficient(self) -> float:
         """
-        Diversity of parents
+        Structural diversity of the parents: the average difference of their variable values,
+        relative to the range of each decision variable
         """
         return self._parent_structural_diversity_coefficient
 
@@ -216,7 +217,8 @@ class CandidateSolution(RankingModel):
     @property
     def parent_cost_diversity_coefficient(self) -> float:
         """
-        Diversity of parents
+        Cost diversity of the parents: the difference of their cost values, relative to the
+        cost diversity of the initial population (at most 1)
         """
         return self._parent_cost_diversity_coefficient
 
@@ -294,7 +296,7 @@ class CandidateSolution(RankingModel):
     @property
     def succ(self) -> bool:
         """
-        Indicates if cost function execution succeded
+        Indicates if cost function execution succeeded
         """
         return self._succ
 

@@ -8,7 +8,8 @@ from gadapt.utils import ga_utils
 
 class CostDiversityPopulationUpdater(BasePopulationUpdater):
     """
-    Common population updater
+    Updates the cost diversity of the population: the absolute cost diversity and the relative
+    cost diversity coefficient (1.0 for the first population, approaching 0.0 as the costs converge).
     """
 
     def _calculate_absolute_cost_diversity(self):
@@ -32,7 +33,7 @@ class CostDiversityPopulationUpdater(BasePopulationUpdater):
         if not allocated_values:
             return float("NaN")
 
-        # 2. Calculate the Absolute Average Difference (your existing metric)
+        # 2. Calculate the Absolute Average Difference (average difference between the costs)
         abs_diff = ga_utils.average_difference(allocated_values)
 
         # 3. Calculate the current scale (Mean of absolute values)
@@ -90,7 +91,7 @@ class CostDiversityPopulationUpdater(BasePopulationUpdater):
         """
         # 1. Extract and Filter
         # Note: Logarithms require values > 0.
-        # If costs can be 0, we add a tiny epsilon.
+        # If the lowest cost is below 1.0, all values are shifted so that the lowest becomes 1.0.
         raw_values = [
             c.cost_value
             for c in self.population.candidate_solutions

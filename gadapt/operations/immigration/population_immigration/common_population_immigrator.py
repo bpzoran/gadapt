@@ -8,8 +8,8 @@ from gadapt.operations.immigration.population_immigration.base_population_immigr
 
 class CommonPopulationImmigrator(BasePopulationImmigrator):
     """
-    Common class for the self.population immigration.
-    In kept part of the self.population lower ranked candidate solutions are replaced with new ones
+    Common class for the population immigration.
+    In the kept part of the population, the lowest ranked candidate solutions are replaced with immigrants
     """
 
     def _immigrate_population(self):

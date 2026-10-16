@@ -18,7 +18,9 @@ class BaseDecisionVariableMutationSelector(ABC):
         decision_variable_mutator: BaseDecisionVariableMutator,
     ):
         """
-        Initializes an instance of the class by setting the decision_variable_mutation_rate_determinator attribute.
+        Args:
+            decision_variable_mutation_rate_determinator: determines the number of decision variables to mutate
+            decision_variable_mutator: mutates the value of a selected decision variable
         """
         self.candidate_solution = None
         self._decision_variable_mutation_rate_determinator = decision_variable_mutation_rate_determinator

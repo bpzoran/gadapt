@@ -188,9 +188,9 @@ class GA:
 
             parent_diversity_mutation_candidate_solution_sampling: The
             sampling algorithm for mutating candidate solutions when population_mutation
-            contains value “parent_structural_diversity”.
+            contains value “parent_diversity”.
                 It only applies when population_mutation has value
-                “parent_structural_diversity”. It determines the way how candidate solutions are to
+                “parent_diversity”. It determines the way how candidate solutions are to
                 be selected based on the diversity of their parents.
 
             must_mutate_for_same_parents: Indicates if completely the same
@@ -534,7 +534,7 @@ class GA:
         “cost_diversity”, the number of mutation candidate solutions is a
         random value from 1 to number_of_mutation_candidate_solutions
         value (or to value determined by percentage_of_mutation_candidate_solutions value).
-        “cost_diversity” means that the “parent_structural_diversity” method is selected
+        “cost_diversity” means that the “parent_diversity” method is selected
         to select candidate solutions to be mutated. This method only determines
         the number of mutated candidate solutions, but not how
         candidate solutions are selected for the mutation.
@@ -564,9 +564,9 @@ class GA:
     def parent_diversity_mutation_candidate_solution_sampling(self) -> str:
         """
         The sampling algorithm for mutating candidate solutions when
-        population_mutation contains value “parent_structural_diversity”.
+        population_mutation contains value “parent_diversity”.
         It only applies when population_mutation has value
-        “parent_structural_diversity”. It determines the way how candidate solutions are
+        “parent_diversity”. It determines the way how candidate solutions are
         to be selected based on the diversity of their parents.
 
         Supported values:
@@ -639,7 +639,14 @@ class GA:
 
         Supported values:
 
-        **"normal_distribution"** - assignes normally distributed random number to the variable selected for mutation
+        **"normal_distribution"** - assigns normally distributed random number to the variable selected for mutation
+
+        **"variable_columnar_diversity"** - assigns normally distributed random number to the variable selected
+        for mutation, with standard deviation based on the variable-columnar-diversity coefficient
+
+        **"cost_diversity"** - assigns normally distributed random number to the variable selected
+        for mutation, with standard deviation based on the diversity of costs in the population.
+        Higher cost diversity means a higher standard deviation.
 
         **"random"** - Random values are assigned to decision variables
         """
@@ -712,7 +719,7 @@ class GA:
         Supported values:
 
         **"avg_cost"** - The optimisation exit is triggered when the
-        average cost of the upper half of the population
+        average cost of the kept part of the population (see keep_elitism_percentage)
         is not improved in the specified number of generations
 
         **"min_cost"** - The optimisation exit is triggered when the minimal cost
@@ -751,7 +758,7 @@ class GA:
     @property
     def parent_selection(self) -> str:
         """
-        The algorithm for sampling algorithm in parent selection.
+        The sampling algorithm used for parent selection.
 
         Supported values:
 

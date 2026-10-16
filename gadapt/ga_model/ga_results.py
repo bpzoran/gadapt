@@ -73,7 +73,7 @@ class GAResults:
     @property
     def success(self) -> bool:
         """
-        Indicates if genetic algorithm optimization succeded
+        Indicates if genetic algorithm optimization succeeded
         """
         return self._success
 
@@ -95,7 +95,7 @@ class GAResults:
     @property
     def message(self) -> str:
         """
-        Messages from the optimization sublimed to one string
+        Messages from the optimization joined into one string
         """
         return self._get_message()
 

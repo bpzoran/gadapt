@@ -183,7 +183,7 @@ class Population:
 
     def add_not_contained_candidate_solutions(self, candidate_solutions) -> int:
         """
-        Adds candidate solutions to population
+        Adds only the candidate solutions whose variable values have never been in the population
         Args:
             candidate_solutions (Tuple[CandidateSolution]): candidate solutions to add
         Returns:
@@ -197,18 +197,16 @@ class Population:
 
     def add_candidate_solutions(self, candidate_solutions) -> int:
         """
-        Adds candidate solutions to population
+        Adds candidate solutions to population, as long as the population is not full
         Args:
             candidate_solutions (Tuple[CandidateSolution]): candidate solutions to add
-        Returns:
-            int: number of candidate solutions added to the population
         """
         for c in candidate_solutions:
             self.add_candidate_solution(c)
 
     def add_new_candidate_solution(self):
         """
-        Adds new candidate solutions to the population
+        Adds a new candidate solution with random variable values to the population
         """
         candidate_solution = CandidateSolution(
             self.population_generation,

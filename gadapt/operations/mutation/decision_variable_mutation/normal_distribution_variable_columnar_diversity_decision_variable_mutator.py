@@ -18,7 +18,7 @@ class NormalDistributionVariableColumnarDiversityDecisionVariableMutator(NormalD
         if self.variable_value.decision_variable.columnar_diversity_coefficient is None or math.isnan(
             self.variable_value.decision_variable.columnar_diversity_coefficient
         ):
-            gadapt_log_error("variable_columnar_diversity_coefficient not set!")
+            gadapt_log_error("columnar_diversity_coefficient not set!")
             return 0.01
         min_std_dev = self.min_std_dev
         max_std_dev = self.max_std_dev

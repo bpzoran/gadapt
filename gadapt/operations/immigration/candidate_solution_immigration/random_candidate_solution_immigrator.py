@@ -5,7 +5,7 @@ from gadapt.operations.immigration.candidate_solution_immigration.base_candidate
 
 class RandomCandidateSolutionImmigrator(BaseCandidateSolutionImmigrator):
     """
-    New immigrated candidate solution with random decision variables
+    Makes an immigrant by assigning a random value to each decision variable of the candidate solution
     """
 
     def _immigrate_candidate_solution(self):

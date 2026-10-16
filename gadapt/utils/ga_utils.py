@@ -11,7 +11,7 @@ Genetic algorithm utility
 
 def get_rand_bool():
     """
-    Returns ranfom boolean value
+    Returns random boolean value
     """
     rand_int = random.getrandbits(1)
     return bool(rand_int)
@@ -19,7 +19,7 @@ def get_rand_bool():
 
 def get_rand_bool_with_probability(probability: float):
     """
-    Returns random value with passed probability for returned value to be True
+    Returns True with the passed probability
     Args:
         probability (float): The probability for True value
     """
@@ -41,7 +41,7 @@ def average(lst: List):
 def try_get_int(s):
     """
     If "s" objects is converted to int, it returns converted value.
-    Othervise, returns s value.
+    Otherwise, returns s value.
     Args:
         s: Object to convert to int
     """
@@ -59,7 +59,7 @@ def try_get_int(s):
 def try_get_float(s):
     """
     If "s" objects is converted to float, it returns converted value.
-    Othervise, returns s value.
+    Otherwise, returns s value.
     Args:
         s: Object to convert to float
     """
@@ -77,7 +77,7 @@ def try_get_float(s):
 def try_get_bool(s):
     """
     If "s" objects is converted to bool, it returns converted value.
-    Othervise, returns s value.
+    Otherwise, returns s value.
     Args:
         s: Object to convert to bool
     """

@@ -8,7 +8,8 @@ from gadapt.operations.cost_finding.base_cost_finder import BaseCostFinder
 
 class ElitismCostFinder(BaseCostFinder):
     """
-    Finding costs for a better half of the population
+    Finds costs for the new candidate solutions and keeps only the best ones in the population
+    (the number is determined by keep_elitism_percentage)
     """
 
     def _find_costs_for_population(self):

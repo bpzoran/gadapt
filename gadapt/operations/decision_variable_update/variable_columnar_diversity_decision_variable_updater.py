@@ -45,7 +45,7 @@ class ColumnarDiversityDecisionVariableUpdater(BaseDecisionVariableUpdater):
 
             # 5. Capture Benchmark (Initial Log Diversity)
             if g.initial_st_dev < 0:
-                # We reuse your existing attribute name for convenience
+                # initial_st_dev holds the initial logarithmic standard deviation (negative while not set)
                 g.initial_st_dev = current_log_stdev
 
             # 6. Normalize to 0-1 range

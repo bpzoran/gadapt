@@ -140,7 +140,7 @@ ga.timeout=3600
 
 **exit_check**=*"avg_cost"* - A criteria for the exit for the genetic algorithm.  
 Supported values:
-- *"avg_cost"* - The optimisation exit is triggered when the average cost of the upper half of the population is not improved in the specified number of generations  
+- *"avg_cost"* - The optimisation exit is triggered when the average cost of the kept part of the population (see *keep_elitism_percentage*) is not improved in the specified number of generations  
 - *"min_cost"* - The optimisation exit is triggered when the minimal cost in the population is not improved in the specified number of generations  
 - *"requested"* - The optimisation exit is triggered when the requested value reached
 - *"generations"* - The optimisation exit requested number of generations defined by "number_of_generations" parameter is reached

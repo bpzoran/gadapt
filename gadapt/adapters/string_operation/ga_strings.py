@@ -82,7 +82,7 @@ def population_to_string(p):
     """
     Creates string from the population
     Args:
-        gp Population for string representation
+        p: Population for string representation
     """
     str_res = ""
     new_line = "\n"

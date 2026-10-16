@@ -27,7 +27,7 @@ class ComposedDecisionVariableMutationRateDeterminator(BaseDecisionVariableMutat
         if self.candidate_solution is None:
             raise Exception("Candidate solution must not be null")
         if len(self.determinators) == 0:
-            raise Exception("at least one mutator must be added")
+            raise Exception("at least one determinator must be added")
         for determinator in self.determinators:
             determinator.candidate_solution = self.candidate_solution
             determinator.max_number_of_mutation_decision_variables = (

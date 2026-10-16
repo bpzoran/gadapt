@@ -12,7 +12,8 @@ from gadapt.operations.mutation.decision_variable_mutation.normal_distribution_d
 class NormalDistributionCostDiversityDecisionVariableMutator(NormalDistributionDecisionVariableMutator):
     """
     Generates random or normally distributed values. Calculates standard deviation based on
-    the variable-columnar-diversity coefficient
+    the relative cost diversity coefficient of the population: the lower the cost diversity,
+    the lower the standard deviation.
     """
 
     def __init__(self, get_cost_diversity_function: Callable,  min_std_dev: float = 0.001, max_std_dev: float = 0.6):
@@ -28,7 +29,7 @@ class NormalDistributionCostDiversityDecisionVariableMutator(NormalDistributionD
         if cost_diversity_coefficient is None or math.isnan(
             cost_diversity_coefficient
         ):
-            gadapt_log_error("cost_diversity_coefficient not set!")
+            gadapt_log_error("relative_cost_diversity_coefficient not set!")
             return 0.01
         min_std_dev = self.min_std_dev
         max_std_dev = self.max_std_dev

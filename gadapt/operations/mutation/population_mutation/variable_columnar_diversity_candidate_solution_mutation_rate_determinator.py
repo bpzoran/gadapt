@@ -8,7 +8,7 @@ class VariableColumnarDiversityCandidateSolutionMutationRateDeterminator(
     BaseCandidateSolutionMutationRateDeterminator
 ):
     """
-    Determining the number of candidate solutions to be mutated in a population based on the variable-columnar-diversity coefficient of the decision variables.
+    Determines the number of candidate solutions to be mutated in a population based on the variable-columnar-diversity coefficient of the decision variables.
     """
 
     def __init__(

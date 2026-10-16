@@ -32,7 +32,7 @@ class VariableColumnarDiversityDecisionVariableMutationRateDeterminator(RandomDe
                 or isnan(g.columnar_diversity_coefficient)
             for g in decision_variables
         ):
-            gadapt_log_error("variable_columnar_diversity_coefficient not set!")
+            gadapt_log_error("columnar_diversity_coefficient not set!")
             return super()._get_number_of_mutation_decision_variables()
 
         mutation_rate = self._get_mutation_rate(decision_variables)

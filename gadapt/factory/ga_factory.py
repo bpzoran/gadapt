@@ -527,7 +527,7 @@ class GAFactory(BaseGAFactory):
 
     def _get_sampling_method(self, str) -> BaseSampling:
         """
-        Sampling Methos Instance
+        Sampling Method Instance
         """
         str_value = str
         sampling_method_strings = str.split(definitions.PARAM_SEPARATOR)

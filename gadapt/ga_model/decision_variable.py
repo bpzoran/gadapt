@@ -123,7 +123,8 @@ class DecisionVariable:
     @property
     def columnar_diversity_coefficient(self) -> float:
         """
-        Relative standard deviation of all variable values for the same decision variable
+        Diversity of the values of this decision variable in the population, from 0 (identical values) to 1.
+        It is the logarithmic standard deviation of the values, relative to the one in the first population.
         """
         return self._standard_deviation
 

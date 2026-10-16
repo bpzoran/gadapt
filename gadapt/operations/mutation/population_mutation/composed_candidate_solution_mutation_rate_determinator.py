@@ -27,7 +27,7 @@ class ComposedCandidateSolutionMutationRateDeterminator(
         if self.population is None:
             raise Exception("Population must not be null")
         if len(self.determinators) == 0:
-            raise Exception("at least one mutator must be added")
+            raise Exception("at least one determinator must be added")
         for determinator in self.determinators:
             determinator.population = self.population
             determinator.max_number_of_mutation_candidate_solutions = (

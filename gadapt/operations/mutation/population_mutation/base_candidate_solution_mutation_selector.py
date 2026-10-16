@@ -22,9 +22,11 @@ class BaseCandidateSolutionMutationSelector(ABC):
         decision_variable_mutation_selector: BaseDecisionVariableMutationSelector,
     ) -> None:
         """
-        Base class for selecting mating candidate solutions in population
+        Base class for selecting candidate solutions in the population to be mutated
         Args:
             candidate_solution_mutation_rate_determinator: candidate solution mutation rate determinator
+            decision_variable_mutation_selector: selector which mutates decision variables
+                inside each selected candidate solution
         """
         super().__init__()
         self.population = None
