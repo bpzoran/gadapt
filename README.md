@@ -19,13 +19,51 @@ A comprehensive and customizable genetic algorithm library.
 
 ## Introduction
 
-[GAdapt](https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. It implements innovative concepts for adaptive mutation of decision variables and candidate solutions.
+[GAdapt](https://gadapt.com) is an open-source Python library for Genetic Algorithm optimization. Its distinguishing feature is **diversity-guided mutation**: instead of a fixed or time-based mutation rate, it measures how diverse the population is in every generation, and uses that to decide how much, where and how to mutate.
 
 ### What Innovations Does GAdapt Bring?
 
-**GAdapt** introduces self-adaptive determination of how many and which candidate solutions and decision variables will be mutated. In addition, it determines the decision variable alteration type. This determination is based on the diversity of parents, diversity of cost, and variable-columnar-diversity of decision variables in the population. The higher diversity and lower convergence necessitate fewer mutated candidate solutions. A high diversity level also allows for more mutated decision variables within each candidate solution. At this stage, variable value alterations are encouraged to be unbiased, favoring a uniform distribution of values. This approach ensures that mutations are not overly frequent, but selected candidate solutions can undergo significant changes, promoting the exploration of potential solutions. As diversity decreases and convergence increases, the frequency of mutated candidate solutions rises, the number of mutated decision variables inside candidate solutions decreases, and variable value changes are biased towards previously attained values, encouraging greater exploitation and fine-tuning of existing solutions. Throughout this process, the selection of mutated candidate solutions and variable values should prioritize those with lower diversity and higher convergence levels, maintaining exploration and preventing GA from getting stuck in some local optimums.
+Evolutionary search is a trade-off between *exploration* (visiting new areas of the search space) and *exploitation* (fine-tuning existing solutions). Mutation influences both, and the best balance changes during a run. Fixed or time-dependent mutation rates, and schemes driven only by fitness, assume that convergence follows a predictable, often linear, path. That rarely holds for multimodal and high-dimensional problems, so mutation pressure ends up mismatched to the real state of the population: either wasted on redundant exploration, or too weak to avoid premature convergence.
 
-The proposed method refines mutation selection, rate determination, and alteration processes, potentially surpassing the limitations of traditional mutation techniques and opening up new possibilities for significantly improved GA performance.
+Population diversity is a more direct signal of the convergence state. GAdapt tracks it at every generation and lets it regulate the whole mutation process: high diversity keeps mutation exploratory, and falling diversity shifts it towards exploitation.
+
+#### Three complementary diversity measures
+
+A single measure can be misleading. Candidate solutions with different decision variable values can have similar costs, and the variable values can converge while the costs still look diverse. GAdapt therefore combines three measures:
+
+| Measure | What it measures | What it drives |
+|---------|------------------|----------------|
+| **Cost diversity** | Spread of the cost values in the population, relative to the initial population | The number of candidate solutions to mutate |
+| **Parent diversity** | The distance between the two parents of a candidate solution: *structural* (difference of their variable values) or *cost* (difference of their costs). By default, one of the two is chosen at random in each generation | Which candidate solutions to mutate |
+| **Variable columnar diversity** | Dispersion of the values of each decision variable (a column of the population) across the candidate solutions | The number of candidate solutions to mutate (using the average over all decision variables), how many and which decision variables to mutate, and how their values are altered |
+
+Each measure is a coefficient between 0 and 1, where 0 means complete convergence and higher values mean more diversity. Cost diversity and variable columnar diversity are calculated on a logarithmic scale relative to the initial population, so they stay sensitive during the late, fine-tuning phase of the search.
+
+#### Five mutation decisions, each guided by diversity
+
+| Decision | Guided by | How | Parameter |
+|----------|-----------|-----|-----------|
+| How many candidate solutions to mutate | Cost diversity or variable columnar diversity | The lower the diversity, the more candidate solutions are mutated: none in the first generation, up to the user-defined maximum when the population has fully converged | *population_mutation* |
+| Which candidate solutions to mutate | Parent diversity | Offspring of the most similar parents are preferred, since they bring the least new information | *population_mutation* |
+| How many decision variables to mutate in each candidate solution | Variable columnar diversity | A random number up to a limit that shrinks as the population converges | *candidate_solution_mutation* |
+| Which decision variables to mutate | Variable columnar diversity | The most converged decision variables (lowest diversity) are prioritized, probabilistically | *candidate_solution_mutation* |
+| How the value of a decision variable is altered | Variable columnar diversity | A normally distributed change around the current value: its standard deviation follows the diversity, so it is practically unbiased while diversity is high, and a small, fine-tuning step as the variable converges. By default, each alteration is either this or a plain random draw, with equal probability | *decision_variable_mutation* |
+
+#### How mutation changes during a run
+
+- **Early in the run**, diversity is high, so few candidate solutions are mutated, but each one may change in many decision variables with unbiased values. This introduces substantial variation, with limited mutation pressure.
+- **Later in the run**, as diversity falls, more candidate solutions are mutated, each in fewer decision variables (the most converged ones), with finer changes. Mutation becomes broad across the population, but gentle within each candidate solution.
+- A constant share of plain random alterations is kept throughout the run, which preserves the ability to escape local optima even at deep convergence.
+
+#### Choosing and combining the measures
+
+- The parameters *population_mutation*, *candidate_solution_mutation* and *decision_variable_mutation* accept comma-separated combinations of these methods, see [Parameters Description](#parameters-description).
+- Cost diversity works best when the convergence of costs is a reliable indicator of the convergence of decision variable values. For cost functions with many local minima of similar cost, parent diversity and variable columnar diversity are more informative. Variable columnar diversity has the most to offer with several decision variables, and with very few of them the other two measures carry more of the work.
+- Every step (determining the rate, selecting candidate solutions and decision variables, altering values) is a separate component, so the diversity-guided components can be combined with other mutation approaches, see [GA Customisation](#ga-customisation).
+
+#### Beyond mutation
+
+GAdapt is a complete genetic algorithm library, and the diversity signals are not limited to mutation. The crossover probability can also be adaptive, following cost diversity or variable columnar diversity. Other supported features include elitism, "Random Immigrants", guaranteed uniqueness of candidate solutions, and optimization of both discrete and continuous variables. See [Parameters Description](#parameters-description) and [Adding Variables](#adding-variables).
 
 ## Installation
 
