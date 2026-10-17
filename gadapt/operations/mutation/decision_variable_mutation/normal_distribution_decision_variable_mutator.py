@@ -12,7 +12,13 @@ class NormalDistributionDecisionVariableMutator(BaseDecisionVariableMutator):
     """
     Generates random or normally distributed values.
     """
-    def __init__(self, min_std_dev: float = 0.001, max_std_dev: float = 0.6):
+    # The lower bound of the standard deviation never decays below this value
+    ABSOLUTE_MIN_STD_DEV = 1e-9
+
+    def __init__(self, min_std_dev: float = 0.001, max_std_dev: float = 0.6,
+                 min_std_dev_decay_generations=None, get_stagnation_generations_function=None):
+        self.min_std_dev_decay_generations = min_std_dev_decay_generations
+        self.get_stagnation_generations_function = get_stagnation_generations_function
         if min_std_dev < 0.0 or max_std_dev < 0.0 or  max_std_dev > 1.0 or min_std_dev > 1.0 or max_std_dev <= min_std_dev:
             self.min_std_dev = 0.001
             self.max_std_dev = 0.6
@@ -30,6 +36,27 @@ class NormalDistributionDecisionVariableMutator(BaseDecisionVariableMutator):
 
     def _calculate_normal_distribution_standard_deviation(self):
         return 0.05
+
+    def _get_lower_bound_of_std_dev(self) -> float:
+        """
+        The lower bound of the standard deviation. It is the constant min_std_dev, unless
+        min_std_dev_decay_generations is set. In that case the bound is divided by 10 for every
+        min_std_dev_decay_generations consecutive generations without an improvement of the minimal
+        cost, and restored when the minimal cost improves. For discrete decision variables it never
+        gets below one step, since a smaller standard deviation only rounds to the same value.
+        """
+        if self.min_std_dev_decay_generations is None or self.get_stagnation_generations_function is None:
+            return self.min_std_dev
+        stagnation_generations_function = self.get_stagnation_generations_function()
+        generations = stagnation_generations_function() if stagnation_generations_function is not None else 0
+        lower_bound = max(
+            min(self.min_std_dev, self.ABSOLUTE_MIN_STD_DEV),
+            self.min_std_dev * 10.0 ** (-generations / self.min_std_dev_decay_generations),
+        )
+        decision_variable = self.variable_value.decision_variable
+        if decision_variable.is_discrete:
+            lower_bound = max(lower_bound, decision_variable.step / (decision_variable.max_value - decision_variable.min_value))
+        return min(lower_bound, self.max_std_dev)
 
     def _make_normally_distributed_random_value(self):
         curr_value = self.variable_value.value

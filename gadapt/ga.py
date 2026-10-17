@@ -116,6 +116,7 @@ class GA:
         logging=False,
         timeout=600,
         factory: Optional[BaseGAFactory] = None,
+        normal_distribution_mutation_min_std_dev_decay_generations: Optional[float] = None,
         **deprecated_kwargs,
     ) -> None:
         """
@@ -252,6 +253,26 @@ class GA:
 
             factory: Factory for creating object
 
+            normal_distribution_mutation_min_std_dev: The lower bound of the standard
+                deviation (relative to the range of the decision variable) of the normal
+                distribution mutation. A lower bound is what limits the fine adjustments at the
+                end of the optimization. For continuous variables, 1e-4 is often better than the
+                default. For discrete variables (with a step), it should not be below one step
+                divided by the range of the variable.
+
+            normal_distribution_mutation_max_std_dev: The upper bound of the standard
+                deviation (relative to the range of the decision variable) of the normal
+                distribution mutation.
+
+            normal_distribution_mutation_min_std_dev_decay_generations: None (default)
+                or a number of generations. If it is None, the lower bound of the standard
+                deviation is constant. Otherwise, the lower bound is divided by 10 for every
+                such number of consecutive generations in which the minimal cost does not improve
+                (down to 1e-9), and it is restored when the minimal cost improves. Fine
+                adjustments are then tried exactly when the progress stalls. For discrete
+                variables, the lower bound never goes below one step. A good starting point is
+                2.5, together with normal_distribution_mutation_min_std_dev of 1e-4.
+
             deprecated_kwargs: Previous names of the parameters (see
             DEPRECATED_PARAMETER_NAMES), e.g. number_of_mutation_chromosomes.
             They are still accepted, but emit a DeprecationWarning.
@@ -298,6 +319,7 @@ class GA:
         self.ensure_unique_individuals = ensure_unique_individuals
         self.normal_distribution_mutation_max_std_dev = normal_distribution_mutation_max_std_dev
         self.normal_distribution_mutation_min_std_dev = normal_distribution_mutation_min_std_dev
+        self.normal_distribution_mutation_min_std_dev_decay_generations = normal_distribution_mutation_min_std_dev_decay_generations
         self.timeout = timeout
         self._current_dv_id = 0
         self._factory = factory
@@ -848,6 +870,24 @@ class GA:
     @normal_distribution_mutation_min_std_dev.setter
     def normal_distribution_mutation_min_std_dev(self, value: float):
         self._normal_distribution_mutation_min_std_dev = ga_utils.try_get_float(value)
+
+    @property
+    def normal_distribution_mutation_min_std_dev_decay_generations(self) -> Optional[float]:
+        """
+        None (default) or a number of generations. If it is None, the lower bound of the standard deviation
+        of the normal distribution mutation (normal_distribution_mutation_min_std_dev) is constant.
+        Otherwise, the lower bound is divided by 10 for every such number of consecutive generations without
+        an improvement of the minimal cost (down to 1e-9), and restored when the minimal cost improves.
+        For discrete variables, it never goes below one step.
+        """
+        return self._normal_distribution_mutation_min_std_dev_decay_generations
+
+    @normal_distribution_mutation_min_std_dev_decay_generations.setter
+    def normal_distribution_mutation_min_std_dev_decay_generations(self, value: Optional[float]):
+        # a bool is kept as it is (float(True) would silently become 1.0), so that the validation rejects it
+        self._normal_distribution_mutation_min_std_dev_decay_generations = (
+            value if value is None or isinstance(value, bool) else ga_utils.try_get_float(value)
+        )
 
     @property
     def logging(self) -> bool:

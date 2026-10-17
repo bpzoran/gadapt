@@ -475,6 +475,16 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif not isinstance(self.options.requested_cost, float):
             self._add_message("Requested Cost must be type float!")
             rslt &= False
+        decay_generations = self.options.normal_distribution_mutation_min_std_dev_decay_generations
+        if decay_generations is not None and (
+            isinstance(decay_generations, bool)
+            or not isinstance(decay_generations, (int, float))
+            or not decay_generations > 0
+        ):
+            self._add_message(
+                "Normal Distribution Mutation Min Std Dev Decay Generations must be None or a positive number!"
+            )
+            rslt &= False
         if self.options.timeout is None:
             self._add_message("Timeout must not be None!")
             rslt &= False

@@ -20,7 +20,7 @@ class NormalDistributionVariableColumnarDiversityDecisionVariableMutator(NormalD
         ):
             gadapt_log_error("columnar_diversity_coefficient not set!")
             return 0.01
-        min_std_dev = self.min_std_dev
+        min_std_dev = self._get_lower_bound_of_std_dev()
         max_std_dev = self.max_std_dev
         std_dev_range = max_std_dev - min_std_dev
         dv_rsd = np.clip(self.variable_value.decision_variable.columnar_diversity_coefficient, 0, 1)

@@ -203,3 +203,4 @@ requirements_local.txt
 /experiment.py
 /experiments/experiment.py
 /experiments/experiment_pygad.py
+/benchmarks/*

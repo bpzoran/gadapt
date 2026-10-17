@@ -16,8 +16,9 @@ class NormalDistributionCostDiversityDecisionVariableMutator(NormalDistributionD
     the lower the standard deviation.
     """
 
-    def __init__(self, get_cost_diversity_function: Callable,  min_std_dev: float = 0.001, max_std_dev: float = 0.6):
-        super().__init__(min_std_dev, max_std_dev)
+    def __init__(self, get_cost_diversity_function: Callable,  min_std_dev: float = 0.001, max_std_dev: float = 0.6,
+                 min_std_dev_decay_generations=None, get_stagnation_generations_function=None):
+        super().__init__(min_std_dev, max_std_dev, min_std_dev_decay_generations, get_stagnation_generations_function)
         self.get_cost_diversity_function = get_cost_diversity_function
 
 
@@ -31,7 +32,7 @@ class NormalDistributionCostDiversityDecisionVariableMutator(NormalDistributionD
         ):
             gadapt_log_error("relative_cost_diversity_coefficient not set!")
             return 0.01
-        min_std_dev = self.min_std_dev
+        min_std_dev = self._get_lower_bound_of_std_dev()
         max_std_dev = self.max_std_dev
         std_dev_range = max_std_dev - min_std_dev
         dv_rsd = np.clip(cost_diversity_coefficient, 0, 1)

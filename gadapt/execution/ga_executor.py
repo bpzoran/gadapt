@@ -43,6 +43,7 @@ class GAExecutor:
         """
         self.population = Population(self.ga_options)
         self.ga_options.cost_diversity_coefficient_function = lambda: self.population.get_relative_cost_diversity_coefficient()
+        self.ga_options.stagnation_generations_function = lambda: self.population.generations_without_improvement
         if self.population is None:
             raise Exception("population object is None!")
         results = GAResults()
@@ -95,6 +96,7 @@ class GAExecutor:
         self.population.previous_avg_cost = self.population.avg_cost
         self.population.previous_min_cost = self.population.min_cost
         self.cost_finder.find_costs(self.population)
+        self.population.update_generations_without_improvement()
         self.decision_variable_updater.update_decision_variables(self.population)
         self.population_updater.update_population(self.population)
 

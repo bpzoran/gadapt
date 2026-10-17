@@ -5,7 +5,8 @@ Pure Python, no compiled code. `README.md` is also the PyPI long description.
 
 ## Running and verifying
 - There is **no test suite**. Verify a change by running the README examples (`from gadapt.ga import GA`) and,
-  for anything that affects search behaviour or speed, by a small benchmark script (see below).
+  for anything that affects search behaviour or speed, by a paired-seed benchmark. `benchmarks/std_dev_floor.py` is a template
+  (multiprocessing, the experiments' GA configuration, gap to the known optimum, Wilcoxon per cell); run it from a scratch directory.
 - Use the repo's pyenv Python (`.python-version` = 3.12). Other interpreters on this machine lack NumPy.
 - `logging=True` writes a `log/` folder into the current working directory (git-ignored). Run experiments
   from a scratch directory so it doesn't land in the repo.
@@ -41,6 +42,12 @@ Pure Python, no compiled code. `README.md` is also the PyPI long description.
   `relative_cost_diversity_coefficient` (`CostDiversityPopulationUpdater`, token `cost_diversity` in `population_mutation` **or
   `crossover`**, see `_get_population_updater`). Anything new that reads one of them must be covered there. A NaN crossover
   probability used to hang `BaseCrossover._mate_pair` forever; it is now an error.
+- `normal_distribution_mutation_min_std_dev_decay_generations` (default `None` = off) is an opt-in: the lower bound of the Gaussian mutation's
+  standard deviation is divided by 10 per N consecutive generations without improvement of the minimal cost (`Population.generations_without_improvement`,
+  the same count that drives the exit rule), floored at one step for discrete variables. With it off, results must stay bit-identical:
+  check a seeded run before and after any change to the Gaussian mutators. Measured on the continuous benchmarks (see the benchmark script):
+  min std dev 1e-4 + decay 2.5 gives ~1.8 orders of magnitude lower median gap for ~20% more evaluations; a fixed floor below one step
+  hurts discrete variables, and a fixed floor <= 1e-5 hurts 20 variables (the 600-generation cap is reached before convergence).
 - `ParentDiversityCandidateSolutionUpdater` is a singleton (`__new__`), so its state is shared across `GA` instances.
 - Pure-Python per-decision-variable overhead dominates for cheap cost functions (~1 ms/generation at pop 32 x 10 decision variables,
   scaling linearly with population size and decision-variable count). For real cost functions, the number of evaluations

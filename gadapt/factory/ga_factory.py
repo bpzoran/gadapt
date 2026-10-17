@@ -189,9 +189,9 @@ class GAFactory(BaseGAFactory):
         if definitions.EXTREME_POINTED in mutator_strings:
             decision_variable_mutators.append(ExtremePointedDecisionVariableMutator())
         if definitions.VARIABLE_COLUMNAR_DIVERSITY in mutator_strings:
-            decision_variable_mutators.append(NormalDistributionVariableColumnarDiversityDecisionVariableMutator(self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev))
+            decision_variable_mutators.append(NormalDistributionVariableColumnarDiversityDecisionVariableMutator(self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev, self._options.normal_distribution_mutation_min_std_dev_decay_generations, self._options.get_stagnation_generations_function))
         if definitions.COST_DIVERSITY in mutator_strings:
-            decision_variable_mutators.append(NormalDistributionCostDiversityDecisionVariableMutator(self._options.get_cost_diversity_coefficient_function, self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev))
+            decision_variable_mutators.append(NormalDistributionCostDiversityDecisionVariableMutator(self._options.get_cost_diversity_coefficient_function, self._options.normal_distribution_mutation_min_std_dev, self._options.normal_distribution_mutation_max_std_dev, self._options.normal_distribution_mutation_min_std_dev_decay_generations, self._options.get_stagnation_generations_function))
         elif definitions.NORMAL_DISTRIBUTION in mutator_strings:
             decision_variable_mutators.append(NormalDistributionDecisionVariableMutator())
         if len(decision_variable_mutators) == 0:

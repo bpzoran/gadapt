@@ -2,6 +2,7 @@
 Population
 """
 
+import math
 import sys
 from datetime import datetime
 from typing import List
@@ -45,6 +46,7 @@ class Population:
         self.relative_cost_diversity_in_first_population = float("NaN")
         self.timeout_expired = False
         self.min_cost_per_generation: List[float] = []
+        self.generations_without_improvement = 0
 
     def __iter__(self):
         return PopulationIterator(self)
@@ -166,6 +168,16 @@ class Population:
     def population_generation(self, value):
         self._population_generation = value
 
+    def update_generations_without_improvement(self):
+        """
+        Counts the consecutive generations in which the minimal cost did not improve.
+        It is the same count that drives the exit check. The first costing is an improvement.
+        """
+        if math.isnan(self.previous_min_cost) or self.min_cost < self.previous_min_cost:
+            self.generations_without_improvement = 0
+        else:
+            self.generations_without_improvement += 1
+
     def clear(self):
         """
         Clears all candidate solutions
@@ -281,6 +293,7 @@ class Population:
         dup.absolute_cost_diversity_in_first_population = self.absolute_cost_diversity_in_first_population
         dup.timeout_expired = self.timeout_expired
         dup.min_cost_per_generation = _deepcopy(self.min_cost_per_generation, memo)
+        dup.generations_without_improvement = self.generations_without_improvement
 
         # options: choose deep or shallow
         dup._options = _deepcopy(self._options, memo)  # deep

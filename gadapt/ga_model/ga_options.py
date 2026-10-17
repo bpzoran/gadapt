@@ -36,6 +36,8 @@ class GAOptions:
             self._ensure_unique_individuals = ga.ensure_unique_individuals
         self._normal_distribution_mutation_min_std_dev = ga.normal_distribution_mutation_min_std_dev
         self._normal_distribution_mutation_max_std_dev = ga.normal_distribution_mutation_max_std_dev
+        self._normal_distribution_mutation_min_std_dev_decay_generations = ga.normal_distribution_mutation_min_std_dev_decay_generations
+        self._stagnation_generations_function = None
         self._logging = ga.logging
         self._decision_variables = ga._decision_variables
         self._set_number_of_mutation_decision_variables(ga)
@@ -116,6 +118,25 @@ class GAOptions:
     @normal_distribution_mutation_min_std_dev.setter
     def normal_distribution_mutation_min_std_dev(self, value: float):
         self._normal_distribution_mutation_min_std_dev = value
+
+    @property
+    def normal_distribution_mutation_min_std_dev_decay_generations(self):
+        return self._normal_distribution_mutation_min_std_dev_decay_generations
+
+    @normal_distribution_mutation_min_std_dev_decay_generations.setter
+    def normal_distribution_mutation_min_std_dev_decay_generations(self, value):
+        self._normal_distribution_mutation_min_std_dev_decay_generations = value
+
+    @property
+    def stagnation_generations_function(self):
+        return self._stagnation_generations_function
+
+    @stagnation_generations_function.setter
+    def stagnation_generations_function(self, value):
+        self._stagnation_generations_function = value
+
+    def get_stagnation_generations_function(self):
+        return self.stagnation_generations_function
 
     @property
     def normal_distribution_mutation_max_std_dev(self) -> float:
