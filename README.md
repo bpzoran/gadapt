@@ -59,7 +59,7 @@ def trig_func(args):
 #Instantiation of genetic algorithm for desired function
 ga = GA(cost_function=trig_func)
 
-#Adding variables (minimal value, maximal value and step)
+#Adding variables (minimal value, maximal value and an optional step)
 ga.add(1.0, 4.0, 0.01)
 ga.add(37.0, 40.0, 0.01)
 ga.add(78.0, 88.0, 0.1)
@@ -256,13 +256,75 @@ ga.number_of_mutation_genes = 2                                                 
 Passing both a previous name and its replacement with different values raises a *TypeError*. Only the *GA* parameters and their option values have aliases: the module paths and class names used by custom factories (see *GA Customisation*) and the *value* property of a variable value (previously *variable_value*) changed without aliases.
 
 ### Adding Variables
-Variables to be optimized can be added by calling the *add* method of the *GA* object. Parameters of this method are the minimum value, the maximum value, and the step. The minimum and maximum value determine a range of possible variable values. The *step* parameter specifies the step that will be used in changing the variables values during the optimization. The step is optional: a variable added without a step is continuous, and can take any value in the range.
+Variables to be optimized are added by calling the *add* method of the *GA* object:
+```
+ga.add(min_value, max_value, step=None)
+```
+The minimum and maximum value determine the range of possible variable values, and both should always be given. The *step* is **optional**, and it determines what kind of variable is optimized:
+
+| Call | Kind of variable | Possible values |
+|------|------------------|-----------------|
+| `ga.add(1.0, 4.0, 0.01)` | discrete (with a step) | 1.0, 1.01, 1.02, ..., 4.0 |
+| `ga.add(1.0, 4.0)` | continuous (no step) | any real number between 1.0 and 4.0 |
+
+**If the step is not defined, continuous optimization is performed for that variable.** Its values are not restricted to a grid, and they are not rounded: random values, crossover and mutation can produce any real number in the range, so the optimized value may look like `1.3701139890548797`. With a step, the values are taken from the grid defined by the minimum value and the step (`min_value + k * step`, never above the maximum), rounded to the number of decimal places of the step.
+
+Some details:
+- Leaving the step out is the same as passing `step=None`.
+- The step must be positive. A step of `0` or a negative step is not a way to say "no step": it fails the validation with the message *Step must be positive float value!*. To get a continuous variable, leave the step out.
+- A step so small that the range contains more than 10<sup>9</sup> steps is treated as no step, so such a variable is also continuous.
+- Discrete and continuous variables can be mixed in the same *GA* object. The default of *ensure_unique_individuals* depends on it: it is *True* only when all variables have a step (see its description above).
 
 For example:
 ```python
 ga.add(1.0, 4.0, 0.01)
 ```
-means that the corresponding parameter can have values between 1.0 and 4.0, and the step for changing variable values in optimization is 0.01.
+means that the corresponding parameter can have values between 1.0 and 4.0, and the step for changing variable values in optimization is 0.01, whereas
+```python
+ga.add(1.0, 4.0)
+```
+means that the corresponding parameter can have any value between 1.0 and 4.0.
+
+A complete example with one discrete and one continuous variable:
+```python
+from gadapt.ga import GA
+
+def sphere(args):
+    return args[0] ** 2 + args[1] ** 2
+
+ga_mixed = GA(cost_function=sphere)
+ga_mixed.add(-5, 5, 1)    # args[0]: discrete, can be -5, -4, ..., 5
+ga_mixed.add(-5.0, 5.0)   # args[1]: no step, so continuous, can be any real number between -5.0 and 5.0
+print(ga_mixed.execute())
+```
+
+An example with all variables continuous, using the Rastrigin function, a standard multimodal benchmark function. Its global minimum is 0, at the point where all variables are 0:
+```python
+import numpy as np
+from gadapt.ga import GA
+
+def rastrigin(args):
+    x = np.asarray(args)
+    return 10 * len(x) + np.sum(x ** 2 - 10 * np.cos(2 * np.pi * x))
+
+ga_continuous = GA(cost_function=rastrigin)
+for _ in range(5):
+    ga_continuous.add(-5.12, 5.12)   # no step, so each of the five variables is continuous
+print(ga_continuous.execute())
+```
+
+The possible output:
+```
+Min cost: 1.5554049042521e-05
+Number of iterations: 231
+Parameter values:
+0: -3.6805571508315964e-08
+1: -4.036152602508579e-06
+2: 4.895884131551171e-07
+3: -0.00027987533973038896
+4: 7.337156119654347e-06
+```
+All optimized values are real numbers very close to 0. Since the variables are continuous, they are not restricted to a grid and are not rounded.
 
 The order in which the variables are added must match the indices of the variables in the cost function. For example, for the given function:
 ```python
