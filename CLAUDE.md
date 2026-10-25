@@ -32,6 +32,8 @@ Pure Python, no compiled code. `README.md` is also the PyPI long description.
 
 ## Behaviour to keep in mind
 - `ga.add(min, max, step)`: the step is the value grid; no step means a continuous variable.
+  Operators that produce values for a discrete variable must round them to `decision_variable.decimal_places`, so they are exact grid
+  values (not `0.30000000000000004`) and compare equal to the other copies of the same grid value (the normal distribution mutator's nudge check relies on it).
 - Uniqueness (`ensure_unique_individuals`): `Population` remembers value tuples in `_seen_candidate_solutions`.
   Anything that changes variable values after a candidate solution is added must call `population.register_candidate_solution(c)`.
   `add_candidate_solution` returns `False` (and silently drops the candidate solution) when the population is full.
