@@ -50,6 +50,11 @@ Pure Python, no compiled code. `README.md` is also the PyPI long description.
   check a seeded run before and after any change to the Gaussian mutators. Measured on the continuous benchmarks (see the benchmark script):
   min std dev 1e-4 + decay 2.5 gives ~1.8 orders of magnitude lower median gap for ~20% more evaluations; a fixed floor below one step
   hurts discrete variables, and a fixed floor <= 1e-5 hurts 20 variables (the 600-generation cap is reached before convergence).
+- `mutation_focus_generations` (default `None` = off) is an opt-in `MutationFocus` (`operations/mutation/mutation_focus.py`) created by the factory and set as
+  `.focus` on the decision-variable mutation selector, the rate determinators (main and helper) and every `ComposedDecisionVariableMutator`. While the minimal cost
+  stagnates it scales the number of mutated decision variables and the weight of the random mutator by `0.5 ** (stagnation / N)`; with probability
+  `mutation_focus_exploration_probability` per mutated candidate solution it is skipped. With it off no random numbers are drawn and results must stay
+  bit-identical (compare seeded runs against `git archive HEAD`). Benchmark: `benchmarks/mutation_focus.py`.
 - `ParentDiversityCandidateSolutionUpdater` is a singleton (`__new__`), so its state is shared across `GA` instances.
 - Pure-Python per-decision-variable overhead dominates for cheap cost functions (~1 ms/generation at pop 32 x 10 decision variables,
   scaling linearly with population size and decision-variable count). For real cost functions, the number of evaluations
