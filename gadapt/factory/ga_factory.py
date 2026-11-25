@@ -15,6 +15,7 @@ from gadapt.operations.crossover.cost_diversity_crossover_probability_determinat
 from gadapt.operations.crossover.fixed_crossover_probability_determinator import FixedCrossoverProbabilityDeterminator
 from gadapt.operations.exit_check.avg_cost_exit_checker import AvgCostExitChecker
 from gadapt.operations.exit_check.base_exit_checker import BaseExitChecker
+from gadapt.operations.exit_check.evaluations_exit_checker import EvaluationsExitChecker
 from gadapt.operations.exit_check.min_cost_exit_checker import MinCostExitChecker
 from gadapt.operations.exit_check.requested_cost_exit_checker import (
     RequestedCostExitChecker,
@@ -581,6 +582,8 @@ class GAFactory(BaseGAFactory):
             return MinCostExitChecker(self._ga.max_attempt_no, self._ga.number_of_generations, self._ga.exit_function)
         if self._ga.exit_check == definitions.GENERATIONS:
             return NumberOfGenerationsExitChecker(self._ga.number_of_generations, self._ga.exit_function)
+        if self._ga.exit_check == definitions.EVALUATIONS:
+            return EvaluationsExitChecker(self._ga.number_of_generations, self._ga.exit_function)
         return RequestedCostExitChecker(self._ga.requested_cost, self._ga.number_of_generations, self._ga.exit_function)
 
     def _get_crossover(self) -> BaseCrossover:

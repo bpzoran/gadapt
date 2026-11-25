@@ -15,6 +15,7 @@ A comprehensive and customizable genetic algorithm library.
   - [Previous Parameter Names](#previous-parameter-names)
   - [Adding Variables](#adding-variables)
   - [GA Execution and Optimisation Results](#ga-execution-and-optimisation-results)
+  - [Limiting the Number of Evaluations](#limiting-the-number-of-evaluations)
 - [GA Customisation](#ga-customisation)
 
 ## Introduction
@@ -118,6 +119,7 @@ The possible output:
 ```
 Min cost: -3.370583074871819
 Number of iterations: 286
+Number of evaluations: 4592
 Parameter values:
 0: 1.57
 1: 39.27
@@ -183,6 +185,7 @@ Supported values:
 - *"min_cost"* - The optimisation exit is triggered when the minimal cost in the population is not improved in the specified number of generations  
 - *"requested"* - The optimisation exit is triggered when the requested value reached
 - *"generations"* - The optimisation exit requested number of generations defined by "number_of_generations" parameter is reached
+- *"evaluations"* - The optimisation exits when the evaluation budget defined by the *max_evaluations* parameter is used up. It requires *max_evaluations* greater than 0.
     
 **max_attempt_no**=*2* - This parameter only takes place when *exit_check* has value *"avg_cost"* or *"min_cost"*. It determines the number of generations in which there is no improvement in the average/minimal cost.
 
@@ -190,7 +193,9 @@ Supported values:
 
 **number_of_generations**=*-1* - The maximal number of generations. The value *-1* means that the number of generations is not limited. When *exit_check* has value *"generations"*, it is the exit criterion: the genetic algorithm exits after this number of generations. When *exit_check* has value *"avg_cost"* or *"min_cost"*, it is an additional upper limit: the genetic algorithm exits when there is no improvement in *max_attempt_no* generations, or when this number of generations is reached, whichever comes first. The limit takes effect only if it is not lower than *max_attempt_no*. It does not apply when *exit_check* has value *"requested"*.
 
-**timeout**=*600* - A number of seconds after which the genetic algorithm optimisation will exit, regardless of whether *exit_check* criteria is reached. When the timeout expires, *messages* in the results contain a warning.
+**timeout**=*600* - A number of seconds after which the genetic algorithm optimisation will exit, regardless of whether *exit_check* criteria is reached. When the timeout expires, *messages* in the results contain a warning. The default is 600 seconds, and the timeout also stops runs limited by *max_evaluations*, so long runs need a larger *timeout*.
+
+**max_evaluations**=*-1* - The maximal number of cost function evaluations. The value *-1* (or any value <= 0) means that the number of evaluations is not limited. The budget is exact: a run with a budget of B evaluations calls the cost function exactly B times, never more. It applies regardless of *exit_check*: the genetic algorithm exits when the budget is used up or when the *exit_check* criterion is met, whichever comes first. With *exit_check* of *"evaluations"* it exits only when the budget is used up (or on *timeout* / *exit_function*). A value lower than *population_size* raises a *ValueError*, because the initial population alone would exceed the budget. When the budget is set, the two probe calls of the cost function that otherwise validate it before the optimisation (at the lower and upper bounds of the variables) are skipped, because they would not be counted. An example is given in the section "GA Execution and Optimisation Results".
 
 **exit_function**=*None* - A function without arguments that is called in each generation. If it returns True, the genetic algorithm exits, regardless of the *exit_check* criteria. It can be used, for example, to stop the optimisation from the outside.
 
@@ -389,6 +394,8 @@ Genetic algorithm optimization executes by calling *execute* method, without par
 - **success**  - Indicates if genetic algorithm optimisation executed successfully.
 - **min_cost** - The minimal cost for optimized variables
 - **number_of_iterations** - The number of generations executed before the optimisation exited
+- **number_of_evaluations** - The number of cost function evaluations executed during the optimisation (the initial population included). With *max_evaluations* set, it never exceeds the budget.
+- **number_of_evaluations_per_generation** - The list of cumulative numbers of evaluations after each generation (the initial population is the first item), aligned with *min_cost_per_generation*.
 - **result_values** - The dictionary that contains variables' optimized values. The key of this dictionary is the sequence number of variable adding, and also the argument index in the cost function. The value of this dictionary is the optimized value for the variable.
 - **messages** - Additional messages of the optimizations. This is a tuple structure where first value is a message level ("INFO", "WARNING" or "ERROR"), and the second value is the message text.
 
@@ -413,6 +420,7 @@ results = ga.execute()
 if results.success: # indicates if the optimisation succeeded
     print("Minimal cost: " + str(results.min_cost))
     print("Number of iterations: " + str(results.number_of_iterations))
+    print("Number of evaluations: " + str(results.number_of_evaluations))
     print("Parameter values:")
     for x in results.result_values:
         print(str(x) + ": " + str(results.result_values[x]))               
@@ -426,6 +434,7 @@ The output may look like it follows:
 ```
 Minimal cost: 0.0
 Number of iterations: 19
+Number of evaluations: 320
 Parameter values:
 0: 0.0
 1: 0.0
@@ -444,10 +453,28 @@ might return the following output:
 ```
 Min cost: 0.0
 Number of iterations: 21
+Number of evaluations: 352
 Parameter values:
 0: 0.0
 1: 0.0
 ```
+
+### Limiting the Number of Evaluations
+To compare GAdapt with other optimisers under the same number of cost function evaluations, set *max_evaluations*. The budget is exact: the cost function is called exactly this number of times, never more. With *exit_check* of *"evaluations"*, the optimisation runs until the budget is used up:
+```python
+from gadapt.ga import GA
+
+def f(args):
+    return sum(x * x for x in args)
+
+ga = GA(cost_function=f, exit_check="evaluations", max_evaluations=20000, timeout=36000)
+for _ in range(10):
+    ga.add(-5.0, 5.0)
+results = ga.execute()
+print(results.number_of_evaluations)  # 20000
+print(results.number_of_evaluations_per_generation[-1])  # 20000
+```
+*timeout* defaults to 600 seconds and it also stops budget-based runs, so long runs need a larger *timeout* (it is 36000 seconds in the example above). The budget can also be combined with another criterion, e.g. *exit_check="min_cost"* together with *max_evaluations*: the optimisation exits at whichever comes first, and the number of evaluations never exceeds the budget. *max_evaluations* must not be lower than *population_size*, otherwise a *ValueError* is raised.
 
 ## GA Customisation
 GAdapt follows clean architecture and SOLID principles, allowing easy customization. Create new implementations of abstract classes and pass them to the genetic algorithm through a factory object.

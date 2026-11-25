@@ -19,6 +19,8 @@ class GAResults:
         self._min_cost_per_generation: List[float] = []
         self._initial_population: Optional[Population] = None
         self._min_cost = float("NaN")
+        self._number_of_evaluations = 0
+        self._number_of_evaluations_per_generation: List[int] = []
 
     def __str__(self) -> str:
         return ga_strings.results_to_string(self)
@@ -69,6 +71,29 @@ class GAResults:
     @number_of_iterations.setter
     def number_of_iterations(self, value: float):
         self._number_of_iterations = value
+
+    @property
+    def number_of_evaluations(self) -> int:
+        """
+        Number of cost function evaluations executed by the optimisation
+        """
+        return self._number_of_evaluations
+
+    @number_of_evaluations.setter
+    def number_of_evaluations(self, value: int):
+        self._number_of_evaluations = value
+
+    @property
+    def number_of_evaluations_per_generation(self) -> List[int]:
+        """
+        Cumulative number of cost function evaluations after each generation
+        (aligned with min_cost_per_generation)
+        """
+        return self._number_of_evaluations_per_generation
+
+    @number_of_evaluations_per_generation.setter
+    def number_of_evaluations_per_generation(self, value: List[int]):
+        self._number_of_evaluations_per_generation = value
 
     @property
     def success(self) -> bool:

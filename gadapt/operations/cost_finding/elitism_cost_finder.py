@@ -24,6 +24,16 @@ class ElitismCostFinder(BaseCostFinder):
                 and c.population_generation == self.population.population_generation
             )
         ]
+        max_evaluations = self.population.options.max_evaluations
+        if max_evaluations > 0:
+            # the evaluation budget is exact: evaluate only what is left of it and drop the rest
+            remaining = max(max_evaluations - self.population.number_of_evaluations, 0)
+            if len(candidate_solutions_for_execution) > remaining:
+                skipped_ids = {id(c) for c in candidate_solutions_for_execution[remaining:]}
+                candidate_solutions_for_execution = candidate_solutions_for_execution[:remaining]
+                self.population.clear_and_add_candidate_solutions(
+                    [c for c in self.population if id(c) not in skipped_ids]
+                )
         for c in candidate_solutions_for_execution:
             self._execute_function(self.population.options.cost_function, c)
         better_candidate_solutions: List[CandidateSolution] = self.population.get_sorted(

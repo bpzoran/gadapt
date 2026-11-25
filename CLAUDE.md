@@ -55,6 +55,13 @@ Pure Python, no compiled code. `README.md` is also the PyPI long description.
   stagnates it scales the number of mutated decision variables and the weight of the random mutator by `0.5 ** (stagnation / N)`; with probability
   `mutation_focus_exploration_probability` per mutated candidate solution it is skipped. With it off no random numbers are drawn and results must stay
   bit-identical (compare seeded runs against `git archive HEAD`). Benchmark: `benchmarks/mutation_focus.py`.
+- `max_evaluations` (default `-1` = off) is an **exact** budget of cost-function calls, also usable as `exit_check="evaluations"` (`EvaluationsExitChecker`,
+  whose own criterion is only `number_of_generations`). `BaseCostFinder._execute_function` counts every call (even one that raises) in
+  `Population.number_of_evaluations`; `ElitismCostFinder._find_costs_for_population` evaluates only what is left of the budget and removes the unevaluated
+  candidate solutions from the population before sorting; `BaseExitChecker.check` exits (after the timeout check) once the budget is used up and sets
+  `Population.evaluation_budget_reached`. With the budget on, `CommonOptionsValidator._check_cost_function` skips its two probe calls of the cost function
+  (they would not be counted). `timeout` (default 600 s) still stops budget-based runs. Validation errors for it are `ValueError`s (`_add_value_error`).
+  With it off results must stay bit-identical.
 - `ParentDiversityCandidateSolutionUpdater` is a singleton (`__new__`), so its state is shared across `GA` instances.
 - Pure-Python per-decision-variable overhead dominates for cheap cost functions (~1 ms/generation at pop 32 x 10 decision variables,
   scaling linearly with population size and decision-variable count). For real cost functions, the number of evaluations

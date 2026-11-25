@@ -46,6 +46,9 @@ class Population:
         self.relative_cost_diversity_in_first_population = float("NaN")
         self.timeout_expired = False
         self.min_cost_per_generation: List[float] = []
+        self.number_of_evaluations = 0
+        self.number_of_evaluations_per_generation: List[int] = []
+        self.evaluation_budget_reached = False
         self.generations_without_improvement = 0
 
     def __iter__(self):
@@ -293,6 +296,9 @@ class Population:
         dup.absolute_cost_diversity_in_first_population = self.absolute_cost_diversity_in_first_population
         dup.timeout_expired = self.timeout_expired
         dup.min_cost_per_generation = _deepcopy(self.min_cost_per_generation, memo)
+        dup.number_of_evaluations = self.number_of_evaluations
+        dup.number_of_evaluations_per_generation = list(self.number_of_evaluations_per_generation)
+        dup.evaluation_budget_reached = self.evaluation_budget_reached
         dup.generations_without_improvement = self.generations_without_improvement
 
         # options: choose deep or shallow

@@ -26,6 +26,8 @@ class BaseCostFinder(ABC):
             decision variables containing values for the function execution.
         """
         sorted_variable_values = list(sorted(c, key=lambda vv: vv.decision_variable.variable_id))
+        # a call that raises still costs an evaluation
+        self.population.number_of_evaluations += 1
         try:
             variable_values = [a.value for a in sorted_variable_values]
             c.cost_value = cost_function(variable_values)
@@ -49,3 +51,4 @@ class BaseCostFinder(ABC):
         self.population = population
         self._find_costs_for_population()
         self.population.min_cost_per_generation.append(self.population.min_cost)
+        self.population.number_of_evaluations_per_generation.append(self.population.number_of_evaluations)

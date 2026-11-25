@@ -35,3 +35,7 @@ class BaseOptionsValidator(ABC):
     def _add_message(self, message, message_level=message_levels.ERROR):
         self.validation_messages.append((message_level, message))
         raise Exception(message)
+
+    def _add_value_error(self, message, message_level=message_levels.ERROR):
+        self.validation_messages.append((message_level, message))
+        raise ValueError(message)

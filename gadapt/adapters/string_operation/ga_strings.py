@@ -112,6 +112,7 @@ def results_to_string(r):
     if r.success:
         rslt = "Min cost: " + str(r.min_cost)
         rslt += "\nNumber of iterations: " + str(r.number_of_iterations)
+        rslt += "\nNumber of evaluations: " + str(r.number_of_evaluations)
         rslt += "\nParameter values:"
         for x in r.result_values:
             rslt += "\n" + str(x) + ": " + str(r.result_values[x])

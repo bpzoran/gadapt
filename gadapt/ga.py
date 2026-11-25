@@ -119,6 +119,7 @@ class GA:
         normal_distribution_mutation_min_std_dev_decay_generations: Optional[float] = None,
         mutation_focus_generations: Optional[float] = None,
         mutation_focus_exploration_probability: float = 0.1,
+        max_evaluations=-1,
         **deprecated_kwargs,
     ) -> None:
         """
@@ -251,7 +252,20 @@ class GA:
 
             timeout: A number of seconds after which the genetic algorithm
             optimisation will exit, regardless of whether
-            exit_check criteria is reached.
+            exit_check criteria is reached. It defaults to 600 seconds and
+            it also stops runs limited by max_evaluations, so long runs need
+            a larger timeout.
+
+            max_evaluations: The maximal number of cost function evaluations.
+            A value <= 0 (default -1) means no limit. The budget is exact: the
+            cost function is never called more times than this, and the GA exits
+            when the budget is used up or when the exit_check criterion is met,
+            whichever comes first. exit_check "evaluations" exits only when the
+            budget is used up. It must not be lower than population_size, because
+            the initial population alone would exceed it. When it is set, the
+            two probe calls of the cost function made before the optimisation
+            (at the lower and upper bounds) are skipped, since they would not be
+            counted in the budget.
 
             factory: Factory for creating object
 
@@ -337,6 +351,7 @@ class GA:
         self.mutation_focus_generations = mutation_focus_generations
         self.mutation_focus_exploration_probability = mutation_focus_exploration_probability
         self.timeout = timeout
+        self.max_evaluations = max_evaluations
         self._current_dv_id = 0
         self._factory = factory
         for old_name, value in deprecated_kwargs.items():
@@ -765,6 +780,12 @@ class GA:
 
         **"requested"** - The optimisation exit is triggered when the
         requested value reached
+
+        **"generations"** - The optimisation exit is triggered when the
+        number of generations (number_of_generations) is reached
+
+        **"evaluations"** - The optimisation exit is triggered when the
+        number of cost function evaluations (max_evaluations) is used up
         """
         return self._exit_check
 
@@ -969,12 +990,26 @@ class GA:
         """
         A number of seconds after which the genetic algorithm optimisation will\
             exit, regardless of whether exit_check criteria is reached.
+            The default is 600 seconds, and it also stops runs limited by
+            max_evaluations, so long runs need a larger timeout.
         """
         return self._timeout
 
     @timeout.setter
     def timeout(self, value: int | str) -> None:
         self._timeout = ga_utils.try_get_int(value)
+
+    @property
+    def max_evaluations(self) -> int:
+        """
+        The maximal number of cost function evaluations. A value <= 0 means no limit.
+        The budget is exact and applies regardless of exit_check.
+        """
+        return self._max_evaluations
+
+    @max_evaluations.setter
+    def max_evaluations(self, value: int) -> None:
+        self._max_evaluations = ga_utils.try_get_int(value)
 
     def clone(self):
         # Create a new instance of the class

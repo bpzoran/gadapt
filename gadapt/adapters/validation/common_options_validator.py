@@ -79,6 +79,9 @@ class CommonOptionsValidator(BaseOptionsValidator):
         elif not callable(self.options.cost_function):
             self._add_message("Cost Function must be callable!")
             return False
+        if self.options.max_evaluations > 0:
+            # the probe calls below would not be counted in the evaluation budget
+            return True
         argsmin = []
         argsmax = []
         for v in self.options._decision_variables:
@@ -512,7 +515,25 @@ class CommonOptionsValidator(BaseOptionsValidator):
                 "Invalid timeout value: {0}".format(str(self.options.timeout))
             )
             rslt &= False
+        rslt &= self._check_max_evaluations(population_size)
         return rslt
+
+    def _check_max_evaluations(self, population_size: int) -> bool:
+        max_evaluations = self.options.max_evaluations
+        if isinstance(max_evaluations, bool) or not isinstance(max_evaluations, int):
+            self._add_value_error("Max Evaluations must be type int!")
+        if max_evaluations > 0 and population_size > 0 and max_evaluations < population_size:
+            self._add_value_error(
+                "Max Evaluations ({0}) must not be lower than the population size ({1}), "
+                "because the initial population alone would exceed the budget!".format(
+                    max_evaluations, population_size
+                )
+            )
+        if self.options.exit_check == definitions.EVALUATIONS and max_evaluations <= 0:
+            self._add_value_error(
+                'Exit Check "evaluations" requires Max Evaluations greater than 0!'
+            )
+        return True
 
     def _validate_selection(
         self,

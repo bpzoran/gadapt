@@ -48,6 +48,11 @@ class BaseExitChecker(ABC):
         if time_diff >= self.population.options.timeout:
             self.population.timeout_expired = True
             return True
+        max_evaluations = self.population.options.max_evaluations
+        if max_evaluations > 0 and self.population.number_of_evaluations >= max_evaluations:
+            self.population.evaluation_budget_reached = True
+            gadapt_log_info("Evaluation budget reached, exiting.")
+            return True
         if self._is_exit():
             self.attempt_no += 1
         else:

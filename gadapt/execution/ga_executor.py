@@ -73,6 +73,8 @@ class GAExecutor:
             results.min_cost = self.population.min_cost
             results.number_of_iterations = self.population.population_generation
             results.min_cost_per_generation = self.population.min_cost_per_generation
+            results.number_of_evaluations = self.population.number_of_evaluations
+            results.number_of_evaluations_per_generation = self.population.number_of_evaluations_per_generation
             for g in best_individual:
                 results.result_values[g.decision_variable.variable_id] = g.value
         except Exception as ex:

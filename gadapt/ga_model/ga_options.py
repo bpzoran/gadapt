@@ -45,6 +45,7 @@ class GAOptions:
         self._set_number_of_mutation_decision_variables(ga)
         self._must_mutate_for_same_parents = ga.must_mutate_for_same_parents
         self._timeout = ga.timeout
+        self._max_evaluations = ga.max_evaluations
 
     def _set_number_of_mutation_candidate_solutions(self, ga):
         if (
@@ -343,3 +344,14 @@ class GAOptions:
     @timeout.setter
     def timeout(self, value: int):
         self._timeout = value
+
+    @property
+    def max_evaluations(self) -> int:
+        """
+        The maximal number of cost function evaluations. A value <= 0 means no limit.
+        """
+        return self._max_evaluations
+
+    @max_evaluations.setter
+    def max_evaluations(self, value: int):
+        self._max_evaluations = value
